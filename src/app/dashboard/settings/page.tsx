@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useState, useEffect } from "react"
@@ -8,7 +9,7 @@ import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { Textarea } from "@/components/ui/textarea"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
-import { Save, Sparkles, ArrowRight, Copy, ExternalLink, Globe, Building2 } from "lucide-react"
+import { Save, Sparkles, ArrowRight, Copy, ExternalLink, Globe, Building2, Link as LinkIcon } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import Link from "next/link"
 import { useDoc, useUser } from "@/firebase"
@@ -40,7 +41,8 @@ export default function SettingsPage() {
     address: "",
     missionStatement: "",
     industry: "",
-    brandColor: "256 60% 55%"
+    brandColor: "256 60% 55%",
+    website: ""
   })
 
   useEffect(() => {
@@ -52,7 +54,8 @@ export default function SettingsPage() {
         address: org.addressLine1 || "",
         missionStatement: org.missionStatement || "",
         industry: org.industry || "",
-        brandColor: org.brandColor || "256 60% 55%"
+        brandColor: org.brandColor || "256 60% 55%",
+        website: org.website || ""
       })
     }
   }, [org])
@@ -69,6 +72,7 @@ export default function SettingsPage() {
       missionStatement: formData.missionStatement,
       industry: formData.industry,
       brandColor: formData.brandColor,
+      website: formData.website,
       updatedAt: serverTimestamp()
     })
 
@@ -185,8 +189,9 @@ export default function SettingsPage() {
               <div className="space-y-1 text-center sm:text-left">
                 <h3 className="text-lg font-bold text-slate-900">Professional Logo</h3>
                 <p className="text-sm text-muted-foreground">This icon anchors your professional ecosystem.</p>
-                <div className="flex gap-2 mt-3">
-                   <Button variant="outline" size="sm">Change Logo</Button>
+                <div className="flex gap-2 mt-3 justify-center sm:justify-start">
+                   <Button variant="outline" size="sm" className="rounded-lg">Change Logo</Button>
+                   <Button variant="ghost" size="sm" className="rounded-lg text-destructive hover:text-destructive hover:bg-destructive/5">Remove</Button>
                 </div>
               </div>
             </div>
@@ -224,6 +229,20 @@ export default function SettingsPage() {
                   onChange={(e) => setFormData({...formData, email: e.target.value})}
                   className="h-11 rounded-xl"
                 />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="org-website" className="text-xs uppercase tracking-widest text-muted-foreground font-bold">Professional Website</Label>
+                <div className="relative">
+                  <LinkIcon className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+                  <Input 
+                    id="org-website" 
+                    type="url"
+                    value={formData.website} 
+                    onChange={(e) => setFormData({...formData, website: e.target.value})}
+                    className="h-11 pl-10 rounded-xl"
+                    placeholder="https://yourwebsite.com"
+                  />
+                </div>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="org-color" className="text-xs uppercase tracking-widest text-muted-foreground font-bold">Brand Color (HSL)</Label>

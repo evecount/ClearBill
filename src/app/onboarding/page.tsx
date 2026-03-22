@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
-import { ArrowRight, Building2, Mail, MapPin, Loader2, ShieldCheck, Scissors, Briefcase, Music, Dumbbell, Star, Mic, Shield, GraduationCap, Hammer, PawPrint, Utensils, TrendingUp, Zap, Target, Lightbulb, HeartPulse, Code, Sparkles } from "lucide-react"
+import { ArrowRight, Briefcase, Loader2, ShieldCheck, Scissors, Music, Dumbbell, Star, Mic, Shield, GraduationCap, Hammer, PawPrint, Utensils, TrendingUp, Zap, Target, Lightbulb, HeartPulse, Code, Sparkles } from "lucide-react"
 import { consultBusinessOnboarding, type OnboardingConsultantOutput } from "@/ai/flows/onboarding-consultant"
 import { useToast } from "@/hooks/use-toast"
 import Link from "next/link"
@@ -82,6 +82,7 @@ export default function OnboardingPage() {
       missionStatement: proposal.missionStatement,
       industry: proposal.industry,
       slug: slug,
+      website: "",
       growthStrategy: proposal.growthStrategy,
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp()
@@ -89,7 +90,10 @@ export default function OnboardingPage() {
 
     setDocumentNonBlocking(doc(user.auth.firestore, 'organizations', orgId), orgData, { merge: true })
 
-    toast({ title: "Identity Profile Saved", description: "Your professional profile is now live." })
+    toast({ 
+      title: "Identity Profile Saved", 
+      description: "Your professional profile is now live. You can further refine these details at any time in your Settings." 
+    })
     router.push("/dashboard")
   }
 
@@ -156,7 +160,6 @@ export default function OnboardingPage() {
           </div>
         ) : (
           <div className="grid lg:grid-cols-5 gap-8 items-start animate-in fade-in slide-in-from-bottom-4 duration-700">
-            {/* Identity & Strategy Card */}
             <Card className="lg:col-span-3 shadow-2xl border-none overflow-hidden h-full rounded-3xl">
               <CardHeader className="bg-slate-900 text-white p-8">
                 <div className="flex justify-between items-center mb-4">
@@ -169,7 +172,6 @@ export default function OnboardingPage() {
                 <p className="text-slate-400 font-bold uppercase tracking-widest text-xs mt-2">{proposal?.industry}</p>
               </CardHeader>
               <CardContent className="p-8 space-y-10">
-                {/* Visual Identity Preview */}
                 <div className="grid sm:grid-cols-2 gap-8">
                   <div className="space-y-2">
                     <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-black">Recommended Tone</Label>
@@ -189,7 +191,6 @@ export default function OnboardingPage() {
 
                 <Separator />
 
-                {/* Strategic Growth Roadmap */}
                 <div className="space-y-6">
                   <Label className="text-[10px] uppercase tracking-widest text-accent font-black block border-b pb-2">Recommended Growth Steps</Label>
                   <div className="grid gap-4">
@@ -245,7 +246,6 @@ export default function OnboardingPage() {
               </CardFooter>
             </Card>
 
-            {/* Portal Preview */}
             <div className="lg:col-span-2 space-y-6 sticky top-24">
               <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-black ml-1">Client Portal Preview</Label>
               <div className="relative group">

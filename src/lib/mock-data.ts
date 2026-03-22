@@ -1,3 +1,4 @@
+
 export type Organization = {
   id: string;
   name: string;
@@ -9,6 +10,7 @@ export type Organization = {
   industry?: string;
   address?: string;
   slug?: string;
+  website?: string;
   growthStrategy?: any;
 };
 
@@ -52,6 +54,7 @@ export const MOCK_ORG: Organization = {
   missionStatement: 'Providing world-class boutique consulting for independent creators.',
   industry: 'Professional Services',
   address: '123 Corporate Way, San Francisco, CA',
+  website: 'https://acme-solutions.io'
 };
 
 export const MOCK_CLIENTS: Client[] = [

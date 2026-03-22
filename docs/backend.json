@@ -1,3 +1,4 @@
+
 {
   "entities": {
     "Organization": {
@@ -15,6 +16,7 @@
         "missionStatement": { "type": "string" },
         "brandColor": { "type": "string" },
         "slug": { "type": "string" },
+        "website": { "type": "string", "format": "uri" },
         "growthStrategy": { "type": "object" },
         "createdAt": { "type": "string", "format": "date-time" },
         "updatedAt": { "type": "string", "format": "date-time" }
