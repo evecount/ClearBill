@@ -1,9 +1,27 @@
+
+"use client"
+
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { CreditCard, ShieldCheck, Zap, ArrowRight, TrendingUp, Sparkles, Layout, Globe, Lock, FileText, Scale, Utensils, Shield, Hammer, BarChart3, Briefcase, Camera, Home, PenTool, CheckCircle, HeartPulse, Code, Music, Scissors } from "lucide-react"
+import { CreditCard, ShieldCheck, Zap, ArrowRight, TrendingUp, Sparkles, Layout, Globe, Lock, FileText, Scale, Utensils, Shield, Hammer, BarChart3, Briefcase, Camera, Home, PenTool, CheckCircle, HeartPulse, Code, Music, Scissors, Loader2 } from "lucide-react"
 import { QuickAuditTool } from "@/components/landing/quick-audit-tool"
+import { useUser, useFirestore, useDoc } from "@/firebase"
+import { useMemoFirebase } from "@/firebase/provider"
+import { doc } from "firebase/firestore"
 
 export default function LandingPage() {
+  const { user, isUserLoading } = useUser()
+  const firestore = useFirestore()
+
+  const orgRef = useMemoFirebase(() => {
+    if (!user || !firestore) return null
+    return doc(firestore, 'organizations', user.uid)
+  }, [user, firestore])
+
+  const { data: org, isLoading: isOrgLoading } = useDoc(orgRef)
+
+  const dashboardLink = org ? "/dashboard" : "/onboarding"
+
   return (
     <div className="min-h-screen flex flex-col">
       <header className="px-6 h-20 flex items-center justify-between border-b bg-white/50 backdrop-blur-md sticky top-0 z-50">
@@ -15,10 +33,10 @@ export default function LandingPage() {
         </div>
         <div className="flex items-center gap-4">
           <Button variant="ghost" asChild>
-            <Link href="/dashboard">Login</Link>
+            <Link href={dashboardLink}>{user ? "Dashboard" : "Login"}</Link>
           </Button>
           <Button className="bg-accent hover:bg-accent/90" asChild>
-            <Link href="/onboarding">Get Started</Link>
+            <Link href={dashboardLink}>{org ? "Go to Dashboard" : "Get Started"}</Link>
           </Button>
         </div>
       </header>
@@ -39,8 +57,8 @@ export default function LandingPage() {
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-6">
               <Button size="lg" className="h-16 px-10 text-xl bg-accent hover:bg-accent/90 shadow-xl shadow-accent/20 group" asChild>
-                <Link href="/onboarding">
-                  Start Your First Invoice <ArrowRight className="ml-2 size-6 group-hover:translate-x-1 transition-transform" />
+                <Link href={dashboardLink}>
+                  {org ? "Continue Your Strategy" : "Start Your First Invoice"} <ArrowRight className="ml-2 size-6 group-hover:translate-x-1 transition-transform" />
                 </Link>
               </Button>
               <Button size="lg" variant="outline" className="h-16 px-10 text-xl" asChild>

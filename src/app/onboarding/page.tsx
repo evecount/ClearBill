@@ -82,14 +82,16 @@ export default function OnboardingPage() {
     }
   }, [user, isUserLoading, auth])
 
-  // 2. Redirect if Identity already exists
+  // 2. Redirect if Identity already exists (bypass onboarding)
   useEffect(() => {
-    if (!isOrgLoading && existingOrg) {
-      router.push('/dashboard')
-    } else if (!isOrgLoading) {
-      setIsSyncing(false)
+    if (!isOrgLoading && !isUserLoading) {
+      if (existingOrg) {
+        router.push('/dashboard')
+      } else {
+        setIsSyncing(false)
+      }
     }
-  }, [existingOrg, isOrgLoading, router])
+  }, [existingOrg, isOrgLoading, isUserLoading, router])
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -220,11 +222,9 @@ export default function OnboardingPage() {
 
   if (isSyncing || isUserLoading || isOrgLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-white">
-        <div className="flex flex-col items-center gap-4">
-          <Loader2 className="size-8 animate-spin text-accent" />
-          <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Synchronizing Identity...</p>
-        </div>
+      <div className="min-h-screen flex flex-col items-center justify-center bg-white">
+        <Loader2 className="size-12 animate-spin text-accent mb-4" />
+        <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground animate-pulse">Recognizing Identity...</p>
       </div>
     )
   }
