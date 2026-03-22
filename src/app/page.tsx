@@ -1,7 +1,6 @@
-
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { CreditCard, ShieldCheck, Zap, ArrowRight, TrendingUp, Sparkles, Layout, Globe, Lock, CheckCircle2 } from "lucide-react"
+import { CreditCard, ShieldCheck, Zap, ArrowRight, TrendingUp, Sparkles, Layout, Globe, Lock } from "lucide-react"
 
 export default function LandingPage() {
   return (
