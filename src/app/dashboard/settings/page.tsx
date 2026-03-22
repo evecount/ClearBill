@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { Textarea } from "@/components/ui/textarea"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
-import { Save, Sparkles, ArrowRight, Copy, ExternalLink, Globe, Building2, Link as LinkIcon, Landmark, Flag, Camera, Upload } from "lucide-react"
+import { Save, Sparkles, ArrowRight, Copy, ExternalLink, Globe, Building2, Link as LinkIcon, Landmark, Flag, Camera, Upload, CreditCard } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import Link from "next/link"
 import { useDoc, useUser, useFirestore } from "@/firebase"
@@ -50,7 +50,8 @@ export default function SettingsPage() {
     industry: "",
     brandColor: "256 60% 55%",
     website: "",
-    logoUrl: ""
+    logoUrl: "",
+    paymentLink: ""
   })
 
   useEffect(() => {
@@ -68,7 +69,8 @@ export default function SettingsPage() {
         industry: org.industry || "",
         brandColor: org.brandColor || "256 60% 55%",
         website: org.website || "",
-        logoUrl: org.logoUrl || ""
+        logoUrl: org.logoUrl || "",
+        paymentLink: org.paymentLink || ""
       })
     }
   }, [org])
@@ -102,6 +104,7 @@ export default function SettingsPage() {
       brandColor: formData.brandColor,
       website: formData.website,
       logoUrl: formData.logoUrl,
+      paymentLink: formData.paymentLink,
       updatedAt: serverTimestamp()
     })
 
@@ -240,6 +243,29 @@ export default function SettingsPage() {
                 {loading ? "Saving Changes..." : "Save Identity Profile"}
              </Button>
           </CardFooter>
+        </Card>
+
+        <Card className="border-none shadow-lg">
+          <CardHeader>
+            <CardTitle>Payment & Payouts</CardTitle>
+            <CardDescription>Anchor your billing to your professional payment gateway.</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="space-y-2">
+              <Label htmlFor="org-payment-link" className="text-xs uppercase tracking-widest text-muted-foreground font-bold">Stripe Payment Link (or similar)</Label>
+              <div className="relative">
+                <CreditCard className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+                <Input 
+                  id="org-payment-link" 
+                  value={formData.paymentLink} 
+                  onChange={(e) => setFormData({...formData, paymentLink: e.target.value})}
+                  className="h-11 pl-10 rounded-xl"
+                  placeholder="https://buy.stripe.com/..."
+                />
+              </div>
+              <p className="text-[10px] text-muted-foreground font-medium">This link will be the target for all "Pay" buttons on your professional invoices.</p>
+            </div>
+          </CardContent>
         </Card>
 
         <Card className="border-none shadow-lg">

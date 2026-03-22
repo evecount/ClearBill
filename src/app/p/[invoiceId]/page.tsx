@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Separator } from "@/components/ui/separator"
-import { CreditCard, Download, CheckCircle2, ShieldCheck, Lock, Globe, Scale, FileText, Landmark } from "lucide-react"
+import { CreditCard, Download, CheckCircle2, ShieldCheck, Lock, Globe, Scale, FileText, Landmark, ExternalLink } from "lucide-react"
 import { useState } from "react"
 import { useToast } from "@/hooks/use-toast"
 import Image from "next/image"
@@ -24,8 +24,6 @@ export default function ClientPortalPage() {
   const { user } = useUser()
   const firestore = useFirestore()
 
-  // In a real app, we'd fetch the specific invoice and organization from Firestore.
-  // For MVP, we'll try to get the org data if a user is logged in (likely the merchant testing).
   const orgRef = useMemoFirebase(() => {
     if (!user || !firestore) return null
     return doc(firestore, 'organizations', user.uid)
@@ -38,11 +36,18 @@ export default function ClientPortalPage() {
   const client = MOCK_CLIENTS.find(c => c.id === invoice.clientId)
 
   const handlePay = () => {
+    if (org.paymentLink) {
+      toast({ title: "Secure Checkout", description: "Redirecting to the professional payment gateway..." })
+      window.location.href = org.paymentLink
+      return
+    }
+
+    // Fallback simulation if no link is provided
     setLoading(true)
     setTimeout(() => {
       setLoading(false)
       setIsPaid(true)
-      toast({ title: "Payment Successful", description: "Your payment has been processed. Thank you!" })
+      toast({ title: "Simulation Complete", description: "This merchant hasn't linked a Stripe PayLink yet. In a live scenario, you'd be redirected now." })
     }, 2000)
   }
 
@@ -183,13 +188,17 @@ export default function ClientPortalPage() {
                   <Button 
                     onClick={handlePay} 
                     disabled={loading}
-                    className="w-full h-16 text-xl text-white rounded-2xl shadow-xl transition-all hover:scale-[1.02]"
+                    className="w-full h-16 text-xl text-white rounded-2xl shadow-xl transition-all hover:scale-[1.02] flex items-center justify-center gap-3"
                     style={{ 
                       backgroundColor: `hsl(${brandColor})`,
                       boxShadow: `0 20px 25px -5px hsla(${brandColor}, 0.2)`
                     }}
                   >
-                    {loading ? "Processing Securely..." : "Pay Outcome Fee Securely"}
+                    {loading ? "Processing Securely..." : (
+                      <>
+                        Pay Outcome Fee Securely {org.paymentLink && <ExternalLink className="size-5" />}
+                      </>
+                    )}
                   </Button>
                 )}
                 {isPaid || invoice.status === 'Paid' ? (

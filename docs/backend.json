@@ -23,6 +23,7 @@
         "brandColor": { "type": "string" },
         "slug": { "type": "string" },
         "website": { "type": "string", "format": "uri" },
+        "paymentLink": { "type": "string", "format": "uri", "description": "A direct Stripe Payment Link or similar checkout URL." },
         "growthStrategy": { "type": "object" },
         "createdAt": { "type": "string", "format": "date-time" },
         "updatedAt": { "type": "string", "format": "date-time" }

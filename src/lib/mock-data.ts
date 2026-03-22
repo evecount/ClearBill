@@ -4,7 +4,8 @@ export type Organization = {
   name: string;
   logoUrl: string;
   email: string;
-  paymentGatewayKey: string;
+  paymentGatewayKey?: string;
+  paymentLink?: string; // Stripe PayLink
   brandColor?: string; // HSL format
   missionStatement?: string;
   industry?: string;
@@ -56,6 +57,7 @@ export const MOCK_ORG: Organization = {
   logoUrl: 'https://picsum.photos/seed/org1/200/200',
   email: 'billing@acme.com',
   paymentGatewayKey: 'sk_test_51Mz...',
+  paymentLink: 'https://buy.stripe.com/test_...',
   brandColor: '256 60% 55%',
   missionStatement: 'Providing world-class boutique consulting for independent creators.',
   industry: 'Professional Services',
