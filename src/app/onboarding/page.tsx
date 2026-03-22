@@ -199,23 +199,8 @@ export default function OnboardingPage() {
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4 py-8 font-body selection:bg-accent/30">
-      <div className="max-w-4xl w-full flex flex-col h-[calc(100vh-120px)] space-y-4">
+      <div className="max-w-4xl w-full flex flex-col h-[calc(100vh-80px)] space-y-4">
         
-        <div className="flex items-center justify-between px-4">
-          <div className="flex items-center gap-2">
-            <div className="bg-accent p-1.5 rounded-lg text-white">
-              <Bot className="size-5" />
-            </div>
-            <div>
-              <h1 className="text-xl font-black tracking-tight">Start Your First Invoice</h1>
-              <p className="text-[10px] text-muted-foreground font-black uppercase tracking-widest">Professional Setup</p>
-            </div>
-          </div>
-          <Badge variant="outline" className="text-accent border-accent text-[10px] font-black uppercase tracking-widest">
-            Ready to Bill
-          </Badge>
-        </div>
-
         <Card className="flex-1 border-none shadow-2xl rounded-[2.5rem] overflow-hidden bg-white flex flex-col">
           <ScrollArea className="flex-1 p-6 md:p-10">
             <div className="space-y-8">
@@ -375,17 +360,5 @@ export default function OnboardingPage() {
         </Card>
       </div>
     </div>
-  )
-}
-
-function Badge({ children, className, variant }: { children: React.ReactNode, className?: string, variant?: string }) {
-  return (
-    <span className={cn(
-      "inline-flex items-center rounded-full border px-2.5 py-0.5 text-[10px] font-black transition-colors uppercase",
-      variant === "outline" ? "border-current" : "bg-primary text-primary-foreground",
-      className
-    )}>
-      {children}
-    </span>
   )
 }
