@@ -15,27 +15,27 @@ Self-employment is the most honest form of enterprise. We believe that independe
 ## 🛠 Features
 
 ### 🧠 AI Professional Identity Architect
-Using **Genkit (Gemini 2.5 Flash)**, the app transforms a raw description of a user's work into a sophisticated brand identity, including:
-- Catchy business names.
-- Impactful mission statements.
-- Suggested industry categorization.
-- **Visual DNA**: AI-generated HSL brand colors that automatically skin the entire client portal.
+Powered by **Genkit (Gemini 2.5 Flash)**, the app transforms a raw description of your work into a sophisticated brand identity:
+- **Identity Generation**: Automatically crafts professional business names and impactful mission statements.
+- **Visual DNA**: AI picks HSL brand colors that automatically skin the entire client portal and dashboard.
+- **Industry Mapping**: Suggests professional categorizations and realistic support structures.
 
-### 📱 Mobile-Native Experience
-Designed for professionals on the go:
-- **Bottom Navigation**: Native-feeling mobile tab bar for quick navigation.
+### 📱 Mobile-Native Professional Experience
+Designed for experts on the move who need to manage their business from anywhere:
+- **Bottom Navigation**: Native-feeling mobile tab bar for quick thumb-navigation.
 - **Touch-Friendly UI**: Card-based lists instead of complex tables on small screens.
-- **PWA Ready**: Manifest and meta-tag configurations for a full-screen, installable app experience.
+- **PWA Ready**: Optimized meta-tags and manifests for a full-screen, installable app experience.
 
-### 💼 Branded Client Portals
-- **Identity-Aware Styling**: Portals dynamically adapt to the organization's unique brand color.
-- **Secure Processing**: Built-in trust badges (SSL, Payment Security) to reassure premium clients.
-- **AI Delivery Snippets**: Automatically generates professional email copy to accompany payment links.
+### 💼 Branded Client Ecosystems
+Your clients don't just see a bill; they enter your professional world:
+- **Identity-Aware Portals**: Portals dynamically adapt to your unique brand color.
+- **Trust-First Design**: Built-in security badges (SSL, Payment Security) to reassure premium clients.
+- **AI Delivery Snippets**: Automatically generates professional email copy and social snippets to accompany your payment links.
 
 ### 📁 Management Suite
-- **Invoice Tracking**: Real-time status updates (Pending, Paid, Overdue).
-- **Client Directory**: Manage customer details and billing history.
-- **Public Profile**: A dedicated URL where clients can view their active balance.
+- **Invoice Tracking**: Real-time status updates (Pending, Paid, Overdue) in a clean, visual dashboard.
+- **Client Directory**: Manage customer details and billing history with a professional CRM-lite interface.
+- **Public Brand Profile**: A dedicated URL where clients can view their active balance and lookup historical invoices securely.
 
 ## 💻 Tech Stack
 
@@ -52,16 +52,6 @@ Designed for professionals on the go:
 3. **Set up Environment Variables**: Create a `.env` file with your Firebase and Gemini API keys.
 4. **Run the dev server**: `npm run dev`
 5. **Start Genkit UI** (Optional): `npm run genkit:dev`
-
-## 📁 Project Structure
-
-- `src/ai/`: Genkit Flows for the Identity Architect and Email Suggester.
-- `src/app/dashboard/`: The internal professional management suite.
-- `src/app/onboarding/`: The AI-powered Brand Identity Architect.
-- `src/app/p/`: Client-facing branded payment portals.
-- `src/app/u/`: Public organization billing lookups.
-- `src/components/ui/`: Reusable Shadcn UI components.
-- `src/lib/`: Mock data and utility functions.
 
 ---
 
