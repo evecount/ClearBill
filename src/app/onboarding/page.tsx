@@ -115,7 +115,7 @@ export default function OnboardingPage() {
   }
 
   const handleFinish = () => {
-    toast({ title: "Profile Ready", description: "Welcome to InvoiceSync!" })
+    toast({ title: "Profile Ready", description: "Welcome to your new Professional Identity Ecosystem!" })
     router.push("/dashboard")
   }
 
@@ -126,7 +126,7 @@ export default function OnboardingPage() {
           <div className="inline-flex items-center justify-center p-3 bg-accent/10 rounded-2xl mb-4">
             <Sparkles className="size-8 text-accent" />
           </div>
-          <h1 className="text-4xl font-bold tracking-tight text-slate-900">AI Brand Architect</h1>
+          <h1 className="text-4xl font-bold tracking-tight text-slate-900">Professional Identity Architect</h1>
           <p className="text-lg text-muted-foreground">Transforming your expertise into a premium client ecosystem.</p>
         </div>
 
@@ -134,8 +134,8 @@ export default function OnboardingPage() {
           <div className="max-w-2xl mx-auto w-full">
             <Card className="shadow-2xl border-none">
               <CardHeader>
-                <CardTitle>Describe your venture</CardTitle>
-                <CardDescription>What do you do? Who are your clients? Our AI will build the professional identity your business deserves.</CardDescription>
+                <CardTitle>Describe your expertise</CardTitle>
+                <CardDescription>What do you do? Who are your clients? Our AI will build the professional ecosystem your work deserves.</CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="space-y-3">
@@ -161,7 +161,7 @@ export default function OnboardingPage() {
                   <Label htmlFor="desc">Your Business Narrative</Label>
                   <Textarea 
                     id="desc"
-                    placeholder="e.g., I run a boutique photography studio in Brooklyn. I focus on high-end architectural shots for real estate firms."
+                    placeholder="e.g., I run a boutique catering service focusing on artisanal farm-to-table dinner parties."
                     className="min-h-[150px] text-lg p-4"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
@@ -177,11 +177,11 @@ export default function OnboardingPage() {
                   {loading ? (
                     <>
                       <Loader2 className="mr-2 h-6 w-6 animate-spin" />
-                      Designing your ecosystem...
+                      Architecting your identity...
                     </>
                   ) : (
                     <>
-                      Generate Brand Identity <ArrowRight className="ml-2 size-5" />
+                      Generate Professional Identity <ArrowRight className="ml-2 size-5" />
                     </>
                   )}
                 </Button>
@@ -202,7 +202,7 @@ export default function OnboardingPage() {
               <CardContent className="p-8 space-y-8">
                 <div className="grid gap-6">
                   <div className="space-y-1">
-                    <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">Brand Tone</Label>
+                    <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">Visual Tone</Label>
                     <div className="flex items-center gap-3">
                       <div 
                         className="size-4 rounded-full border shadow-sm" 
@@ -233,16 +233,16 @@ export default function OnboardingPage() {
               </CardContent>
               <CardFooter className="p-8 bg-slate-50 border-t flex flex-col gap-3">
                 <Button className="w-full h-12 bg-accent hover:bg-accent/90" onClick={handleFinish}>
-                  Accept Brand & Continue <ArrowRight className="ml-2 size-4" />
+                  Accept Identity & Continue <ArrowRight className="ml-2 size-4" />
                 </Button>
                 <Button variant="ghost" className="w-full" onClick={() => setStep(1)}>
-                  Redesign Identity
+                  Redesign Ecosystem
                 </Button>
               </CardFooter>
             </Card>
 
             <div className="space-y-4">
-              <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold ml-1">Live Portal Preview</Label>
+              <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold ml-1">Live Identity Preview</Label>
               <div className="relative group">
                 <div 
                   className="absolute -inset-1 rounded-3xl blur opacity-25 group-hover:opacity-40 transition duration-1000"
@@ -300,7 +300,7 @@ export default function OnboardingPage() {
               <div className="p-4 rounded-xl bg-blue-50 border border-blue-100">
                 <p className="text-xs text-blue-700 flex gap-2">
                   <Sparkles className="size-3 shrink-0" />
-                  Notice how your brand identity flows through the entire portal. This creates instant trust for your premium clients.
+                  Notice how your unique identity flows through the entire portal. This creates instant trust for your premium clients.
                 </p>
               </div>
             </div>
