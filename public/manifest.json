@@ -1,0 +1,22 @@
+
+{
+  "name": "InvoiceSync",
+  "short_name": "InvoiceSync",
+  "description": "Professional Identity Ecosystem for Self-Employment",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#219ebc",
+  "icons": [
+    {
+      "src": "https://picsum.photos/seed/invsync/192/192",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://picsum.photos/seed/invsync/512/512",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

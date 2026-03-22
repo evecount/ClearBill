@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { MOCK_CLIENTS as INITIAL_CLIENTS } from "@/lib/mock-data"
-import { Plus, Search, Mail, MapPin, MoreVertical, Trash2, Edit2, FileText } from "lucide-react"
+import { Plus, Search, Mail, MapPin, MoreVertical, Trash2, Edit2, FileText, User } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger, DropdownMenuSeparator } from "@/components/ui/dropdown-menu"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
@@ -65,8 +65,7 @@ export default function ClientsPage() {
   }
 
   const viewInvoices = (clientName: string) => {
-    toast({ title: "Redirecting", description: `Viewing invoices for ${clientName}...` })
-    router.push(`/dashboard/invoices`) // In a real app we'd pass a query param
+    router.push(`/dashboard/invoices`)
   }
 
   return (
@@ -79,11 +78,11 @@ export default function ClientsPage() {
         
         <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
           <DialogTrigger asChild>
-            <Button className="bg-accent hover:bg-accent/90" onClick={() => setClientForm({ name: "", email: "", address: "" })}>
+            <Button className="bg-accent hover:bg-accent/90 hidden md:flex" onClick={() => setClientForm({ name: "", email: "", address: "" })}>
               <Plus className="size-4 mr-2" /> Add Client
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="rounded-t-3xl sm:rounded-3xl">
             <DialogHeader>
               <DialogTitle>Add New Client</DialogTitle>
               <DialogDescription>Enter the details for your new customer.</DialogDescription>
@@ -96,6 +95,7 @@ export default function ClientsPage() {
                   placeholder="e.g. Jane Doe" 
                   value={clientForm.name}
                   onChange={(e) => setClientForm({ ...clientForm, name: e.target.value })}
+                  className="h-12 rounded-xl"
                 />
               </div>
               <div className="grid gap-2">
@@ -106,6 +106,7 @@ export default function ClientsPage() {
                   placeholder="jane@example.com" 
                   value={clientForm.email}
                   onChange={(e) => setClientForm({ ...clientForm, email: e.target.value })}
+                  className="h-12 rounded-xl"
                 />
               </div>
               <div className="grid gap-2">
@@ -115,22 +116,22 @@ export default function ClientsPage() {
                   placeholder="123 Main St, City, Country" 
                   value={clientForm.address}
                   onChange={(e) => setClientForm({ ...clientForm, address: e.target.value })}
+                  className="h-12 rounded-xl"
                 />
               </div>
             </div>
             <DialogFooter>
-              <Button variant="outline" onClick={() => setIsAddOpen(false)}>Cancel</Button>
-              <Button onClick={handleAddClient} className="bg-accent hover:bg-accent/90">Save Client</Button>
+              <Button onClick={handleAddClient} className="w-full h-12 bg-accent hover:bg-accent/90 rounded-xl">Save Client</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
       </div>
 
       <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
-        <DialogContent>
+        <DialogContent className="rounded-t-3xl sm:rounded-3xl">
           <DialogHeader>
             <DialogTitle>Edit Client</DialogTitle>
-            <DialogDescription>Update the billing information for {activeClient?.name}.</DialogDescription>
+            <DialogDescription>Update the information for {activeClient?.name}.</DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
@@ -139,6 +140,7 @@ export default function ClientsPage() {
                 id="edit-name" 
                 value={clientForm.name}
                 onChange={(e) => setClientForm({ ...clientForm, name: e.target.value })}
+                className="h-12 rounded-xl"
               />
             </div>
             <div className="grid gap-2">
@@ -147,6 +149,7 @@ export default function ClientsPage() {
                 id="edit-email" 
                 value={clientForm.email}
                 onChange={(e) => setClientForm({ ...clientForm, email: e.target.value })}
+                className="h-12 rounded-xl"
               />
             </div>
             <div className="grid gap-2">
@@ -155,36 +158,80 @@ export default function ClientsPage() {
                 id="edit-address" 
                 value={clientForm.address}
                 onChange={(e) => setClientForm({ ...clientForm, address: e.target.value })}
+                className="h-12 rounded-xl"
               />
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsEditOpen(false)}>Cancel</Button>
-            <Button onClick={handleUpdateClient} className="bg-accent hover:bg-accent/90">Update Client</Button>
+            <Button onClick={handleUpdateClient} className="w-full h-12 bg-accent hover:bg-accent/90 rounded-xl">Update Client</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
-      <Card>
-        <CardHeader>
-          <div className="relative flex-1 max-w-sm">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-            <Input 
-              placeholder="Search clients..." 
-              className="pl-10" 
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
+      <div className="relative flex-1 bg-white p-2 rounded-xl border shadow-sm">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+        <Input 
+          placeholder="Search clients..." 
+          className="pl-10 border-none shadow-none focus-visible:ring-0" 
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+      </div>
+
+      {/* Mobile Card List */}
+      <div className="grid gap-4 md:hidden pb-12">
+        {filteredClients.length > 0 ? (
+          filteredClients.map((client) => (
+            <Card key={client.id} className="overflow-hidden border-none shadow-md">
+              <CardContent className="p-4 flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="bg-slate-100 p-3 rounded-full">
+                    <User className="size-5 text-slate-600" />
+                  </div>
+                  <div>
+                    <p className="font-bold text-slate-900">{client.name}</p>
+                    <p className="text-xs text-muted-foreground">{client.email}</p>
+                  </div>
+                </div>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon" className="size-8">
+                      <MoreVertical className="size-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem onClick={() => handleEditClick(client)}>
+                      <Edit2 className="size-4 mr-2" /> Edit
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => viewInvoices(client.name)}>
+                      <FileText className="size-4 mr-2" /> Invoices
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem className="text-destructive" onClick={() => handleDelete(client.id)}>
+                      <Trash2 className="size-4 mr-2" /> Delete
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </CardContent>
+            </Card>
+          ))
+        ) : (
+          <div className="py-12 text-center text-muted-foreground bg-white rounded-2xl border border-dashed">
+            No clients found.
           </div>
-        </CardHeader>
-        <CardContent>
+        )}
+      </div>
+
+      {/* Desktop Table */}
+      <Card className="hidden md:block overflow-hidden border-none shadow-lg rounded-2xl">
+        <CardContent className="p-0">
           <Table>
-            <TableHeader>
+            <TableHeader className="bg-slate-50/50">
               <TableRow>
-                <TableHead>Client Name</TableHead>
-                <TableHead>Email Address</TableHead>
-                <TableHead>Billing Address</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead className="font-bold">Client Name</TableHead>
+                <TableHead className="font-bold">Email Address</TableHead>
+                <TableHead className="font-bold">Billing Address</TableHead>
+                <TableHead className="text-right font-bold">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -233,7 +280,7 @@ export default function ClientsPage() {
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={4} className="h-24 text-center text-muted-foreground">
+                  <TableCell colSpan={4} className="h-48 text-center text-muted-foreground">
                     No clients found.
                   </TableCell>
                 </TableRow>
