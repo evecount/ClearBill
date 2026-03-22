@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
-import { Sparkles, ArrowRight, Building2, Mail, MapPin, Loader2, ShieldCheck, Scissors, Briefcase, Music, Dumbbell, Star, Mic, Shield, GraduationCap, Hammer, PawPrint, Utensils } from "lucide-react"
+import { Sparkles, ArrowRight, Building2, Mail, MapPin, Loader2, ShieldCheck, Scissors, Briefcase, Music, Dumbbell, Star, Mic, Shield, GraduationCap, Hammer, PawPrint, Utensils, TrendingUp, Zap, Target } from "lucide-react"
 import { consultBusinessOnboarding, type OnboardingConsultantOutput } from "@/ai/flows/onboarding-consultant"
 import { useToast } from "@/hooks/use-toast"
 import Link from "next/link"
@@ -17,76 +17,12 @@ import { setDocumentNonBlocking } from "@/firebase/non-blocking-updates"
 import { doc, serverTimestamp } from "firebase/firestore"
 
 const QUICK_STARTS = [
-  {
-    label: "Personal Chef",
-    icon: Utensils,
-    text: "I am a private personal chef providing boutique catering for small dinner parties and customized weekly meal prep for busy families. I need my billing to reflect the premium, artisanal nature of my culinary services."
-  },
-  {
-    label: "Private Tutor",
-    icon: GraduationCap,
-    text: "I provide private SAT and college prep tutoring for high school students. I need to look professional to parents who are investing in their children's future and want clear, branded billing."
-  },
-  {
-    label: "Lash Artist",
-    icon: Scissors,
-    text: "I run a boutique eyelash studio providing luxury extensions and lash lifts. I need to look high-end and professional for my premium clients."
-  },
-  {
-    label: "Beauty Consultant",
-    icon: Sparkles,
-    text: "I am an independent beauty consultant providing personalized skincare regimens and makeup artistry for weddings and corporate events."
-  },
-  {
-    label: "Handyman",
-    icon: Hammer,
-    text: "I provide high-quality home repair and maintenance services. My clients are homeowners who expect clear, professional billing for my time and materials that reflects my reliability."
-  },
-  {
-    label: "Dog Walker",
-    icon: PawPrint,
-    text: "I run a boutique dog walking and pet sitting service for busy professionals. A professional portal helps build the immense trust required for them to leave their keys and pets with me."
-  },
-  {
-    label: "Sound Engineer",
-    icon: Music,
-    text: "I am a freelance sound engineer specializing in podcast post-production, audio restoration, and custom sound design for indie filmmakers."
-  },
-  {
-    label: "Virtual Assistant",
-    icon: Briefcase,
-    text: "I provide executive-level virtual assistance for creative agency founders, managing complex schedules and client communications."
-  },
-  {
-    label: "Personal Trainer",
-    icon: Dumbbell,
-    text: "I am a private personal trainer focusing on functional strength and mobility for busy corporate executives."
-  },
-  {
-    label: "Professional Comedian",
-    icon: Star,
-    text: "I am a stand-up comedian and corporate entertainer providing clean, high-energy comedy sets for galas, retreats, and private parties."
-  },
-  {
-    label: "Freelance Dancer",
-    icon: Music,
-    text: "I am a professional dancer and choreographer specializing in commercial performance and movement instruction for music videos and luxury events."
-  },
-  {
-    label: "Event Emcee",
-    icon: Mic,
-    text: "I am a professional master of ceremonies and event host, specializing in charity auctions, corporate conferences, and high-profile festivals."
-  },
-  {
-    label: "Security Expert",
-    icon: Shield,
-    text: "I provide private security and executive protection for high-profile events and corporate offices. My work is high-stakes, and my billing portal needs to reflect that professional trust."
-  },
-  {
-    label: "Facility Specialist",
-    icon: Building2,
-    text: "I provide specialized commercial cleaning and facility maintenance for boutique medical offices. Professionalism in my billing is key to maintaining my long-term corporate contracts."
-  }
+  { label: "Personal Chef", icon: Utensils, text: "I am a private personal chef providing boutique catering for small dinner parties and customized weekly meal prep for busy families." },
+  { label: "Private Tutor", icon: GraduationCap, text: "I provide private SAT and college prep tutoring for high school students." },
+  { label: "Lash Artist", icon: Scissors, text: "I run a boutique eyelash studio providing luxury extensions and lash lifts." },
+  { label: "Handyman", icon: Hammer, text: "I provide high-quality home repair and maintenance services for local homeowners." },
+  { label: "Sound Engineer", icon: Music, text: "I am a freelance sound engineer specializing in podcast post-production and custom sound design." },
+  { label: "Security Expert", icon: Shield, text: "I provide private security and executive protection for high-profile events and corporate offices." }
 ]
 
 export default function OnboardingPage() {
@@ -101,13 +37,12 @@ export default function OnboardingPage() {
 
   const handleConsult = async () => {
     if (!description.trim()) {
-      toast({ title: "Please tell us about your business", variant: "destructive" })
+      toast({ title: "Please tell us about your expertise", variant: "destructive" })
       return
     }
 
     setLoading(true)
     try {
-      // Ensure user is signed in anonymously if not already
       if (!user) {
         initiateAnonymousSignIn(auth)
       }
@@ -116,7 +51,7 @@ export default function OnboardingPage() {
       setProposal(result)
       setStep(2)
     } catch (error) {
-      toast({ title: "AI Consultant Busy", description: "Please try again in a moment.", variant: "destructive" })
+      toast({ title: "Consultant Busy", description: "Please try again in a moment.", variant: "destructive" })
     } finally {
       setLoading(false)
     }
@@ -144,45 +79,46 @@ export default function OnboardingPage() {
       missionStatement: proposal.missionStatement,
       industry: proposal.industry,
       slug: slug,
+      growthStrategy: proposal.growthStrategy,
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp()
     }
 
     setDocumentNonBlocking(doc(user.auth.firestore, 'organizations', orgId), orgData, { merge: true })
 
-    toast({ title: "Profile Ready", description: "Welcome to your new Professional Identity Ecosystem!" })
+    toast({ title: "Identity & Strategy Ready", description: "Your professional growth engine is now active!" })
     router.push("/dashboard")
   }
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4 py-12">
-      <div className="max-w-4xl w-full space-y-8">
+      <div className="max-w-5xl w-full space-y-8">
         <div className="text-center space-y-2">
           <div className="inline-flex items-center justify-center p-3 bg-accent/10 rounded-2xl mb-4">
             <Sparkles className="size-8 text-accent" />
           </div>
           <h1 className="text-4xl font-bold tracking-tight text-slate-900">Professional Identity Architect</h1>
-          <p className="text-lg text-muted-foreground">Transforming your expertise into a premium client ecosystem.</p>
+          <p className="text-lg text-muted-foreground">Transforming expertise into high-value professional ecosystems.</p>
         </div>
 
         {step === 1 ? (
           <div className="max-w-2xl mx-auto w-full">
-            <Card className="shadow-2xl border-none">
-              <CardHeader>
-                <CardTitle>Describe your expertise</CardTitle>
-                <CardDescription>What do you do? Who are your clients? Our AI will build the professional ecosystem your work deserves.</CardDescription>
+            <Card className="shadow-2xl border-none rounded-3xl overflow-hidden">
+              <CardHeader className="bg-slate-900 text-white p-8">
+                <CardTitle className="text-2xl">Describe your expertise</CardTitle>
+                <CardDescription className="text-slate-400">Our Growth Agent will architect the identity and strategy your work deserves.</CardDescription>
               </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="space-y-3">
-                  <Label className="text-xs uppercase tracking-widest text-muted-foreground font-bold">Quick Start Templates</Label>
+              <CardContent className="p-8 space-y-8">
+                <div className="space-y-4">
+                  <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-black">Quick Start Narratives</Label>
                   <div className="flex flex-wrap gap-2">
                     {QUICK_STARTS.map((qs) => (
                       <button
                         key={qs.label}
                         onClick={() => setDescription(qs.text)}
                         className={cn(
-                          "flex items-center gap-2 px-3 py-1.5 rounded-full text-sm border transition-all hover:bg-slate-50 active:scale-95",
-                          description === qs.text ? "bg-accent/10 border-accent text-accent ring-1 ring-accent" : "bg-white border-slate-200 text-slate-600"
+                          "flex items-center gap-2 px-4 py-2 rounded-xl text-sm border transition-all hover:bg-slate-50 active:scale-95",
+                          description === qs.text ? "bg-accent border-accent text-white shadow-lg shadow-accent/20" : "bg-white border-slate-200 text-slate-600"
                         )}
                       >
                         <qs.icon className="size-3" />
@@ -192,31 +128,31 @@ export default function OnboardingPage() {
                   </div>
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="desc">Your Business Narrative</Label>
+                <div className="space-y-3">
+                  <Label htmlFor="desc" className="text-[10px] uppercase tracking-widest text-muted-foreground font-black">Your Narrative</Label>
                   <Textarea 
                     id="desc"
-                    placeholder="e.g., I run a boutique catering service focusing on artisanal farm-to-table dinner parties."
-                    className="min-h-[150px] text-lg p-4"
+                    placeholder="Tell us what you do and who your ideal clients are..."
+                    className="min-h-[150px] text-lg p-5 rounded-2xl focus:ring-accent/20 border-slate-200 shadow-inner bg-slate-50/50"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                   />
                 </div>
               </CardContent>
-              <CardFooter>
+              <CardFooter className="p-8 pt-0">
                 <Button 
-                  className="w-full h-14 text-lg bg-accent hover:bg-accent/90 shadow-lg shadow-accent/20" 
+                  className="w-full h-16 text-lg bg-accent hover:bg-accent/90 shadow-xl shadow-accent/30 rounded-2xl group" 
                   onClick={handleConsult}
                   disabled={loading}
                 >
                   {loading ? (
                     <>
                       <Loader2 className="mr-2 h-6 w-6 animate-spin" />
-                      Architecting your identity...
+                      Architecting Growth Strategy...
                     </>
                   ) : (
                     <>
-                      Generate Professional Identity <ArrowRight className="ml-2 size-5" />
+                      Architect Professional Ecosystem <ArrowRight className="ml-2 size-5 group-hover:translate-x-1 transition-transform" />
                     </>
                   )}
                 </Button>
@@ -224,109 +160,128 @@ export default function OnboardingPage() {
             </Card>
           </div>
         ) : (
-          <div className="grid lg:grid-cols-2 gap-8 items-start animate-in fade-in slide-in-from-bottom-4 duration-700">
-            <Card className="shadow-xl border-none overflow-hidden h-full">
+          <div className="grid lg:grid-cols-5 gap-8 items-start animate-in fade-in slide-in-from-bottom-4 duration-700">
+            {/* Identity & Strategy Card */}
+            <Card className="lg:col-span-3 shadow-2xl border-none overflow-hidden h-full rounded-3xl">
               <CardHeader className="bg-slate-900 text-white p-8">
                 <div className="flex justify-between items-center mb-4">
-                  <Badge className="bg-accent text-white border-none px-3 py-1">AI PROPOSAL</Badge>
+                  <div className="flex items-center gap-2 px-3 py-1 bg-accent rounded-full text-[10px] font-black tracking-widest text-white uppercase">
+                    <Zap className="size-3" /> Growth Agent Proposal
+                  </div>
                   <Sparkles className="size-5 text-accent" />
                 </div>
-                <CardTitle className="text-3xl font-bold">{proposal?.suggestedName}</CardTitle>
-                <p className="text-slate-400 font-medium">{proposal?.industry}</p>
+                <CardTitle className="text-4xl font-black tracking-tight">{proposal?.suggestedName}</CardTitle>
+                <p className="text-slate-400 font-bold uppercase tracking-widest text-xs mt-2">{proposal?.industry}</p>
               </CardHeader>
-              <CardContent className="p-8 space-y-8">
-                <div className="grid gap-6">
-                  <div className="space-y-1">
-                    <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">Visual Tone</Label>
-                    <div className="flex items-center gap-3">
+              <CardContent className="p-8 space-y-10">
+                {/* Visual Identity Preview */}
+                <div className="grid sm:grid-cols-2 gap-8">
+                  <div className="space-y-2">
+                    <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-black">Identity Tone</Label>
+                    <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-2xl border">
                       <div 
-                        className="size-4 rounded-full border shadow-sm" 
+                        className="size-5 rounded-full border shadow-sm shrink-0" 
                         style={{ backgroundColor: `hsl(${proposal?.brandColor || '256 60% 55%'})` }} 
                       />
-                      <p className="text-lg font-medium text-slate-800">{proposal?.brandingTone}</p>
+                      <p className="font-bold text-slate-800">{proposal?.brandingTone}</p>
                     </div>
                   </div>
-                  <div className="space-y-1">
-                    <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">Mission Statement</Label>
-                    <p className="text-slate-600 italic leading-relaxed">"{proposal?.missionStatement}"</p>
+                  <div className="space-y-2">
+                    <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-black">Mission</Label>
+                    <p className="text-sm text-slate-600 italic leading-relaxed font-medium">"{proposal?.missionStatement}"</p>
                   </div>
-                  <div className="grid sm:grid-cols-2 gap-6 pt-4 border-t">
-                    <div className="space-y-1">
-                      <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">Client Support</Label>
-                      <div className="flex items-center gap-2 text-sm font-medium text-slate-700">
-                        <Mail className="size-3 text-accent" /> {proposal?.suggestedEmail}
+                </div>
+
+                <Separator />
+
+                {/* Strategic Growth Roadmap - NEW SECTION */}
+                <div className="space-y-6">
+                  <Label className="text-[10px] uppercase tracking-widest text-accent font-black block border-b pb-2">Strategic Growth Roadmap</Label>
+                  <div className="grid gap-4">
+                    <div className="flex gap-4 items-start">
+                      <div className="bg-emerald-50 p-2 rounded-xl border border-emerald-100 shrink-0">
+                        <Target className="size-4 text-emerald-600" />
+                      </div>
+                      <div className="space-y-1">
+                        <p className="text-sm font-bold text-slate-900">Initial Focus</p>
+                        <p className="text-xs text-muted-foreground leading-relaxed">{proposal?.growthStrategy.initialFocus}</p>
                       </div>
                     </div>
-                    <div className="space-y-1">
-                      <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">Business Location</Label>
-                      <div className="flex items-center gap-2 text-sm font-medium text-slate-700">
-                        <MapPin className="size-3 text-accent" /> {proposal?.suggestedAddress?.split(',')[0]}
+                    <div className="flex gap-4 items-start">
+                      <div className="bg-purple-50 p-2 rounded-xl border border-purple-100 shrink-0">
+                        <Star className="size-4 text-purple-600" />
+                      </div>
+                      <div className="space-y-1">
+                        <p className="text-sm font-bold text-slate-900">Premium Tier Proposal</p>
+                        <p className="text-xs text-muted-foreground leading-relaxed">{proposal?.growthStrategy.premiumTierSuggestion}</p>
+                      </div>
+                    </div>
+                    <div className="flex gap-4 items-start">
+                      <div className="bg-blue-50 p-2 rounded-xl border border-blue-100 shrink-0">
+                        <TrendingUp className="size-4 text-blue-600" />
+                      </div>
+                      <div className="space-y-1">
+                        <p className="text-sm font-bold text-slate-900">Recurring Revenue Model</p>
+                        <p className="text-xs text-muted-foreground leading-relaxed">{proposal?.growthStrategy.recurringRevenueModel}</p>
                       </div>
                     </div>
                   </div>
                 </div>
               </CardContent>
               <CardFooter className="p-8 bg-slate-50 border-t flex flex-col gap-3">
-                <Button className="w-full h-12 bg-accent hover:bg-accent/90" onClick={handleFinish}>
-                  Accept Identity & Continue <ArrowRight className="ml-2 size-4" />
+                <Button className="w-full h-14 bg-accent hover:bg-accent/90 rounded-2xl text-lg font-bold shadow-xl shadow-accent/20" onClick={handleFinish}>
+                  Accept Strategy & Launch Ecosystem <ArrowRight className="ml-2 size-5" />
                 </Button>
-                <Button variant="ghost" className="w-full" onClick={() => setStep(1)}>
-                  Redesign Ecosystem
+                <Button variant="ghost" className="w-full text-slate-500 hover:text-slate-900" onClick={() => setStep(1)}>
+                  Refine Narrative
                 </Button>
               </CardFooter>
             </Card>
 
-            <div className="space-y-4">
-              <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold ml-1">Live Identity Preview</Label>
+            {/* Portal Preview Area */}
+            <div className="lg:col-span-2 space-y-6 sticky top-24">
+              <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-black ml-1">Identity Ecosystem Preview</Label>
               <div className="relative group">
                 <div 
-                  className="absolute -inset-1 rounded-3xl blur opacity-25 group-hover:opacity-40 transition duration-1000"
+                  className="absolute -inset-1 rounded-[2.5rem] blur opacity-25 group-hover:opacity-40 transition duration-1000"
                   style={{ backgroundColor: `hsl(${proposal?.brandColor || '256 60% 55%'})` }}
                 ></div>
-                <div className="relative bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden">
+                <div className="relative bg-white rounded-3xl shadow-2xl border border-slate-100 overflow-hidden">
                   <div className="p-6 bg-slate-50 border-b flex justify-between items-center">
                     <div className="flex items-center gap-3">
                       <div className="size-8 bg-slate-900 rounded-lg flex items-center justify-center">
                         <span className="text-white text-xs font-bold">{proposal?.suggestedName?.[0]}</span>
                       </div>
-                      <span className="text-sm font-bold text-slate-900">{proposal?.suggestedName}</span>
+                      <span className="text-xs font-bold text-slate-900">{proposal?.suggestedName}</span>
                     </div>
-                    <div className="flex items-center gap-2">
-                       <ShieldCheck className="size-4 text-emerald-500" />
-                       <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Secure Portal</span>
-                    </div>
+                    <ShieldCheck className="size-4 text-emerald-500" />
                   </div>
                   <div className="p-8 space-y-6">
                     <div className="flex justify-between items-start">
                       <div className="space-y-1">
                         <p className="text-[8px] uppercase font-bold text-muted-foreground">Billed To</p>
-                        <div className="h-3 w-32 bg-slate-200 rounded animate-pulse"></div>
+                        <div className="h-3 w-32 bg-slate-100 rounded animate-pulse"></div>
                       </div>
                       <div className="text-right space-y-1">
-                        <p className="text-[8px] uppercase font-bold text-muted-foreground">Amount Due</p>
-                        <p className="text-xl font-black" style={{ color: `hsl(${proposal?.brandColor || '256 60% 55%'})` }}>$2,500.00</p>
+                        <p className="text-[8px] uppercase font-bold text-muted-foreground">Premium Fee</p>
+                        <p className="text-2xl font-black" style={{ color: `hsl(${proposal?.brandColor || '256 60% 55%'})` }}>$2,500.00</p>
                       </div>
                     </div>
                     <div className="space-y-3">
-                      <div className="flex justify-between border-b pb-2">
-                        <div className="h-2 w-48 bg-slate-100 rounded"></div>
-                        <div className="h-2 w-12 bg-slate-100 rounded"></div>
-                      </div>
-                      <div className="flex justify-between border-b pb-2">
-                        <div className="h-2 w-32 bg-slate-100 rounded"></div>
-                        <div className="h-2 w-12 bg-slate-100 rounded"></div>
-                      </div>
+                      <div className="h-2 w-full bg-slate-50 rounded"></div>
+                      <div className="h-2 w-2/3 bg-slate-50 rounded"></div>
                     </div>
                     <Button 
                       disabled 
-                      className="w-full text-white h-10 rounded-xl"
-                      style={{ backgroundColor: `hsl(${proposal?.brandColor || '256 60% 55%'})` }}
+                      className="w-full text-white h-12 rounded-xl shadow-lg"
+                      style={{ 
+                        backgroundColor: `hsl(${proposal?.brandColor || '256 60% 55%'})`,
+                        boxShadow: `0 10px 15px -3px hsla(${proposal?.brandColor}, 0.3)`
+                      }}
                     >
                       Pay Securely
                     </Button>
-                    <div className="pt-4 flex justify-center items-center gap-4 opacity-30 grayscale scale-75">
-                      <div className="text-[10px] font-bold">Stripe</div>
-                    </div>
+                    <p className="text-[8px] text-center text-muted-foreground font-medium uppercase tracking-[0.2em]">Verified Professional Ecosystem</p>
                   </div>
                 </div>
               </div>
@@ -335,8 +290,8 @@ export default function OnboardingPage() {
         )}
 
         <div className="text-center pt-8">
-          <Link href="/dashboard" className="text-sm text-muted-foreground hover:text-accent transition-colors">
-            Skip for now and enter manually
+          <Link href="/dashboard" className="text-sm font-medium text-slate-400 hover:text-accent transition-colors flex items-center justify-center gap-2">
+            Enter manually without AI consulting <ArrowRight className="size-3" />
           </Link>
         </div>
       </div>
@@ -350,4 +305,8 @@ function Badge({ children, className }: { children: React.ReactNode, className?:
       {children}
     </span>
   )
+}
+
+function Separator() {
+  return <div className="h-[1px] w-full bg-slate-100" />
 }

@@ -1,9 +1,8 @@
-
 "use client"
 
 import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { CreditCard, FileText, Users, TrendingUp, ArrowUpRight, Plus, Settings, Sparkles, Copy, ExternalLink, Link as LinkIcon } from "lucide-react"
+import { CreditCard, FileText, Users, TrendingUp, ArrowUpRight, Plus, Sparkles, Copy, ExternalLink, Lightbulb, ArrowRight, Zap } from "lucide-react"
 import { MOCK_INVOICES, MOCK_CLIENTS, MOCK_ORG } from "@/lib/mock-data"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
@@ -34,13 +33,14 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-20 md:pb-8">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold tracking-tight">Overview</h1>
       </div>
 
+      {/* Stats Grid */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
+        <Card className="border-none shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
@@ -54,7 +54,7 @@ export default function DashboardPage() {
             </p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="border-none shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Pending Payments</CardTitle>
             <FileText className="h-4 w-4 text-muted-foreground" />
@@ -66,7 +66,7 @@ export default function DashboardPage() {
             </p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="border-none shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Active Clients</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
@@ -78,10 +78,10 @@ export default function DashboardPage() {
             </p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="border-none shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Payment Success Rate</CardTitle>
-            <CreditCard className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">Payment Success</CardTitle>
+            <Zap className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">98.2%</div>
@@ -92,51 +92,103 @@ export default function DashboardPage() {
         </Card>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-        <Card className="col-span-4">
-          <CardHeader>
-            <CardTitle>Recent Invoices</CardTitle>
-            <CardDescription>A list of your most recent billing activity.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Invoice</TableHead>
-                  <TableHead>Client</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="text-right">Amount</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {MOCK_INVOICES.slice(0, 5).map((invoice) => {
-                  const client = MOCK_CLIENTS.find(c => c.id === invoice.clientId)
-                  return (
-                    <TableRow key={invoice.id}>
-                      <TableCell className="font-medium">{invoice.number}</TableCell>
-                      <TableCell>{client?.name}</TableCell>
-                      <TableCell>
-                        <Badge variant={invoice.status === 'Paid' ? 'default' : 'secondary'} className={invoice.status === 'Paid' ? 'bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/20' : ''}>
-                          {invoice.status}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-right">${invoice.total.toLocaleString()}</TableCell>
-                    </TableRow>
-                  )
-                })}
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
-        <div className="col-span-3 space-y-4">
-          <Card className="bg-primary text-white border-none">
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-7">
+        {/* Main Content Area */}
+        <div className="col-span-4 space-y-6">
+          {/* Strategic Growth Insights - NEW PARTNER SECTION */}
+          <Card className="border-accent/20 bg-accent/5 overflow-hidden border-2">
+            <CardHeader className="pb-3">
+              <div className="flex items-center gap-2">
+                <div className="bg-accent p-1.5 rounded-lg text-white">
+                  <Lightbulb className="size-4" />
+                </div>
+                <div>
+                  <CardTitle className="text-lg">Strategic Growth Insights</CardTitle>
+                  <CardDescription>AI-driven opportunities to scale your expertise.</CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid gap-3">
+                <div className="flex items-start gap-4 p-4 bg-white rounded-xl border shadow-sm">
+                  <div className="bg-emerald-50 p-2 rounded-full shrink-0">
+                    <TrendingUp className="size-4 text-emerald-600" />
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-sm font-bold">Upsell Opportunity Detected</p>
+                    <p className="text-xs text-muted-foreground leading-relaxed">
+                      Your "Standard Consulting" rate is 15% below the regional average for high-end creators. Consider a "Premium Strategy" tier.
+                    </p>
+                    <Button variant="link" size="sm" className="h-auto p-0 text-accent text-xs font-bold">
+                      View AI Proposal <ArrowRight className="size-3 ml-1" />
+                    </Button>
+                  </div>
+                </div>
+                <div className="flex items-start gap-4 p-4 bg-white rounded-xl border shadow-sm">
+                  <div className="bg-blue-50 p-2 rounded-full shrink-0">
+                    <FileText className="size-4 text-blue-600" />
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-sm font-bold">Recurring Revenue Engine</p>
+                    <p className="text-xs text-muted-foreground leading-relaxed">
+                      3 clients have paid 2+ invoices this month. Converting them to a monthly retainer could stabilize your cash flow by 40%.
+                    </p>
+                    <Button variant="link" size="sm" className="h-auto p-0 text-accent text-xs font-bold">
+                      Generate Retainer Template <ArrowRight className="size-3 ml-1" />
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="border-none shadow-sm overflow-hidden">
+            <CardHeader>
+              <CardTitle>Recent Activity</CardTitle>
+              <CardDescription>Track your most recent billing events.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Invoice</TableHead>
+                    <TableHead>Client</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead className="text-right">Amount</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {MOCK_INVOICES.slice(0, 5).map((invoice) => {
+                    const client = MOCK_CLIENTS.find(c => c.id === invoice.clientId)
+                    return (
+                      <TableRow key={invoice.id}>
+                        <TableCell className="font-medium text-xs md:text-sm">{invoice.number}</TableCell>
+                        <TableCell className="text-xs md:text-sm">{client?.name}</TableCell>
+                        <TableCell>
+                          <Badge variant={invoice.status === 'Paid' ? 'default' : 'secondary'} className={invoice.status === 'Paid' ? 'bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/20' : ''}>
+                            {invoice.status}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-right font-bold text-xs md:text-sm">${invoice.total.toLocaleString()}</TableCell>
+                      </TableRow>
+                    )
+                  })}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Sidebar Area */}
+        <div className="col-span-3 space-y-6">
+          <Card className="bg-primary text-white border-none shadow-xl">
             <CardHeader className="pb-2">
               <CardTitle className="text-lg">Your Public Link</CardTitle>
-              <CardDescription className="text-primary-foreground/70">Share this link with clients or add it to your website.</CardDescription>
+              <CardDescription className="text-primary-foreground/70">Share this link to provide high-trust client access.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="bg-white/10 rounded-lg p-3 flex items-center justify-between">
-                <span className="text-xs truncate font-mono opacity-80">invoicesync.com/u/{MOCK_ORG.slug || MOCK_ORG.id}</span>
+                <span className="text-xs truncate font-mono opacity-80">clearbill.com/u/{MOCK_ORG.slug || MOCK_ORG.id}</span>
                 <div className="flex gap-2">
                   <Button size="icon" variant="ghost" className="size-8 hover:bg-white/20" onClick={copyPublicLink}>
                     <Copy className="size-3" />
@@ -151,36 +203,27 @@ export default function DashboardPage() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="border-none shadow-sm">
             <CardHeader>
               <CardTitle>Quick Actions</CardTitle>
             </CardHeader>
             <CardContent className="grid gap-3">
-              <Link href="/onboarding" className="flex items-center gap-4 rounded-lg border p-4 bg-accent/5 hover:bg-accent/10 transition-colors border-accent/20">
-                <div className="bg-accent/20 p-2 rounded-full">
+              <Link href="/onboarding" className="flex items-center gap-4 rounded-xl border p-4 bg-accent/5 hover:bg-accent/10 transition-all border-accent/20 group">
+                <div className="bg-accent/20 p-2 rounded-lg group-hover:scale-110 transition-transform">
                   <Sparkles className="size-4 text-accent" />
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-accent">Activate AI Consultant</p>
-                  <p className="text-xs text-muted-foreground">Refine your business brand & mission.</p>
+                  <p className="text-sm font-bold text-accent">Activate Growth Agent</p>
+                  <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">New capability</p>
                 </div>
               </Link>
-              <Link href="/dashboard/invoices/new" className="flex items-center gap-4 rounded-lg border p-4 hover:bg-muted/50 transition-colors">
-                <div className="bg-primary/10 p-2 rounded-full">
-                  <Plus className="size-4 text-primary" />
+              <Link href="/dashboard/invoices/new" className="flex items-center gap-4 rounded-xl border p-4 hover:bg-slate-50 transition-all group">
+                <div className="bg-slate-100 p-2 rounded-lg group-hover:scale-110 transition-transform">
+                  <Plus className="size-4 text-slate-600" />
                 </div>
                 <div>
                   <p className="text-sm font-medium">Create New Invoice</p>
-                  <p className="text-xs text-muted-foreground">Quickly bill a client for services.</p>
-                </div>
-              </Link>
-              <Link href="/dashboard/clients" className="flex items-center gap-4 rounded-lg border p-4 hover:bg-muted/50 transition-colors">
-                <div className="bg-emerald-500/10 p-2 rounded-full">
-                  <Users className="size-4 text-emerald-600" />
-                </div>
-                <div>
-                  <p className="text-sm font-medium">Add Client</p>
-                  <p className="text-xs text-muted-foreground">Expand your customer base.</p>
+                  <p className="text-xs text-muted-foreground">Bill for your services instantly.</p>
                 </div>
               </Link>
             </CardContent>
