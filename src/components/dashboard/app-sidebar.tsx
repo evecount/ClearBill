@@ -1,4 +1,3 @@
-
 "use client"
 
 import * as React from "react"
@@ -9,7 +8,8 @@ import {
   Settings,
   CreditCard,
   Plus,
-  FileSignature
+  FileSignature,
+  Bot
 } from "lucide-react"
 
 import {
@@ -44,7 +44,8 @@ export function AppSidebar() {
   const { data: org } = useDoc(orgRef)
 
   const navItems = [
-    { title: "Dashboard", icon: LayoutDashboard, url: "/dashboard" },
+    { title: "Overview", icon: LayoutDashboard, url: "/dashboard" },
+    { title: "Strategic Partner", icon: Bot, url: "/dashboard/consultant" },
     { title: "Proposals", icon: FileSignature, url: "/dashboard/proposals" },
     { title: "Invoices", icon: FileText, url: "/dashboard/invoices" },
     { title: "Clients", icon: Users, url: "/dashboard/clients" },

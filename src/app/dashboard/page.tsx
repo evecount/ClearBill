@@ -1,9 +1,8 @@
-
 "use client"
 
 import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { CreditCard, FileText, Users, TrendingUp, ArrowUpRight, Plus, Sparkles, Copy, ExternalLink, ArrowRight, Zap, Target, Star, ShieldCheck, FileSignature } from "lucide-react"
+import { CreditCard, FileText, Users, TrendingUp, ArrowUpRight, Plus, Sparkles, Copy, ExternalLink, ArrowRight, Zap, Target, Star, ShieldCheck, FileSignature, Bot } from "lucide-react"
 import { MOCK_INVOICES, MOCK_CLIENTS } from "@/lib/mock-data"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
@@ -67,9 +66,9 @@ export default function DashboardPage() {
           <p className="text-muted-foreground">Manage your professional identity and billing.</p>
         </div>
         <div className="flex items-center gap-3">
-          <Button variant="outline" size="sm" asChild>
-            <Link href="/onboarding">
-              <Sparkles className="size-4 mr-2" /> Refresh Strategy
+          <Button variant="outline" size="sm" asChild className="border-accent text-accent">
+            <Link href="/dashboard/consultant">
+              <Bot className="size-4 mr-2" /> Talk to Partner
             </Link>
           </Button>
           <Button asChild className="bg-accent hover:bg-accent/90">
@@ -246,11 +245,11 @@ export default function DashboardPage() {
           <Card className="border-none shadow-sm">
             <CardHeader><CardTitle>Quick Actions</CardTitle></CardHeader>
             <CardContent className="grid gap-3">
-              <Link href="/onboarding" className="flex items-center gap-4 rounded-xl border p-4 bg-accent/5 hover:bg-accent/10 transition-all border-accent/20 group">
-                <div className="bg-accent/20 p-2 rounded-lg group-hover:scale-110 transition-transform"><Sparkles className="size-4 text-accent" /></div>
+              <Link href="/dashboard/consultant" className="flex items-center gap-4 rounded-xl border p-4 bg-accent/5 hover:bg-accent/10 transition-all border-accent/20 group">
+                <div className="bg-accent/20 p-2 rounded-lg group-hover:scale-110 transition-transform"><Bot className="size-4 text-accent" /></div>
                 <div>
-                  <p className="text-sm font-bold text-accent">Update Identity Profile</p>
-                  <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">Refine your brand</p>
+                  <p className="text-sm font-bold text-accent">Talk to Strategic Partner</p>
+                  <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">Draft invoices via chat</p>
                 </div>
               </Link>
               <Link href="/dashboard/invoices/new" className="flex items-center gap-4 rounded-xl border p-4 hover:bg-slate-50 transition-all group">
