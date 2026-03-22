@@ -52,7 +52,8 @@ Your Mission:
 2. NARRATIVE: Provide a "Narrative Script" block (like a film opening) that sets the emotional stakes of the project.
 3. EPISODES: Break the work into 3-4 "Episodes" (e.g., EP 01: The Discovery, EP 02: The Visionary Build, EP 03: The Cultural Legacy).
 4. Focus on the "Strategic Win" for the client, not the labor of the expert. 
-5. NEVER invent the Business Name or Client Name; use exactly what is provided in the input.`,
+5. INVESTMENT TIERS: Create 3 clear investment tiers (e.g., $3,000, $6,000, $12,000) and list which deliverables are unlocked at each stage.
+6. NEVER invent the Business Name or Client Name; use exactly what is provided in the input.`,
 });
 
 const proposalGeneratorFlow = ai.defineFlow(
