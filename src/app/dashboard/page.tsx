@@ -137,7 +137,7 @@ export default function DashboardPage() {
                     <CardDescription className="text-slate-400">Personalized insights to help you command higher rates.</CardDescription>
                   </div>
                 </div>
-                <Badge variant="outline" className="text-accent border-accent text-[10px] font-black uppercase tracking-widest">AI Insights Active</Badge>
+                <Badge variant="outline" className="text-accent border-accent text-[10px] font-black uppercase tracking-widest">Growth Mode Active</Badge>
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -163,14 +163,14 @@ export default function DashboardPage() {
                   </div>
                   {org.growthStrategy.agenticInsight && (
                     <div className="p-4 bg-accent/10 border border-accent/20 rounded-xl space-y-2">
-                      <p className="text-[10px] font-black uppercase tracking-widest text-accent">Growth Recommendation</p>
+                      <p className="text-[10px] font-black uppercase tracking-widest text-accent">Recommendation</p>
                       <p className="text-xs text-slate-200 italic leading-relaxed">"{org.growthStrategy.agenticInsight}"</p>
                     </div>
                   )}
                 </div>
               ) : (
                 <div className="py-8 text-center bg-white/5 rounded-xl border border-dashed border-white/10">
-                  <p className="text-sm text-slate-400">Complete onboarding to unlock growth recommendations.</p>
+                  <p className="text-sm text-slate-400">Complete setup to unlock growth recommendations.</p>
                   <Button asChild variant="link" className="text-accent mt-2">
                     <Link href="/onboarding">Get Recommendations <ArrowRight className="size-3 ml-1" /></Link>
                   </Button>

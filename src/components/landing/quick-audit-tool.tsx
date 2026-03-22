@@ -74,21 +74,21 @@ export function QuickAuditTool() {
               )}
             </Button>
             <p className="text-[10px] text-center text-muted-foreground uppercase tracking-widest font-bold">
-              Powered by Tier-0 Strategic DNA
+              Secure Professional Auditing
             </p>
           </div>
         ) : (
           <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="grid grid-cols-2 gap-4">
               <div className="p-4 bg-slate-900 text-white rounded-2xl space-y-1">
-                <p className="text-[8px] uppercase font-black tracking-widest text-accent">Elite Market Rate</p>
+                <p className="text-[8px] uppercase font-black tracking-widest text-accent">Market Rate</p>
                 <p className="text-2xl font-black">${result.suggestedRateRange.min} - ${result.suggestedRateRange.max}</p>
                 <p className="text-[8px] text-slate-400 font-bold uppercase">{result.suggestedRateRange.unit}</p>
               </div>
               <div className="p-4 bg-destructive/5 border border-destructive/20 rounded-2xl space-y-1">
                 <div className="flex items-center gap-1.5">
                   <ShieldAlert className="size-3 text-destructive" />
-                  <p className="text-[8px] uppercase font-black tracking-widest text-destructive">Undercharging Risk</p>
+                  <p className="text-[8px] uppercase font-black tracking-widest text-destructive">Risk Insight</p>
                 </div>
                 <p className="text-[10px] text-slate-700 font-medium leading-relaxed italic line-clamp-3">
                   {result.underchargingRiskInsight}
@@ -99,7 +99,7 @@ export function QuickAuditTool() {
             <div className="p-5 bg-accent/5 rounded-2xl border border-accent/10 space-y-2">
               <div className="flex items-center gap-2">
                 <Info className="size-4 text-accent" />
-                <p className="text-[10px] font-black uppercase tracking-widest text-accent">Value Justification</p>
+                <p className="text-[10px] font-black uppercase tracking-widest text-accent">Justification</p>
               </div>
               <p className="text-xs text-slate-600 leading-relaxed italic">
                 "{result.valueJustification}"
@@ -111,7 +111,7 @@ export function QuickAuditTool() {
                 Audit Another Quote
               </Button>
               <Button variant="link" className="text-accent text-xs font-bold uppercase tracking-widest" asChild>
-                <a href="/onboarding">Save this DNA & Launch My Business <ArrowRight className="size-3 ml-2" /></a>
+                <a href="/onboarding">Launch My Business Now <ArrowRight className="size-3 ml-2" /></a>
               </Button>
             </div>
           </div>

@@ -31,7 +31,7 @@ export default function ConsultantPage() {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'assistant',
-      content: "I'm your Strategic Co-Founder. Tell me about the work you've done or the project you're envisioning. I'll handle the architecture."
+      content: "I'm your Strategic Partner. Tell me about the work you've done or the project you're envisioning. I'll help you architect the win."
     }
   ])
   const scrollRef = useRef<HTMLDivElement>(null)
@@ -87,14 +87,11 @@ export default function ConsultantPage() {
   const handleLaunchInvoice = (data: StrategicConsultantOutput['draftData']) => {
     if (!user || !firestore || !data) return
     
-    // Find or create client logic could go here, for MVP we'll use a placeholder or prompt user
-    // For now, let's just log and toast to show it's wired.
     toast({ 
       title: "Architecting Invoice...", 
       description: `Launching strategic billing for ${data.clientName || 'your client'}.` 
     })
     
-    // In a full implementation, we'd addDoc to 'invoices' and 'lineItems' and redirect
     router.push('/dashboard/invoices/new') 
   }
 
@@ -103,10 +100,10 @@ export default function ConsultantPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-black tracking-tight">Strategic Partner</h1>
-          <p className="text-muted-foreground">Zero-form architecture for your professional identity.</p>
+          <p className="text-muted-foreground">Zero-form architecture for your professional billing.</p>
         </div>
         <Badge variant="outline" className="border-accent text-accent bg-accent/5 font-black uppercase tracking-widest text-[10px]">
-          Sovereign Context Active
+          Partner Mode Active
         </Badge>
       </div>
 
@@ -189,7 +186,7 @@ export default function ConsultantPage() {
         <div className="p-6 border-t bg-slate-50/50">
           <div className="relative flex items-center gap-2">
             <Input 
-              placeholder="e.g. 'I just finished a 10 hour logo design for Nexus Creative...'" 
+              placeholder="e.g. 'I just finished a 10 hour branding project for Nexus Creative...'" 
               className="h-14 rounded-2xl pr-20 bg-white border-slate-200 shadow-inner text-sm"
               value={input}
               onChange={(e) => setInput(e.target.value)}
@@ -207,7 +204,7 @@ export default function ConsultantPage() {
           </div>
           <div className="flex items-center gap-2 mt-3 px-2">
             <Sparkles className="size-3 text-accent" />
-            <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">AI is processing your sovereign context</span>
+            <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">AI is processing your professional context</span>
           </div>
         </div>
       </Card>

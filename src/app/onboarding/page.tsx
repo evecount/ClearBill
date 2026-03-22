@@ -1,4 +1,3 @@
-
 "use client"
 
 import { useState, useRef, useEffect } from "react"
@@ -127,7 +126,7 @@ export default function OnboardingPage() {
       setMessages(prev => [
         ...prev,
         { role: 'user', content: description },
-        { role: 'assistant', content: "I've drafted your first elite invoice based on your expertise. Take a look at the preview below.", component: 'final' }
+        { role: 'assistant', content: "I've drafted your first professional invoice based on your expertise. Take a look at the preview below.", component: 'final' }
       ])
     } catch (error) {
       toast({ title: "Partner Busy", description: "Please try again in a moment.", variant: "destructive" })
@@ -209,7 +208,7 @@ export default function OnboardingPage() {
             </div>
             <div>
               <h1 className="text-xl font-black tracking-tight">Start Your First Invoice</h1>
-              <p className="text-[10px] text-muted-foreground font-black uppercase tracking-widest">Professional Onboarding</p>
+              <p className="text-[10px] text-muted-foreground font-black uppercase tracking-widest">Professional Setup</p>
             </div>
           </div>
           <Badge variant="outline" className="text-accent border-accent text-[10px] font-black uppercase tracking-widest">
