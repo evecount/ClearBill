@@ -1,4 +1,3 @@
-
 "use client"
 
 import { useState } from "react"
@@ -7,7 +6,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import { MOCK_INVOICES as INITIAL_INVOICES, MOCK_CLIENTS, MOCK_ORG } from "@/lib/mock-data"
-import { Plus, Search, ExternalLink, MoreVertical, Copy, Trash2, Filter, Download, Send, Share2, Sparkles, Loader2, Calendar, DollarSign, User } from "lucide-react"
+import { Plus, Search, ExternalLink, MoreVertical, Copy, Trash2, Filter, Download, Send, Share2, Sparkles, Loader2, Calendar, DollarSign, User, FileText } from "lucide-react"
 import Link from "next/link"
 import { Input } from "@/components/ui/input"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
