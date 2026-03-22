@@ -1,4 +1,3 @@
-
 "use client"
 
 import { useState } from "react"
@@ -6,11 +5,10 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card"
 import { Textarea } from "@/components/ui/textarea"
-import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { MOCK_CLIENTS, MOCK_ORG } from "@/lib/mock-data"
-import { ArrowLeft, Loader2, Sparkles, Send, FileSignature, Target, Zap, CheckCircle2 } from "lucide-react"
+import { ArrowLeft, Loader2, Sparkles, FileSignature, Target, Zap, CheckCircle2, Quote, BookOpen, Layers } from "lucide-react"
 import Link from "next/link"
 import { useToast } from "@/hooks/use-toast"
 import { generateProposal, type ProposalGeneratorOutput } from "@/ai/flows/proposal-generator"
@@ -18,6 +16,8 @@ import { useUser, useDoc } from "@/firebase"
 import { useMemoFirebase } from "@/firebase/provider"
 import { doc, collection, serverTimestamp } from "firebase/firestore"
 import { addDocumentNonBlocking } from "@/firebase/non-blocking-updates"
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
+import { Slider } from "@/components/ui/slider"
 
 export default function NewProposalPage() {
   const router = useRouter()
@@ -27,6 +27,7 @@ export default function NewProposalPage() {
   const [brief, setBrief] = useState("")
   const [selectedClient, setSelectedClient] = useState("")
   const [proposal, setProposal] = useState<ProposalGeneratorOutput | null>(null)
+  const [selectedTierIndex, setSelectedTierIndex] = useState(0)
 
   const orgRef = useMemoFirebase(() => {
     if (!user) return null
@@ -47,10 +48,11 @@ export default function NewProposalPage() {
         businessName: org?.name || MOCK_ORG.name,
         clientName: MOCK_CLIENTS.find(c => c.id === selectedClient)?.name || "Potential Client",
         projectBrief: brief,
-        brandingTone: org?.brandColor ? "Professional and Value-First" : "Modern Corporate"
+        brandingTone: org?.brandColor ? "Cinematic and Value-First" : "Modern Professional"
       })
       setProposal(result)
-      toast({ title: "Proposal Drafted", description: "AI has architected a high-value proposal based on your brief." })
+      setSelectedTierIndex(0)
+      toast({ title: "Proposal Architected", description: "AI has generated a rich storytelling dashboard for this win." })
     } catch (error) {
       toast({ title: "AI Error", description: "Could not architect proposal at this time.", variant: "destructive" })
     } finally {
@@ -67,7 +69,7 @@ export default function NewProposalPage() {
       title: proposal.proposalTitle,
       status: "Draft",
       content: JSON.stringify(proposal),
-      estimatedAmount: 0, // Could be parsed from AI output if structured better
+      estimatedAmount: proposal.investmentTiers[0]?.amount || 0,
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp()
     }
@@ -82,22 +84,22 @@ export default function NewProposalPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6 pb-20">
+    <div className="max-w-5xl mx-auto space-y-6 pb-20">
       <div className="flex items-center gap-4">
         <Button variant="ghost" size="icon" asChild>
           <Link href="/dashboard/proposals">
             <ArrowLeft className="size-4" />
           </Link>
         </Button>
-        <h1 className="text-3xl font-bold">New Proposal</h1>
+        <h1 className="text-3xl font-bold tracking-tight">Project Architect</h1>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-3">
-        <div className="md:col-span-2 space-y-6">
-          <Card>
+      <div className="grid gap-8 md:grid-cols-3">
+        <div className="md:col-span-2 space-y-8">
+          <Card className="border-none shadow-sm">
             <CardHeader>
-              <CardTitle>Project Brief</CardTitle>
-              <CardDescription>Describe the project in your own words. We'll translate it into a high-value proposal.</CardDescription>
+              <CardTitle>Define the Win</CardTitle>
+              <CardDescription>Describe the project goals. Our AI will translate this into a cinematic proposal dashboard.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="space-y-2">
@@ -114,10 +116,10 @@ export default function NewProposalPage() {
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label>What is the Strategic Win?</Label>
+                <Label>Project Context</Label>
                 <Textarea 
-                  placeholder="e.g. A residential plumbing overhaul for a 1920s bungalow, focusing on future-proofing and modern efficiency..." 
-                  className="min-h-[200px] rounded-2xl p-5 text-lg"
+                  placeholder="e.g. A global retreat platform for wellness experts, including a digital booking home and a documentary film series..." 
+                  className="min-h-[150px] rounded-2xl p-5 text-lg"
                   value={brief}
                   onChange={(e) => setBrief(e.target.value)}
                 />
@@ -130,77 +132,138 @@ export default function NewProposalPage() {
                 disabled={loading}
               >
                 {loading ? <Loader2 className="mr-2 size-5 animate-spin" /> : <Sparkles className="mr-2 size-5" />}
-                {proposal ? "Refine Proposal" : "Architect Proposal"}
+                {proposal ? "Refine Narrative" : "Architect Proposal Dashboard"}
               </Button>
             </CardFooter>
           </Card>
 
           {proposal && (
-            <Card className="border-accent/20 animate-in fade-in slide-in-from-bottom-4 duration-500">
-              <CardHeader className="bg-slate-900 text-white p-8 rounded-t-xl">
-                <div className="flex items-center gap-2 px-3 py-1 bg-accent rounded-full text-[10px] font-black tracking-widest text-white uppercase w-fit mb-4">
-                  <FileSignature className="size-3" /> Branded Proposal
+            <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <div className="text-center space-y-4 pt-8">
+                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-accent">Strategic Proposal Preview</p>
+                <h2 className="text-4xl md:text-5xl font-black text-slate-900 leading-tight">{proposal.proposalTitle}</h2>
+                <p className="text-lg text-slate-500 max-w-2xl mx-auto leading-relaxed">{proposal.executiveSummary}</p>
+              </div>
+
+              {/* Narrative Script Block */}
+              <Card className="bg-slate-50 border-2 border-slate-200 rounded-[2.5rem] overflow-hidden">
+                <CardHeader className="bg-white border-b p-8">
+                  <div className="flex items-center gap-3">
+                    <div className="bg-accent/10 p-2 rounded-xl">
+                      <Quote className="size-5 text-accent" />
+                    </div>
+                    <div>
+                      <CardTitle className="text-xl">Episode 1: The Narrative Opening</CardTitle>
+                      <p className="text-xs text-muted-foreground uppercase tracking-widest font-bold mt-1">Cinematic Script Draft</p>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent className="p-10">
+                   <div className="font-mono text-lg leading-relaxed text-slate-800 bg-white border-l-8 border-accent/30 p-8 rounded-xl shadow-sm italic">
+                      {proposal.narrativeScript}
+                   </div>
+                </CardContent>
+              </Card>
+
+              {/* Episodic Arcs */}
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 mb-6">
+                  <BookOpen className="size-5 text-accent" />
+                  <h3 className="text-lg font-black uppercase tracking-widest text-slate-900">Project Story Arcs</h3>
                 </div>
-                <CardTitle className="text-3xl font-black">{proposal.proposalTitle}</CardTitle>
-              </CardHeader>
-              <CardContent className="p-8 space-y-8">
-                <div className="space-y-4">
-                  <h3 className="text-lg font-bold flex items-center gap-2">
-                    <Target className="size-5 text-accent" /> Strategic Objective
-                  </h3>
-                  <p className="text-slate-600 leading-relaxed italic border-l-4 border-accent/20 pl-4">
-                    {proposal.executiveSummary}
-                  </p>
+                <Accordion type="single" collapsible className="w-full space-y-4">
+                  {proposal.episodes.map((episode, idx) => (
+                    <AccordionItem key={idx} value={`item-${idx}`} className="bg-white rounded-2xl border px-6 py-2 shadow-sm">
+                      <AccordionTrigger className="hover:no-underline py-4">
+                        <div className="flex items-center gap-4 text-left">
+                          <span className="text-accent font-black text-xs">EPISODE 0{idx + 1}</span>
+                          <span className="font-bold text-lg">{episode.title}</span>
+                        </div>
+                      </AccordionTrigger>
+                      <AccordionContent className="text-slate-600 text-base leading-relaxed pt-2 pb-6 border-t mt-2">
+                        {episode.arc}
+                      </AccordionContent>
+                    </AccordionItem>
+                  ))}
+                </Accordion>
+              </div>
+
+              {/* Investment Planner */}
+              <div className="bg-slate-900 text-white rounded-[3rem] p-10 md:p-16 space-y-12">
+                <div className="space-y-4 text-center">
+                  <h3 className="text-3xl font-black italic font-serif">Investment Roadmap</h3>
+                  <p className="text-slate-400 max-w-md mx-auto text-sm">Adjust the slider to see how different budget tiers unlock specific building blocks of the project win.</p>
                 </div>
 
-                <div className="space-y-4">
-                  <h3 className="text-lg font-bold flex items-center gap-2">
-                    <Zap className="size-5 text-accent" /> Defined Deliverables
-                  </h3>
-                  <div className="grid gap-3">
-                    {proposal.deliverables.map((item, i) => (
-                      <div key={i} className="flex items-start gap-3 p-3 bg-slate-50 rounded-xl border">
-                        <CheckCircle2 className="size-4 text-emerald-500 mt-0.5 shrink-0" />
-                        <span className="text-sm font-medium text-slate-700">{item}</span>
+                <div className="space-y-8">
+                  <div className="flex justify-between items-end">
+                    <div className="space-y-1">
+                      <p className="text-[10px] font-black uppercase tracking-widest text-accent">Active Tier</p>
+                      <p className="text-5xl font-black font-mono tracking-tighter">${proposal.investmentTiers[selectedTierIndex].amount.toLocaleString()}</p>
+                    </div>
+                    <div className="text-right">
+                       <span className="bg-accent text-white px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg shadow-accent/20">
+                         {proposal.investmentTiers[selectedTierIndex].label}
+                       </span>
+                    </div>
+                  </div>
+
+                  <Slider 
+                    value={[selectedTierIndex]} 
+                    max={proposal.investmentTiers.length - 1} 
+                    step={1} 
+                    onValueChange={([val]) => setSelectedTierIndex(val)}
+                    className="py-4"
+                  />
+
+                  <div className="grid gap-4 pt-6">
+                    <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-2">Deliverables for this tier:</p>
+                    {proposal.investmentTiers[selectedTierIndex].scope.map((item, i) => (
+                      <div key={i} className="flex items-center gap-3 p-4 bg-white/5 border border-white/10 rounded-2xl">
+                        <CheckCircle2 className="size-4 text-accent" />
+                        <span className="text-sm font-medium">{item}</span>
                       </div>
                     ))}
                   </div>
                 </div>
+              </div>
 
-                <div className="space-y-4">
-                  <h3 className="text-lg font-bold">Pricing Framework</h3>
-                  <div className="p-4 bg-accent/5 rounded-xl border border-accent/10">
-                    <p className="text-sm text-slate-700 leading-relaxed">{proposal.pricingStructure}</p>
-                  </div>
-                </div>
-
-                <div className="pt-8 border-t text-center italic text-sm text-muted-foreground">
-                  {proposal.closingStatement}
-                </div>
-              </CardContent>
-              <CardFooter className="bg-slate-50 p-6 rounded-b-xl">
-                <Button className="w-full h-12 bg-slate-900 hover:bg-slate-800" onClick={handleSave}>
-                  Save & Prepare Delivery
+              <div className="flex justify-center pt-8">
+                <Button className="h-16 px-12 text-xl bg-slate-900 hover:bg-slate-800 rounded-2xl shadow-2xl" onClick={handleSave}>
+                  Save & Launch Dashboard
                 </Button>
-              </CardFooter>
-            </Card>
+              </div>
+            </div>
           )}
         </div>
 
         <div className="space-y-6">
-          <Card className="bg-slate-900 text-white border-none shadow-xl">
+          <Card className="bg-accent text-white border-none shadow-xl rounded-[2rem]">
             <CardHeader>
-              <CardTitle className="text-lg">Why use proposals?</CardTitle>
+              <div className="bg-white/10 p-2 rounded-xl w-fit mb-4">
+                <Layers className="size-5 text-white" />
+              </div>
+              <CardTitle className="text-xl">The Story Method</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4 text-sm text-slate-400 leading-relaxed">
+            <CardContent className="space-y-4 text-sm text-white/80 leading-relaxed">
               <p>
-                Proposals are the "Deep Water" bridge. They allow you to move past the ego of the client and the expert.
+                Standard proposals are checklists. Strategic Dashboards are narratives.
               </p>
               <p>
-                By defining the <strong>Strategic Win</strong> upfront, you eliminate scope creep and ensure your expertise is <strong>Clearly Valued</strong> before the work begins.
+                By framing the project as a series of <strong>Episodes</strong>, you invite the client to become a character in the "Win" you are architecting.
+              </p>
+              <p>
+                This cinematic approach justifies elite rates by shifting the focus from labor to <strong>Legacy</strong>.
               </p>
             </CardContent>
           </Card>
+
+          <div className="p-6 bg-slate-100 rounded-[2rem] border border-dashed border-slate-300">
+             <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-4 text-center">Interactive Tooltips</p>
+             <p className="text-xs text-slate-500 leading-relaxed italic text-center">
+               "Your clients aren't just buying services. They are buying the certainty of a successful outcome."
+             </p>
+          </div>
         </div>
       </div>
     </div>
