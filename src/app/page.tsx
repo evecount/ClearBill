@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { CreditCard, ShieldCheck, Zap, ArrowRight, TrendingUp, Sparkles, Layout, Globe, Lock, FileText, Scale, Utensils, Shield, Hammer, BarChart3 } from "lucide-react"
+import { CreditCard, ShieldCheck, Zap, ArrowRight, TrendingUp, Sparkles, Layout, Globe, Lock, FileText, Scale, Utensils, Shield, Hammer, BarChart3, Briefcase, Camera, Home, PenTool, CheckCircle } from "lucide-react"
 import { QuickAuditTool } from "@/components/landing/quick-audit-tool"
 
 export default function LandingPage() {
@@ -43,8 +43,8 @@ export default function LandingPage() {
                   Get Started for Free <ArrowRight className="ml-2 size-6 group-hover:translate-x-1 transition-transform" />
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" className="h-16 px-10 text-xl">
-                How it Works
+              <Button size="lg" variant="outline" className="h-16 px-10 text-xl" asChild>
+                 <Link href="#how-it-works">How it Works</Link>
               </Button>
             </div>
           </div>
@@ -94,26 +94,34 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* Value Prop Section */}
-        <section className="py-24 px-6 bg-white border-b">
-          <div className="max-w-4xl mx-auto text-center space-y-12">
-            <div className="space-y-4">
-              <h2 className="text-sm font-bold tracking-[0.3em] text-accent uppercase">The ClearBill Standard</h2>
-              <h3 className="text-4xl font-bold text-primary">Your Expertise. Clearly Valued.</h3>
+        {/* Profession-Specific Solutions (SEO Boost) */}
+        <section id="how-it-works" className="py-24 px-6 bg-white">
+          <div className="max-w-7xl mx-auto space-y-16">
+            <div className="text-center space-y-4">
+              <h2 className="text-sm font-bold tracking-[0.3em] text-accent uppercase">Built for the Modern Expert</h2>
+              <h3 className="text-4xl font-bold text-primary">Tailored for your specific craft.</h3>
+              <p className="text-muted-foreground max-w-2xl mx-auto">
+                Whether you're closing deals or fixing leaks, ClearBill provides the professional architecture you need to command the rates you deserve.
+              </p>
             </div>
-            <div className="grid md:grid-cols-2 gap-12 text-left">
-              <div className="space-y-4">
-                <p className="text-lg font-medium text-slate-900">Charge what you're actually worth.</p>
-                <p className="text-muted-foreground leading-relaxed">
-                  Independent experts—from personal chefs to plumbers—often use generic tools that fail to reflect their true worth. ClearBill ensures you command market rates by framing your work as a strategic win, not just a list of tasks.
-                </p>
-              </div>
-              <div className="space-y-4">
-                <p className="text-lg font-medium text-slate-900">Value clarity built into every invoice.</p>
-                <p className="text-muted-foreground leading-relaxed">
-                  Every invoice should be a testament to your craft. ClearBill provides the professional infrastructure that honors your expertise and reflects the true value you provide, including AI-drafted contracts that protect your work.
-                </p>
-              </div>
+
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {[
+                { title: "Real Estate Agents", icon: Home, desc: "Professional commission invoices and high-trust agent portals." },
+                { title: "Marketing Freelancers", icon: PenTool, desc: "Outcome-based contracts that highlight strategic campaign value." },
+                { title: "Sales Consultants", icon: TrendingUp, desc: "Success-fee tracking and professional performance summaries." },
+                { title: "Expert Trades", icon: Hammer, desc: "Service quotes that translate labor into 'Property Care Stewardship'." },
+                { title: "Creative Directors", icon: Camera, desc: "High-end portfolios integrated with secure B2B billing." },
+                { title: "Legal & Security", icon: Shield, desc: "AI-drafted compliance terms and professional risk mitigation agreements." },
+                { title: "Culinary Experts", icon: Utensils, desc: "Boutique catering portals for high-value client experiences." },
+                { title: "Corporate Trainers", icon: Briefcase, desc: "Structured workshop billing focused on organizational outcomes." },
+              ].map((role) => (
+                <div key={role.title} className="p-6 rounded-2xl bg-slate-50 border border-slate-100 hover:border-accent/20 transition-all hover:bg-white hover:shadow-xl group">
+                  <role.icon className="size-8 text-accent mb-4 group-hover:scale-110 transition-transform" />
+                  <h4 className="font-bold text-primary mb-2">{role.title}</h4>
+                  <p className="text-xs text-muted-foreground leading-relaxed">{role.desc}</p>
+                </div>
+              ))}
             </div>
           </div>
         </section>
@@ -199,7 +207,7 @@ export default function LandingPage() {
                   "Growth Insights"
                 ].map((feature) => (
                   <div key={feature} className="flex items-center gap-3">
-                    <div className="bg-accent p-1 rounded-full"><ShieldCheck className="size-3" /></div>
+                    <div className="bg-accent p-1 rounded-full"><CheckCircle className="size-3" /></div>
                     <span className="text-sm font-medium">{feature}</span>
                   </div>
                 ))}
@@ -283,7 +291,7 @@ export default function LandingPage() {
             <Link href="#" className="hover:text-primary transition-colors">Support</Link>
           </div>
           <p className="text-xs text-muted-foreground">
-            © 2024 ClearBill. Honoring Every Profession.
+            © 2024 ClearBill. Your Expertise. Clearly Valued.
           </p>
         </div>
       </footer>
