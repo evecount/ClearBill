@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { CreditCard, ShieldCheck, Zap, ArrowRight, TrendingUp, Sparkles, Layout, Globe, Lock, FileText, Scale } from "lucide-react"
+import { CreditCard, ShieldCheck, Zap, ArrowRight, TrendingUp, Sparkles, Layout, Globe, Lock, FileText, Scale, Utensils, Shield, Hammer } from "lucide-react"
 
 export default function LandingPage() {
   return (
@@ -34,7 +34,7 @@ export default function LandingPage() {
               <span className="text-accent underline decoration-accent/20 underline-offset-8">Invoices & Contracts.</span>
             </h1>
             <p className="text-xl md:text-2xl text-muted-foreground leading-relaxed max-w-3xl mx-auto">
-              Charge market rates, never undercharge for your time, and highlight the true value you provide to your clients.
+              Charge market rates, never undercharge for your time again, and highlight the true value you provide to your clients.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-6">
               <Button size="lg" className="h-16 px-10 text-xl bg-accent hover:bg-accent/90 shadow-xl shadow-accent/20 group" asChild>
@@ -60,51 +60,75 @@ export default function LandingPage() {
               <div className="space-y-4">
                 <p className="text-lg font-medium text-slate-900">Charge what you're actually worth.</p>
                 <p className="text-muted-foreground leading-relaxed">
-                  Too often, independent experts—from personal chefs to security specialists—are forced to use generic tools that fail to reflect their true worth. ClearBill ensures you command market rates by framing your work as a strategic win.
+                  Independent experts—from personal chefs to plumbers—often use generic tools that fail to reflect their true worth. ClearBill ensures you command market rates by framing your work as a strategic win, not just a list of chores.
                 </p>
               </div>
               <div className="space-y-4">
                 <p className="text-lg font-medium text-slate-900">Value clarity built into every invoice.</p>
                 <p className="text-muted-foreground leading-relaxed">
-                  Every invoice should be a testament to your craft. ClearBill provides the digital infrastructure that honors your expertise and reflects the true value you provide, including AI-drafted contracts that protect your work.
+                  Every invoice should be a testament to your craft. ClearBill provides the professional infrastructure that honors your expertise and reflects the true value you provide, including AI-drafted contracts that protect your work.
                 </p>
               </div>
             </div>
           </div>
         </section>
 
+        {/* Case Study Led Section */}
         <section className="py-20 px-6 max-w-7xl mx-auto border-t">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-primary">Elevate Your Business</h2>
-            <p className="text-muted-foreground mt-2">Bridge the gap between your skill and the client's perception of value.</p>
+          <div className="text-center mb-16 space-y-4">
+            <h2 className="text-3xl font-bold text-primary">Honoring Every Profession</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">See how independent experts use ClearBill to transform how they are perceived—and how they are paid.</p>
           </div>
-          <div className="grid md:grid-cols-3 gap-12">
-            <div className="group space-y-4 p-6 rounded-3xl hover:bg-slate-50 transition-colors">
-              <div className="bg-accent/10 p-3 rounded-2xl w-fit group-hover:scale-110 transition-transform">
-                <Layout className="size-8 text-accent" />
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="group space-y-6 p-8 rounded-3xl bg-white border border-slate-100 shadow-sm hover:shadow-xl hover:border-accent/10 transition-all">
+              <div className="bg-orange-500/10 p-3 rounded-2xl w-fit">
+                <Utensils className="size-8 text-orange-600" />
               </div>
-              <h3 className="text-2xl font-bold">Professional Portals</h3>
-              <p className="text-muted-foreground leading-relaxed">
-                Present a branded facade that reflects your commitment to quality and command the rates your expertise deserves.
-              </p>
+              <div className="space-y-2">
+                <h3 className="text-xl font-bold">The Culinary Consultant</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  "I used to just be 'the cook.' With ClearBill, I send professional portals that highlight my nutritional expertise. I've increased my dinner party rates by 40% because clients now see the strategic value of my service."
+                </p>
+              </div>
+              <div className="pt-4 border-t border-dashed">
+                <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-accent">
+                  <Layout className="size-3" /> Branded Portals
+                </div>
+              </div>
             </div>
-            <div className="group space-y-4 p-6 rounded-3xl hover:bg-slate-50 transition-colors">
-              <div className="bg-blue-500/10 p-3 rounded-2xl w-fit group-hover:scale-110 transition-transform">
-                <Scale className="size-8 text-blue-500" />
+
+            <div className="group space-y-6 p-8 rounded-3xl bg-white border border-slate-100 shadow-sm hover:shadow-xl hover:border-accent/10 transition-all">
+              <div className="bg-blue-500/10 p-3 rounded-2xl w-fit">
+                <Shield className="size-8 text-blue-600" />
               </div>
-              <h3 className="text-2xl font-bold">Outcome Agreements</h3>
-              <p className="text-muted-foreground leading-relaxed">
-                Stop guessing on terms. Attach professional, AI-drafted agreements to every invoice to protect your work and your time.
-              </p>
+              <div className="space-y-2">
+                <h3 className="text-xl font-bold">The Risk Mitigation Expert</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  "Security specialists often struggle to draft legal terms. ClearBill's AI drafts my Outcome Agreements in seconds. It ensures my corporate clients understand the scope and the 'win' they are paying for."
+                </p>
+              </div>
+              <div className="pt-4 border-t border-dashed">
+                <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-blue-600">
+                  <Scale className="size-3" /> AI Outcome Agreements
+                </div>
+              </div>
             </div>
-            <div className="group space-y-4 p-6 rounded-3xl hover:bg-slate-50 transition-colors">
-              <div className="bg-emerald-500/10 p-3 rounded-2xl w-fit group-hover:scale-110 transition-transform">
-                <Zap className="size-8 text-emerald-500" />
+
+            <div className="group space-y-6 p-8 rounded-3xl bg-white border border-slate-100 shadow-sm hover:shadow-xl hover:border-accent/10 transition-all">
+              <div className="bg-emerald-500/10 p-3 rounded-2xl w-fit">
+                <Hammer className="size-8 text-emerald-600" />
               </div>
-              <h3 className="text-2xl font-bold">Value Highlighting</h3>
-              <p className="text-muted-foreground leading-relaxed">
-                Use AI to translate technical tasks into business outcomes, ensuring your clients see exactly why your time is valuable.
-              </p>
+              <div className="space-y-2">
+                <h3 className="text-xl font-bold">The Property Care Steward</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  "Handymen are often undervalued. I use ClearBill to translate 'fixing a leak' into 'Long-term Property Asset Protection.' Highlighting the outcome rather than the task has changed how my clients respect my time."
+                </p>
+              </div>
+              <div className="pt-4 border-t border-dashed">
+                <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-emerald-600">
+                  <Zap className="size-3" /> Value Highlighting
+                </div>
+              </div>
             </div>
           </div>
         </section>
