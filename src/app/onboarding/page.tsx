@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
-import { Sparkles, ArrowRight, Building2, Mail, MapPin, Loader2, CheckCircle2, FileText, Globe, ShieldCheck, Palette, Camera, Scissors, Briefcase, Code, Music, Dumbbell, Star, Mic, Shield } from "lucide-react"
+import { Sparkles, ArrowRight, Building2, Mail, MapPin, Loader2, CheckCircle2, FileText, Globe, ShieldCheck, Palette, Camera, Scissors, Briefcase, Code, Music, Dumbbell, Star, Mic, Shield, GraduationCap, Hammer, PawPrint } from "lucide-react"
 import { consultBusinessOnboarding, type OnboardingConsultantOutput } from "@/ai/flows/onboarding-consultant"
 import { useToast } from "@/hooks/use-toast"
 import Link from "next/link"
@@ -16,9 +16,9 @@ import { cn } from "@/lib/utils"
 
 const QUICK_STARTS = [
   {
-    label: "Graphic Designer",
-    icon: Palette,
-    text: "I am a freelance graphic designer specializing in minimalist brand identities and high-end typography for tech startups."
+    label: "Private Tutor",
+    icon: GraduationCap,
+    text: "I provide private SAT and college prep tutoring for high school students. I need to look professional to parents who are investing in their children's future and want clear, branded billing."
   },
   {
     label: "Lash Artist",
@@ -31,9 +31,14 @@ const QUICK_STARTS = [
     text: "I am an independent beauty consultant providing personalized skincare regimens and makeup artistry for weddings and corporate events."
   },
   {
-    label: "Photographer",
-    icon: Camera,
-    text: "I am a professional architectural photographer capturing minimalist interior spaces for real estate firms and design magazines."
+    label: "Handyman",
+    icon: Hammer,
+    text: "I provide high-quality home repair and maintenance services. My clients are homeowners who expect clear, professional billing for my time and materials that reflects my reliability."
+  },
+  {
+    label: "Dog Walker",
+    icon: PawPrint,
+    text: "I run a boutique dog walking and pet sitting service for busy professionals. A professional portal helps build the immense trust required for them to leave their keys and pets with me."
   },
   {
     label: "Sound Engineer",
@@ -74,11 +79,6 @@ const QUICK_STARTS = [
     label: "Facility Specialist",
     icon: Building2,
     text: "I provide specialized commercial cleaning and facility maintenance for boutique medical offices. Professionalism in my billing is key to maintaining my long-term corporate contracts."
-  },
-  {
-    label: "Dev Consultant",
-    icon: Code,
-    text: "I am a senior software consultant specializing in building high-performance Next.js applications and cloud infrastructure for SMEs."
   }
 ]
 
