@@ -1,0 +1,17 @@
+
+{
+  "placeholderImages": [
+    {
+      "id": "org-logo-1",
+      "description": "Professional corporate logo placeholder",
+      "imageUrl": "https://picsum.photos/seed/org1/200/200",
+      "imageHint": "corporate logo"
+    },
+    {
+      "id": "hero-invoicing",
+      "description": "Financial dashboard showing invoices and charts",
+      "imageUrl": "https://picsum.photos/seed/finance/1200/800",
+      "imageHint": "financial dashboard"
+    }
+  ]
+}
