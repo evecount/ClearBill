@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
-import { ArrowRight, Loader2, ShieldCheck, Scissors, Music, HeartPulse, Code, Utensils, Hammer, Shield, Sparkles, Zap, Target, Star } from "lucide-react"
+import { ArrowRight, Loader2, ShieldCheck, Scissors, Music, HeartPulse, Code, Utensils, Hammer, Shield, Sparkles, Zap, Target, Star, Palette, PenTool } from "lucide-react"
 import { consultBusinessOnboarding, type OnboardingConsultantOutput } from "@/ai/flows/onboarding-consultant"
 import { useToast } from "@/hooks/use-toast"
 import { cn } from "@/lib/utils"
@@ -18,11 +18,11 @@ import { doc, serverTimestamp } from "firebase/firestore"
 import { Separator } from "@/components/ui/separator"
 
 const QUICK_STARTS = [
+  { label: "Artist", icon: Palette, text: "I am an artist creating a proposal for a museum to showcase a series of Mekong Delta inspired storytelling installations." },
+  { label: "Graphic Designer", icon: PenTool, text: "I am a graphic designer creating a brand logo and visual identity system for a new sustainable fashion startup." },
   { label: "Personal Chef", icon: Utensils, text: "I am a private personal chef providing boutique catering for small dinner parties and customized weekly meal prep for busy families." },
   { label: "Software Architect", icon: Code, text: "I provide high-end software architectural consulting and delivery management for scale-up startups." },
-  { label: "Lash Artist", icon: Scissors, text: "I run a boutique eyelash studio providing luxury extensions and lash lifts." },
   { label: "Handyman", icon: Hammer, text: "I provide high-quality home repair and maintenance services for local homeowners." },
-  { label: "Sound Engineer", icon: Music, text: "I am a freelance sound engineer specializing in podcast post-production and custom sound design." },
   { label: "Security Expert", icon: Shield, text: "I provide private security and executive protection for high-profile events and corporate offices." },
   { label: "Wellness Coach", icon: HeartPulse, text: "I provide personalized health and longevity coaching for high-performance executives." }
 ]
@@ -196,11 +196,11 @@ export default function OnboardingPage() {
                         key={qs.label}
                         onClick={() => setDescription(qs.text)}
                         className={cn(
-                          "flex items-center gap-2 px-4 py-2 rounded-xl text-sm border transition-all hover:bg-slate-50",
+                          "flex items-center gap-2 px-4 py-2 rounded-xl text-sm border transition-all hover:bg-slate-50 text-left",
                           description === qs.text ? "bg-accent border-accent text-white shadow-lg" : "bg-white border-slate-200 text-slate-600"
                         )}
                       >
-                        <qs.icon className="size-3" />
+                        <qs.icon className="size-3 shrink-0" />
                         {qs.label}
                       </button>
                     ))}
