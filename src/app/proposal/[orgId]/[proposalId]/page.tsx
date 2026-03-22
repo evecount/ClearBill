@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useParams } from "next/navigation"
@@ -8,10 +9,11 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button"
 import { Slider } from "@/components/ui/slider"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
-import { Loader2, Quote, BookOpen, CheckCircle2, ShieldCheck, CreditCard, Layers, ExternalLink } from "lucide-react"
+import { Loader2, Quote, BookOpen, CheckCircle2, ShieldCheck, CreditCard, Layers, ExternalLink, ArrowRight } from "lucide-react"
 import { useState } from "react"
 import { type ProposalGeneratorOutput } from "@/ai/flows/proposal-generator"
 import Link from "next/link"
+import { cn } from "@/lib/utils"
 
 export default function PublicProposalPage() {
   const params = useParams()
@@ -69,8 +71,10 @@ export default function PublicProposalPage() {
     )
   }
 
+  const activeTier = proposal.investmentTiers[selectedTierIndex]
+
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-accent/20">
+    <div className="min-h-screen bg-slate-50 text-slate-900 font-body selection:bg-accent/20">
       {/* Navigation */}
       <nav className="sticky top-0 bg-white/95 backdrop-blur-md z-50 border-b border-slate-200/50 shadow-sm">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
@@ -85,7 +89,7 @@ export default function PublicProposalPage() {
               <a href="#story" className="text-[10px] font-black uppercase tracking-widest hover:text-accent transition-colors">The Story</a>
               <a href="#investment" className="text-[10px] font-black uppercase tracking-widest hover:text-accent transition-colors">Investment</a>
             </div>
-            <Button className="bg-accent hover:bg-accent/90 text-white rounded-full px-6 text-xs font-black uppercase tracking-widest">
+            <Button className="bg-accent hover:bg-accent/90 text-white rounded-full px-6 text-xs font-black uppercase tracking-widest shadow-lg shadow-accent/20">
               Accept Proposal
             </Button>
           </div>
@@ -144,7 +148,7 @@ export default function PublicProposalPage() {
         </section>
 
         {/* Investment Planner Section */}
-        <section id="investment" className="max-w-5xl mx-auto px-6 mb-32">
+        <section id="investment" className="max-w-5xl mx-auto px-6 mb-32 scroll-mt-24">
           <div className="bg-slate-900 text-white rounded-[3.5rem] p-10 md:p-20 shadow-2xl relative overflow-hidden">
             <div className="absolute top-0 right-0 p-32 bg-accent/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
             
@@ -152,7 +156,7 @@ export default function PublicProposalPage() {
               <div className="space-y-4 text-center">
                 <h2 className="text-4xl font-black italic">Investment Roadmap</h2>
                 <p className="text-slate-400 max-w-md mx-auto text-sm leading-relaxed">
-                  Adjust the slider below. Every investment tier unlocks specific, tangible building blocks for your strategic win.
+                  Adjust the slider to calibrate the scope of your expectations. Every tier represents a distinct level of strategic impact.
                 </p>
               </div>
 
@@ -160,10 +164,12 @@ export default function PublicProposalPage() {
                 <div className="flex flex-col md:flex-row justify-between items-center gap-8">
                   <div className="space-y-2 text-center md:text-left">
                     <p className="text-[10px] font-black uppercase tracking-[0.3em] text-accent">Active Investment Tier</p>
-                    <p className="text-6xl font-black font-mono tracking-tighter">${proposal.investmentTiers[selectedTierIndex].amount.toLocaleString()}</p>
+                    <p className="text-6xl font-black font-mono tracking-tighter text-white animate-in fade-in duration-300" key={activeTier.amount}>
+                      ${activeTier.amount.toLocaleString()}
+                    </p>
                   </div>
                   <div className="bg-accent text-white px-8 py-3 rounded-full text-xs font-black uppercase tracking-widest shadow-xl shadow-accent/20">
-                    {proposal.investmentTiers[selectedTierIndex].label}
+                    {activeTier.label}
                   </div>
                 </div>
 
@@ -176,18 +182,20 @@ export default function PublicProposalPage() {
                     className="py-8"
                   />
                   <div className="flex justify-between text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">
-                    <span>Entry Build</span>
-                    <span>Growth Pilot</span>
-                    <span>Full Release</span>
+                    {proposal.investmentTiers.map((tier, i) => (
+                      <span key={i} className={cn(selectedTierIndex === i ? "text-accent" : "")}>
+                        {tier.label}
+                      </span>
+                    ))}
                   </div>
                 </div>
 
                 <div className="pt-8 border-t border-white/10">
-                  <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 mb-6">Deliverables for this tier:</p>
+                  <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 mb-6">Guaranteed Deliverables for this tier:</p>
                   <div className="grid sm:grid-cols-2 gap-4">
-                    {proposal.investmentTiers[selectedTierIndex].scope.map((item, i) => (
-                      <div key={i} className="flex items-center gap-4 p-5 bg-white/5 border border-white/10 rounded-2xl">
-                        <CheckCircle2 className="size-5 text-accent" />
+                    {activeTier.scope.map((item, i) => (
+                      <div key={i} className="flex items-center gap-4 p-5 bg-white/5 border border-white/10 rounded-2xl animate-in slide-in-from-bottom-2 fade-in duration-300" style={{ animationDelay: `${i * 100}ms` }}>
+                        <CheckCircle2 className="size-5 text-accent shrink-0" />
                         <span className="text-sm font-medium leading-relaxed">{item}</span>
                       </div>
                     ))}
@@ -198,8 +206,8 @@ export default function PublicProposalPage() {
               <div className="text-center space-y-8">
                 <div className="flex flex-col items-center gap-4">
                    <p className="text-xs text-slate-400 font-medium">Recommended Model: <span className="text-white font-bold">{proposal.pricingStructure}</span></p>
-                   <Button className="h-20 px-12 text-xl bg-accent hover:bg-accent/90 rounded-2xl shadow-2xl transition-all hover:scale-[1.02]">
-                      Accept & Launch Dashboard
+                   <Button className="h-20 px-12 text-xl bg-accent hover:bg-accent/90 rounded-2xl shadow-2xl transition-all hover:scale-[1.02] group">
+                      Accept & Lock In This Scope <ArrowRight className="ml-3 size-6 group-hover:translate-x-1 transition-transform" />
                    </Button>
                 </div>
                 <p className="text-[10px] text-slate-500 font-medium uppercase tracking-[0.2em]">Secure Strategic Agreement | Powered by ClearBill</p>
@@ -214,7 +222,7 @@ export default function PublicProposalPage() {
               <ShieldCheck className="size-8 text-accent mb-2" />
               <h3 className="text-xl font-bold">The Strategic Win Guarantee</h3>
               <p className="text-sm text-slate-500 max-w-sm leading-relaxed">
-                "We don't bill for hours. We bill for the certainty of your success."
+                "We don't bill for hours. We bill for the certainty of your success within the defined roadmap."
               </p>
            </div>
            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">

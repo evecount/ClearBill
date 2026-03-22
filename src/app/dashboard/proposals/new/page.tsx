@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useState } from "react"
@@ -7,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { ArrowLeft, Loader2, Sparkles, BookOpen, CheckCircle2, Quote, Layers, ChevronRight } from "lucide-react"
+import { ArrowLeft, Loader2, Sparkles, BookOpen, CheckCircle2, Quote, Layers, ChevronRight, Scale } from "lucide-react"
 import Link from "next/link"
 import { useToast } from "@/hooks/use-toast"
 import { generateProposal, type ProposalGeneratorOutput } from "@/ai/flows/proposal-generator"
@@ -62,7 +63,7 @@ export default function NewProposalPage() {
       
       setProposal(result)
       setSelectedTierIndex(0)
-      toast({ title: "Proposal Architected", description: "AI has generated a rich storytelling roadmap." })
+      toast({ title: "Proposal Architected", description: "AI has generated a rich storytelling roadmap with investment tiers." })
     } catch (error) {
       toast({ title: "AI Error", description: "Could not architect proposal.", variant: "destructive" })
     } finally {
@@ -106,7 +107,7 @@ export default function NewProposalPage() {
 
       <div className="grid gap-8 lg:grid-cols-3">
         <div className="lg:col-span-2 space-y-8">
-          <Card className="border-none shadow-sm">
+          <Card className="border-none shadow-sm bg-white">
             <CardHeader>
               <CardTitle>Define the Strategic Win</CardTitle>
               <CardDescription>Anchored in {org?.name || 'your business'}'s expertise.</CardDescription>
@@ -128,7 +129,7 @@ export default function NewProposalPage() {
               <div className="space-y-2">
                 <Label>Project Context</Label>
                 <Textarea 
-                  placeholder="Describe the project goals and high-level outcomes..." 
+                  placeholder="Describe the project goals and high-level outcomes (e.g., 'A museum exhibit design in Singapore')..." 
                   className="min-h-[150px] rounded-2xl p-5 text-lg"
                   value={brief}
                   onChange={(e) => setBrief(e.target.value)}
@@ -155,24 +156,48 @@ export default function NewProposalPage() {
                 <p className="text-lg text-slate-500 max-w-2xl mx-auto leading-relaxed">{proposal.executiveSummary}</p>
               </div>
 
-              <Card className="bg-slate-50 border-2 border-slate-200 rounded-[2.5rem] overflow-hidden">
-                <CardHeader className="bg-white border-b p-8">
+              {/* Investment Slider Preview for Merchant */}
+              <div className="bg-slate-900 text-white rounded-[3rem] p-8 md:p-12 space-y-8 shadow-2xl">
+                <div className="flex items-center justify-between border-b border-white/10 pb-6">
                   <div className="flex items-center gap-3">
-                    <div className="bg-accent/10 p-2 rounded-xl">
-                      <Quote className="size-5 text-accent" />
+                    <Scale className="size-5 text-accent" />
+                    <h3 className="text-xl font-black italic">Investment Roadmap Preview</h3>
+                  </div>
+                  <Badge variant="outline" className="text-accent border-accent uppercase tracking-widest text-[10px] font-bold">Client View</Badge>
+                </div>
+
+                <div className="space-y-8">
+                  <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+                    <div className="space-y-1 text-center md:text-left">
+                      <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Active Tier</p>
+                      <p className="text-4xl font-black font-mono tracking-tighter">${proposal.investmentTiers[selectedTierIndex].amount.toLocaleString()}</p>
                     </div>
-                    <div>
-                      <CardTitle className="text-xl">The Narrative Opening</CardTitle>
-                      <p className="text-xs text-muted-foreground uppercase tracking-widest font-bold mt-1">Strategic Script</p>
+                    <div className="bg-accent text-white px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg">
+                      {proposal.investmentTiers[selectedTierIndex].label}
                     </div>
                   </div>
-                </CardHeader>
-                <CardContent className="p-10">
-                   <div className="font-mono text-lg leading-relaxed text-slate-800 bg-white border-l-8 border-accent/30 p-8 rounded-xl shadow-sm italic">
-                      {proposal.narrativeScript}
-                   </div>
-                </CardContent>
-              </Card>
+
+                  <Slider 
+                    value={[selectedTierIndex]} 
+                    max={proposal.investmentTiers.length - 1} 
+                    step={1} 
+                    onValueChange={([val]) => setSelectedTierIndex(val)}
+                    className="py-4"
+                  />
+
+                  <div className="grid gap-4 pt-4">
+                    <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-2">Scope of Expectations:</p>
+                    <div className="grid sm:grid-cols-2 gap-3">
+                      {proposal.investmentTiers[selectedTierIndex].scope.map((item, i) => (
+                        <div key={i} className="flex items-center gap-3 p-4 bg-white/5 border border-white/10 rounded-2xl">
+                          <CheckCircle2 className="size-4 text-accent" />
+                          <span className="text-xs font-medium">{item}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
 
               <div className="space-y-4">
                 <div className="flex items-center gap-2 mb-6">
@@ -196,48 +221,9 @@ export default function NewProposalPage() {
                 </Accordion>
               </div>
 
-              <div className="bg-slate-900 text-white rounded-[3rem] p-10 md:p-16 space-y-12 shadow-2xl">
-                <div className="space-y-4 text-center">
-                  <h3 className="text-3xl font-black italic">Investment Roadmap</h3>
-                  <p className="text-slate-400 max-w-md mx-auto text-sm">Select a tier to see the unlocked outcomes.</p>
-                </div>
-
-                <div className="space-y-8">
-                  <div className="flex flex-col md:flex-row justify-between items-center gap-8">
-                    <div className="space-y-1 text-center md:text-left">
-                      <p className="text-[10px] font-black uppercase tracking-widest text-accent">Active Tier</p>
-                      <p className="text-5xl font-black font-mono tracking-tighter">${proposal.investmentTiers[selectedTierIndex].amount.toLocaleString()}</p>
-                    </div>
-                    <div className="bg-accent text-white px-6 py-2 rounded-full text-xs font-black uppercase tracking-widest shadow-lg shadow-accent/20">
-                      {proposal.investmentTiers[selectedTierIndex].label}
-                    </div>
-                  </div>
-
-                  <Slider 
-                    value={[selectedTierIndex]} 
-                    max={proposal.investmentTiers.length - 1} 
-                    step={1} 
-                    onValueChange={([val]) => setSelectedTierIndex(val)}
-                    className="py-4"
-                  />
-
-                  <div className="grid gap-4 pt-6">
-                    <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-2">Deliverables:</p>
-                    <div className="grid sm:grid-cols-2 gap-3">
-                      {proposal.investmentTiers[selectedTierIndex].scope.map((item, i) => (
-                        <div key={i} className="flex items-center gap-3 p-4 bg-white/5 border border-white/10 rounded-2xl">
-                          <CheckCircle2 className="size-4 text-accent" />
-                          <span className="text-sm font-medium">{item}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
               <div className="flex justify-center pt-8">
                 <Button className="h-16 px-12 text-xl bg-slate-900 hover:bg-slate-800 rounded-2xl shadow-2xl group" onClick={handleSave}>
-                  Save & Launch Dashboard <ChevronRight className="ml-2 size-5 group-hover:translate-x-1 transition-transform" />
+                  Save & Deliver Dashboard <ChevronRight className="ml-2 size-5 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </div>
             </div>
@@ -250,19 +236,31 @@ export default function NewProposalPage() {
               <div className="bg-white/10 p-2 rounded-xl w-fit mb-4">
                 <Layers className="size-5 text-white" />
               </div>
-              <CardTitle className="text-xl">The Story Method</CardTitle>
+              <CardTitle className="text-xl">Prevent Scope Creep</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4 text-sm text-white/80 leading-relaxed">
               <p>
-                Proposals built by {org?.name || 'experts'} are grounded in narrative certainty.
+                By providing clear investment tiers, you anchor the client's expectations to the price they pay.
               </p>
               <p>
-                By starting with facts and ending with a cinematic win, you ensure your clients see the value long before the bill arrives.
+                The <strong>Investment Roadmap</strong> slider makes it physically impossible for them to expect "Mars" on an "Earth" budget.
               </p>
             </CardContent>
           </Card>
         </div>
       </div>
     </div>
+  )
+}
+
+function Badge({ children, className, variant }: { children: React.ReactNode, className?: string, variant?: string }) {
+  return (
+    <span className={cn(
+      "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors",
+      variant === "outline" ? "border-current" : "bg-primary text-primary-foreground",
+      className
+    )}>
+      {children}
+    </span>
   )
 }
