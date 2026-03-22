@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
-import { Sparkles, ArrowRight, Building2, Mail, MapPin, Loader2, CheckCircle2, FileText, Globe, ShieldCheck, Palette, Camera, Scissors, Briefcase, Code, Music, Dumbbell, Home } from "lucide-react"
+import { Sparkles, ArrowRight, Building2, Mail, MapPin, Loader2, CheckCircle2, FileText, Globe, ShieldCheck, Palette, Camera, Scissors, Briefcase, Code, Music, Dumbbell, Star } from "lucide-react"
 import { consultBusinessOnboarding, type OnboardingConsultantOutput } from "@/ai/flows/onboarding-consultant"
 import { useToast } from "@/hooks/use-toast"
 import Link from "next/link"
@@ -21,9 +21,14 @@ const QUICK_STARTS = [
     text: "I am a freelance graphic designer specializing in minimalist brand identities and high-end typography for tech startups."
   },
   {
-    label: "Eyelash Tech",
+    label: "Lash Artist",
     icon: Scissors,
-    text: "I run a luxury eyelash studio focused on providing high-quality, long-lasting extensions and lash lifts for busy professionals."
+    text: "I run a boutique eyelash studio providing luxury extensions and lash lifts. I need to look high-end and professional for my premium clients."
+  },
+  {
+    label: "Beauty Consultant",
+    icon: Sparkles,
+    text: "I am an independent beauty consultant providing personalized skincare regimens and makeup artistry for weddings and corporate events."
   },
   {
     label: "Photographer",
