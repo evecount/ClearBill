@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
@@ -22,6 +22,11 @@ export default function InvoicesPage() {
   const [shareInvoice, setShareInvoice] = useState<any>(null)
   const [aiEmail, setAiEmail] = useState<InvoiceEmailOutput | null>(null)
   const [loadingEmail, setLoadingEmail] = useState(false)
+  const [origin, setOrigin] = useState("")
+
+  useEffect(() => {
+    setOrigin(window.location.origin)
+  }, [])
 
   const filteredInvoices = invoices.filter(inv => {
     const client = MOCK_CLIENTS.find(c => c.id === inv.clientId)
@@ -32,7 +37,7 @@ export default function InvoicesPage() {
   })
 
   const copyLink = (id: string) => {
-    const url = `${window.location.origin}/p/${id}`
+    const url = `${origin || window.location.origin}/p/${id}`
     navigator.clipboard.writeText(url)
     toast({ title: "Link Copied", description: "Professional payment portal URL copied to clipboard." })
   }
@@ -287,7 +292,7 @@ export default function InvoicesPage() {
               <p className="text-sm font-medium">Payment Link</p>
               <div className="flex items-center gap-2 p-3 bg-slate-50 rounded-xl border">
                 <code className="text-xs truncate flex-1 font-mono">
-                  {window.location.origin}/p/{shareInvoice?.id}
+                  {origin}/p/{shareInvoice?.id}
                 </code>
                 <Button size="icon" variant="ghost" className="size-8" onClick={() => copyLink(shareInvoice?.id)}>
                   <Copy className="size-3" />
@@ -318,11 +323,11 @@ export default function InvoicesPage() {
                     <Separator className="my-2" />
                     <p className="font-bold text-[10px] uppercase tracking-widest text-muted-foreground">Body</p>
                     <div className="whitespace-pre-wrap text-slate-600 leading-relaxed italic">
-                      {aiEmail.body.replace('[PAYMENT_LINK]', `${window.location.origin}/p/${shareInvoice?.id}`)}
+                      {aiEmail.body.replace('[PAYMENT_LINK]', `${origin}/p/${shareInvoice?.id}`)}
                     </div>
                   </div>
                   <Button className="w-full text-xs h-10 bg-accent hover:bg-accent/90" onClick={() => {
-                    const text = `Subject: ${aiEmail.subject}\n\n${aiEmail.body.replace('[PAYMENT_LINK]', `${window.location.origin}/p/${shareInvoice?.id}`)}`;
+                    const text = `Subject: ${aiEmail.subject}\n\n${aiEmail.body.replace('[PAYMENT_LINK]', `${origin}/p/${shareInvoice?.id}`)}`;
                     navigator.clipboard.writeText(text);
                     toast({ title: "Email Copied", description: "Subject and body copied to clipboard." });
                   }}>
