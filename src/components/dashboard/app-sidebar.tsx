@@ -1,3 +1,4 @@
+
 "use client"
 
 import * as React from "react"
@@ -7,7 +8,8 @@ import {
   FileText,
   Settings,
   CreditCard,
-  Plus
+  Plus,
+  FileSignature
 } from "lucide-react"
 
 import {
@@ -42,6 +44,7 @@ export function AppSidebar() {
 
   const navItems = [
     { title: "Dashboard", icon: LayoutDashboard, url: "/dashboard" },
+    { title: "Proposals", icon: FileSignature, url: "/dashboard/proposals" },
     { title: "Invoices", icon: FileText, url: "/dashboard/invoices" },
     { title: "Clients", icon: Users, url: "/dashboard/clients" },
     { title: "Payments", icon: CreditCard, url: "/dashboard/payments" },
@@ -66,7 +69,7 @@ export function AppSidebar() {
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton 
                     asChild 
-                    isActive={pathname === item.url}
+                    isActive={pathname === item.url || pathname.startsWith(item.url + '/')}
                     tooltip={item.title}
                   >
                     <Link href={item.url}>

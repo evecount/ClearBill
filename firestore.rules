@@ -1,95 +1,34 @@
+
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    /**
-     * INVOICESYNC SECURITY RULES ANALYSIS & PHILOSOPHY
-     * 
-     * Core Philosophy:
-     * This ruleset implements a strict multi-tenant authorization model. The system is designed
-     * around Organizations as the primary tenant. Security is enforced through a combination of 
-     * hierarchical path-based checks and data-level ownership verification.
-     * 
-     * Data Structure:
-     * - /organizations/{organizationId}: Root tenant document.
-     * - /organizations/{organizationId}/clients/{clientId}: Subcollection for tenant-specific clients.
-     * - /organizations/{organizationId}/invoices/{invoiceId}: Subcollection for client-specific billing.
-     * - /organizations/{organizationId}/invoices/{invoiceId}/lineItems/{lineItemId}: Granular invoice data.
-     * 
-     * Key Security Decisions:
-     * 1. Multi-Tenancy: The 'organizationId' acts as the primary partition. Organization 
-     *    administrators (mapped to the document ID) have full control over their sub-tree.
-     * 2. Shared Access (Invoices): Invoices and LineItems implement a shared access pattern 
-     *    where the Organization has full CRUD access, but the specific Client identified by 
-     *    'clientId' is granted read-only access.
-     * 3. Authorization Independence: Every sub-document (Client, Invoice, LineItem) is 
-     *    required to store its 'organizationId' internally. This allows rules to verify 
-     *    relational integrity and ownership without expensive 'get()' calls to parent docs.
-     * 4. Prototyping Flexibility: While authorization is strictly enforced based on UIDs 
-     *    and relational fields, the internal content of the documents (names, totals, 
-     *    descriptions) is not type-validated to allow for rapid schema iteration.
-     */
-
-    // --- GLOBAL HELPER FUNCTIONS ---
-
-    /**
-     * @description Checks if the request is from an authenticated user.
-     */
     function isSignedIn() {
       return request.auth != null;
     }
 
-    /**
-     * @description Checks if the authenticated user's UID matches the provided ID.
-     */
     function isOwner(userId) {
       return isSignedIn() && request.auth.uid == userId;
     }
 
-    /**
-     * @description Combines ownership check with existence check for updates and deletes.
-     */
     function isExistingOwner(userId) {
       return resource != null && isOwner(userId);
     }
 
-    /**
-     * @description Verifies the internal organizationId field matches the organizationId in the path.
-     * Used to ensure data is not "orphaned" or written to the wrong tenant.
-     */
     function matchesOrgPath(orgId) {
       return request.resource.data.organizationId == orgId;
     }
 
-    /**
-     * @description Ensures that critical relational fields cannot be changed during an update.
-     */
     function isRelationalDataImmutable() {
       return request.resource.data.organizationId == resource.data.organizationId;
     }
 
-    // --- COLLECTION RULES ---
-
-    /**
-     * @description Rules for the root Organization document. Defines the tenant.
-     * @path /organizations/{organizationId}
-     * @allow Authenticated user can create/read/update their own organization (uid == organizationId).
-     * @deny User 'user_abc' attempting to update /organizations/user_xyz.
-     * @principle Self-Creation and Ownership.
-     */
     match /organizations/{organizationId} {
       allow get, list: if isOwner(organizationId);
       allow create: if isOwner(organizationId) && request.resource.data.id == organizationId;
       allow update: if isExistingOwner(organizationId) && request.resource.data.id == resource.data.id;
       allow delete: if isExistingOwner(organizationId);
 
-      /**
-       * @description Rules for Clients belonging to an organization.
-       * @path /organizations/{organizationId}/clients/{clientId}
-       * @allow Organization owner creating a client with 'organizationId' matching the path.
-       * @deny Updating a client's 'organizationId' to a different organization.
-       * @principle Relational integrity and owner-only subcollection access.
-       */
       match /clients/{clientId} {
         allow get, list: if isOwner(organizationId);
         allow create: if isOwner(organizationId) && matchesOrgPath(organizationId);
@@ -97,30 +36,21 @@ service cloud.firestore {
         allow delete: if isExistingOwner(organizationId);
       }
 
-      /**
-       * @description Rules for Invoices. Shared between the organization and the specific client.
-       * @path /organizations/{organizationId}/invoices/{invoiceId}
-       * @allow Organization owner creating an invoice; Client reading an invoice assigned to them.
-       * @deny Anonymous user reading an invoice; Client attempting to delete an invoice.
-       * @principle Shared access (Closed Collaborators) for reading, Owner-only for writes.
-       */
+      match /proposals/{proposalId} {
+        allow get, list: if isOwner(organizationId);
+        allow create: if isOwner(organizationId) && matchesOrgPath(organizationId);
+        allow update: if isExistingOwner(organizationId) && isRelationalDataImmutable();
+        allow delete: if isExistingOwner(organizationId);
+      }
+
       match /invoices/{invoiceId} {
-        // Reads allowed for Org Owner OR the specific Client identified in the document
         allow get: if isOwner(organizationId) || (isSignedIn() && resource.data.clientId == request.auth.uid);
         allow list: if isOwner(organizationId);
         
-        // Writes strictly limited to the Organization Owner
         allow create: if isOwner(organizationId) && matchesOrgPath(organizationId);
         allow update: if isExistingOwner(organizationId) && isRelationalDataImmutable();
         allow delete: if isExistingOwner(organizationId);
 
-        /**
-         * @description Rules for individual line items within an invoice.
-         * @path /organizations/{organizationId}/invoices/{invoiceId}/lineItems/{lineItemId}
-         * @allow Organization admin adding a service description to an existing invoice.
-         * @deny Client modifying the 'amount' or 'taxable' status of a line item.
-         * @principle Deeply nested relational integrity enforcement.
-         */
         match /lineItems/{lineItemId} {
           allow get: if isOwner(organizationId) || (isSignedIn() && resource.data.clientId == request.auth.uid);
           allow list: if isOwner(organizationId);
@@ -132,15 +62,8 @@ service cloud.firestore {
       }
     }
 
-    /**
-     * @description Collection Group rules for Invoices to allow clients to list their invoices across organizations.
-     * @path /invoices/{invoiceId} (Collection Group)
-     * @principle Path-agnostic querying restricted by document-level identity.
-     */
     match /{path=**}/invoices/{invoiceId} {
-      // Allows a client to perform collectionGroup('invoices').where('clientId', '==', uid)
       allow list: if isSignedIn() && request.query.limit <= 100;
     }
-
   }
 }

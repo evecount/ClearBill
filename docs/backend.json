@@ -45,6 +45,24 @@
       },
       "required": ["id", "organizationId", "name", "contactEmail", "createdAt", "updatedAt"]
     },
+    "Proposal": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Proposal",
+      "type": "object",
+      "description": "Represents a project proposal drafted with AI.",
+      "properties": {
+        "id": { "type": "string" },
+        "organizationId": { "type": "string" },
+        "clientId": { "type": "string" },
+        "title": { "type": "string" },
+        "status": { "type": "string", "enum": ["Draft", "Sent", "Accepted", "Declined"] },
+        "content": { "type": "string" },
+        "estimatedAmount": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "organizationId", "clientId", "title", "status", "createdAt", "updatedAt"]
+    },
     "Invoice": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "Invoice",
@@ -92,6 +110,10 @@
     "/organizations/{organizationId}/clients/{clientId}": {
       "schema": { "$ref": "#/backend/entities/Client" },
       "description": "Clients of the organization."
+    },
+    "/organizations/{organizationId}/proposals/{proposalId}": {
+      "schema": { "$ref": "#/backend/entities/Proposal" },
+      "description": "Proposals for clients."
     },
     "/organizations/{organizationId}/invoices/{invoiceId}": {
       "schema": { "$ref": "#/backend/entities/Invoice" },

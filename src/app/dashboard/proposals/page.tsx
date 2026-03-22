@@ -1,0 +1,146 @@
+
+"use client"
+
+import { useState } from "react"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader } from "@/components/ui/card"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Badge } from "@/components/ui/badge"
+import { Plus, Search, MoreVertical, Trash2, Edit2, FileSignature, ArrowRight, Sparkles } from "lucide-react"
+import { Input } from "@/components/ui/input"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { useToast } from "@/hooks/use-toast"
+import Link from "next/link"
+import { useUser, useCollection } from "@/firebase"
+import { useMemoFirebase } from "@/firebase/provider"
+import { collection, query, orderBy } from "firebase/firestore"
+
+export default function ProposalsPage() {
+  const { toast } = useToast()
+  const { user } = useUser()
+  const [search, setSearch] = useState("")
+
+  const proposalsQuery = useMemoFirebase(() => {
+    if (!user) return null
+    return query(
+      collection(user.auth.firestore, 'organizations', user.uid, 'proposals'),
+      orderBy('createdAt', 'desc')
+    )
+  }, [user])
+
+  const { data: proposals, isLoading } = useCollection(proposalsQuery)
+
+  const filteredProposals = proposals?.filter(p => 
+    p.title.toLowerCase().includes(search.toLowerCase())
+  ) || []
+
+  const handleDelete = (id: string) => {
+    toast({ title: "Proposal Deleted", description: "The proposal has been removed." })
+  }
+
+  return (
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Proposals</h1>
+          <p className="text-muted-foreground">Draft and deliver high-value project wins.</p>
+        </div>
+        <Button asChild className="bg-accent hover:bg-accent/90">
+          <Link href="/dashboard/proposals/new">
+            <Plus className="size-4 mr-2" /> New Proposal
+          </Link>
+        </Button>
+      </div>
+
+      <div className="flex flex-col sm:flex-row items-center gap-4 bg-white p-4 rounded-xl border shadow-sm">
+        <div className="relative flex-1 w-full">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+          <Input 
+            placeholder="Search proposals..." 
+            className="pl-10 border-none shadow-none focus-visible:ring-0" 
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
+      </div>
+
+      {isLoading ? (
+        <div className="py-24 text-center text-muted-foreground">Architecting proposal list...</div>
+      ) : proposals && proposals.length > 0 ? (
+        <Card className="overflow-hidden border-none shadow-lg rounded-2xl">
+          <CardContent className="p-0">
+            <Table>
+              <TableHeader className="bg-slate-50/50">
+                <TableRow>
+                  <TableHead className="font-bold">Proposal Title</TableHead>
+                  <TableHead className="font-bold">Status</TableHead>
+                  <TableHead className="font-bold">Estimate</TableHead>
+                  <TableHead className="font-bold">Created</TableHead>
+                  <TableHead className="text-right font-bold">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filteredProposals.map((proposal) => (
+                  <TableRow key={proposal.id}>
+                    <TableCell>
+                      <div className="flex items-center gap-3">
+                        <div className="bg-slate-100 p-2 rounded-lg">
+                          <FileSignature className="size-4 text-accent" />
+                        </div>
+                        <span className="font-bold">{proposal.title}</span>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant="secondary" className="bg-slate-100 text-slate-600 border-none">
+                        {proposal.status}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="font-bold text-accent">
+                      {proposal.estimatedAmount ? `$${proposal.estimatedAmount.toLocaleString()}` : "N/A"}
+                    </TableCell>
+                    <TableCell className="text-xs text-muted-foreground">
+                      {proposal.createdAt?.toDate ? proposal.createdAt.toDate().toLocaleDateString() : 'Just now'}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="icon">
+                            <MoreVertical className="size-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem asChild>
+                            <Link href={`/dashboard/proposals/${proposal.id}`}>
+                              <Edit2 className="size-4 mr-2" /> Edit
+                            </Link>
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem className="text-destructive" onClick={() => handleDelete(proposal.id)}>
+                            <Trash2 className="size-4 mr-2" /> Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+      ) : (
+        <div className="py-24 text-center bg-white rounded-2xl border border-dashed border-slate-200">
+          <FileSignature className="size-12 mx-auto mb-4 text-slate-200" />
+          <h3 className="text-lg font-bold">No Proposals Yet</h3>
+          <p className="text-sm text-muted-foreground max-w-xs mx-auto mb-6">
+            Proposals are the high-trust entry point for elite professional relationships.
+          </p>
+          <Button asChild className="bg-accent hover:bg-accent/90">
+            <Link href="/dashboard/proposals/new">
+              <Sparkles className="size-4 mr-2" /> Draft Your First Proposal
+            </Link>
+          </Button>
+        </div>
+      )}
+    </div>
+  )
+}

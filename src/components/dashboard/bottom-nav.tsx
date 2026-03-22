@@ -3,7 +3,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { LayoutDashboard, FileText, Users, Settings, Plus } from "lucide-react"
+import { LayoutDashboard, FileText, Users, Settings, Plus, FileSignature } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 export function BottomNav() {
@@ -11,16 +11,16 @@ export function BottomNav() {
 
   const navItems = [
     { title: "Overview", icon: LayoutDashboard, url: "/dashboard" },
+    { title: "Proposals", icon: FileSignature, url: "/dashboard/proposals" },
     { title: "Invoices", icon: FileText, url: "/dashboard/invoices" },
     { title: "Clients", icon: Users, url: "/dashboard/clients" },
-    { title: "Settings", icon: Settings, url: "/dashboard/settings" },
   ]
 
   return (
     <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-slate-200 pb-safe shadow-[0_-4px_10px_rgba(0,0,0,0.05)]">
       <div className="flex items-center justify-around h-16">
         {navItems.map((item) => {
-          const isActive = pathname === item.url
+          const isActive = pathname === item.url || pathname.startsWith(item.url + '/')
           return (
             <Link 
               key={item.url} 
