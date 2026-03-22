@@ -5,7 +5,7 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Plus, Search, Mail, MapPin, MoreVertical, Trash2, Edit2, FileText, User, Loader2 } from "lucide-react"
+import { Plus, Search, Mail, MapPin, MoreVertical, Trash2, Edit2, FileText, User, Building2 } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger, DropdownMenuSeparator } from "@/components/ui/dropdown-menu"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
@@ -27,7 +27,7 @@ export default function ClientsPage() {
   const [isAddOpen, setIsAddOpen] = useState(false)
   const [isEditOpen, setIsEditOpen] = useState(false)
   const [activeClient, setActiveClient] = useState<any>(null)
-  const [clientForm, setClientForm] = useState({ name: "", email: "", address: "" })
+  const [clientForm, setClientForm] = useState({ name: "", company: "", email: "", address: "" })
 
   const clientsQuery = useMemoFirebase(() => {
     if (!user || !firestore) return null
@@ -41,6 +41,7 @@ export default function ClientsPage() {
 
   const filteredClients = clients?.filter(client => 
     client.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    (client.company || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
     client.email.toLowerCase().includes(searchQuery.toLowerCase())
   ) || []
 
@@ -58,14 +59,14 @@ export default function ClientsPage() {
     }
 
     addDocumentNonBlocking(collection(firestore, 'organizations', user.uid, 'clients'), clientData)
-    setClientForm({ name: "", email: "", address: "" })
+    setClientForm({ name: "", company: "", email: "", address: "" })
     setIsAddOpen(false)
     toast({ title: "Client Added", description: `${clientData.name} has been added to your directory.` })
   }
 
   const handleEditClick = (client: any) => {
     setActiveClient(client)
-    setClientForm({ name: client.name, email: client.email, address: client.address })
+    setClientForm({ name: client.name, company: client.company || "", email: client.email, address: client.address })
     setIsEditOpen(true)
   }
 
@@ -98,7 +99,7 @@ export default function ClientsPage() {
         
         <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
           <DialogTrigger asChild>
-            <Button className="bg-accent hover:bg-accent/90" onClick={() => setClientForm({ name: "", email: "", address: "" })}>
+            <Button className="bg-accent hover:bg-accent/90" onClick={() => setClientForm({ name: "", company: "", email: "", address: "" })}>
               <Plus className="size-4 mr-2" /> Add Client
             </Button>
           </DialogTrigger>
@@ -111,6 +112,10 @@ export default function ClientsPage() {
               <div className="grid gap-2">
                 <Label htmlFor="name">Full Name</Label>
                 <Input id="name" placeholder="e.g. Jane Doe" value={clientForm.name} onChange={(e) => setClientForm({ ...clientForm, name: e.target.value })} className="h-12 rounded-xl" />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="company">Company / Organization</Label>
+                <Input id="company" placeholder="e.g. Global Tech Partners" value={clientForm.company} onChange={(e) => setClientForm({ ...clientForm, company: e.target.value })} className="h-12 rounded-xl" />
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="email">Email Address</Label>
@@ -140,6 +145,10 @@ export default function ClientsPage() {
               <Input id="edit-name" value={clientForm.name} onChange={(e) => setClientForm({ ...clientForm, name: e.target.value })} className="h-12 rounded-xl" />
             </div>
             <div className="grid gap-2">
+              <Label htmlFor="edit-company">Company / Organization</Label>
+              <Input id="edit-company" value={clientForm.company} onChange={(e) => setClientForm({ ...clientForm, company: e.target.value })} className="h-12 rounded-xl" />
+            </div>
+            <div className="grid gap-2">
               <Label htmlFor="edit-email">Email Address</Label>
               <Input id="edit-email" value={clientForm.email} onChange={(e) => setClientForm({ ...clientForm, email: e.target.value })} className="h-12 rounded-xl" />
             </div>
@@ -156,7 +165,7 @@ export default function ClientsPage() {
 
       <div className="relative bg-white p-2 rounded-xl border shadow-sm">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-        <Input placeholder="Search clients..." className="pl-10 border-none shadow-none focus-visible:ring-0" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+        <Input placeholder="Search clients by name, company or email..." className="pl-10 border-none shadow-none focus-visible:ring-0" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
       </div>
 
       {isLoading ? (
@@ -167,7 +176,7 @@ export default function ClientsPage() {
             <Table>
               <TableHeader className="bg-slate-50/50">
                 <TableRow>
-                  <TableHead className="font-bold">Client Name</TableHead>
+                  <TableHead className="font-bold">Client / Company</TableHead>
                   <TableHead className="font-bold">Email Address</TableHead>
                   <TableHead className="font-bold">Billing Address</TableHead>
                   <TableHead className="text-right font-bold">Actions</TableHead>
@@ -176,7 +185,17 @@ export default function ClientsPage() {
               <TableBody>
                 {filteredClients.map((client) => (
                   <TableRow key={client.id}>
-                    <TableCell className="font-medium">{client.name}</TableCell>
+                    <TableCell>
+                      <div className="flex flex-col">
+                        <span className="font-medium text-slate-900">{client.name}</span>
+                        {client.company && (
+                          <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                            <Building2 className="size-3" />
+                            {client.company}
+                          </div>
+                        )}
+                      </div>
+                    </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
                         <Mail className="size-3 text-muted-foreground" />
