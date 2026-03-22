@@ -9,8 +9,9 @@ import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { MOCK_ORG } from "@/lib/mock-data"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
-import { Upload, Save, Lock, CreditCard } from "lucide-react"
+import { Upload, Save, Lock, CreditCard, RefreshCw } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
+import { Badge } from "@/components/ui/badge"
 
 export default function SettingsPage() {
   const { toast } = useToast()
@@ -22,6 +23,14 @@ export default function SettingsPage() {
       setLoading(false)
       toast({ title: "Settings Saved", description: "Your organization profile has been updated." })
     }, 1500)
+  }
+
+  const handleLogoChange = () => {
+    toast({ title: "Logo Upload", description: "File explorer opened. Please select a square PNG or JPG." })
+  }
+
+  const handleUpdateCredentials = () => {
+    toast({ title: "Update Triggered", description: "Verification email sent to organization owner." })
   }
 
   return (
@@ -44,14 +53,17 @@ export default function SettingsPage() {
                   <AvatarImage src={MOCK_ORG.logoUrl} alt={MOCK_ORG.name} />
                   <AvatarFallback>{MOCK_ORG.name[0]}</AvatarFallback>
                 </Avatar>
-                <div className="absolute inset-0 bg-black/40 rounded-full opacity-0 group-hover:opacity-100 flex items-center justify-center cursor-pointer transition-opacity">
+                <div 
+                  className="absolute inset-0 bg-black/40 rounded-full opacity-0 group-hover:opacity-100 flex items-center justify-center cursor-pointer transition-opacity"
+                  onClick={handleLogoChange}
+                >
                    <Upload className="size-6 text-white" />
                 </div>
               </div>
               <div className="space-y-1 text-center sm:text-left">
                 <h3 className="text-lg font-medium">Organization Logo</h3>
                 <p className="text-sm text-muted-foreground">Square image, at least 400x400px recommended.</p>
-                <Button variant="outline" size="sm" className="mt-2">Change Logo</Button>
+                <Button variant="outline" size="sm" className="mt-2" onClick={handleLogoChange}>Change Logo</Button>
               </div>
             </div>
 
@@ -74,7 +86,7 @@ export default function SettingsPage() {
           </CardContent>
           <CardFooter className="bg-muted/50 justify-end py-4">
              <Button className="bg-accent hover:bg-accent/90" onClick={handleSave} disabled={loading}>
-                <Save className="size-4 mr-2" /> Save Profile
+                <Save className="size-4 mr-2" /> {loading ? "Saving..." : "Save Profile"}
              </Button>
           </CardFooter>
         </Card>
@@ -121,7 +133,9 @@ export default function SettingsPage() {
           </CardContent>
           <CardFooter className="bg-muted/50 justify-between py-4">
              <p className="text-xs text-muted-foreground">Changes to API keys require immediate verification.</p>
-             <Button variant="outline">Update Credentials</Button>
+             <Button variant="outline" onClick={handleUpdateCredentials}>
+               <RefreshCw className="size-3 mr-2" /> Update Credentials
+             </Button>
           </CardFooter>
         </Card>
       </div>
