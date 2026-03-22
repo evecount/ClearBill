@@ -2,7 +2,7 @@
 "use client"
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { CreditCard, FileText, Users, TrendingUp, ArrowUpRight, ArrowDownRight } from "lucide-react"
+import { CreditCard, FileText, Users, TrendingUp, ArrowUpRight, ArrowDownRight, Plus, Settings } from "lucide-react"
 import { MOCK_INVOICES, MOCK_CLIENTS } from "@/lib/mock-data"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
