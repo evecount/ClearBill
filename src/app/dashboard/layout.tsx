@@ -1,15 +1,42 @@
+
+"use client"
+
+import { useEffect } from "react"
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar"
 import { AppSidebar } from "@/components/dashboard/app-sidebar"
 import { BottomNav } from "@/components/dashboard/bottom-nav"
 import { Separator } from "@/components/ui/separator"
-import { CreditCard } from "lucide-react"
+import { CreditCard, Loader2 } from "lucide-react"
 import Link from "next/link"
+import { useUser, useAuth } from "@/firebase"
+import { initiateAnonymousSignIn } from "@/firebase/non-blocking-login"
 
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const { user, isUserLoading } = useUser()
+  const auth = useAuth()
+
+  // Ensure a professional identity exists for persistence
+  useEffect(() => {
+    if (!isUserLoading && !user && auth) {
+      initiateAnonymousSignIn(auth)
+    }
+  }, [user, isUserLoading, auth])
+
+  if (isUserLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+        <div className="flex flex-col items-center gap-4">
+          <Loader2 className="size-8 animate-spin text-accent" />
+          <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Synchronizing Identity...</p>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <SidebarProvider>
       <div className="hidden md:flex">
