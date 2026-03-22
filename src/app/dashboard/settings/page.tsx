@@ -9,9 +9,10 @@ import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { MOCK_ORG } from "@/lib/mock-data"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
-import { Upload, Save, Lock, CreditCard, RefreshCw } from "lucide-react"
+import { Upload, Save, Lock, CreditCard, RefreshCw, Sparkles, ArrowRight } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import { Badge } from "@/components/ui/badge"
+import Link from "next/link"
 
 export default function SettingsPage() {
   const { toast } = useToast()
@@ -35,12 +36,36 @@ export default function SettingsPage() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
-        <p className="text-muted-foreground">Manage your organization profile and payment integrations.</p>
+      <div className="flex justify-between items-start">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
+          <p className="text-muted-foreground">Manage your organization profile and payment integrations.</p>
+        </div>
+        <Button asChild variant="outline" className="border-accent text-accent hover:bg-accent/5">
+          <Link href="/onboarding">
+            <Sparkles className="size-4 mr-2" /> AI Re-brand
+          </Link>
+        </Button>
       </div>
 
       <div className="grid gap-8">
+        <Card className="border-accent/20 bg-accent/5">
+          <CardHeader>
+            <div className="flex items-center gap-3">
+              <Sparkles className="size-5 text-accent" />
+              <CardTitle>AI Brand Assistant</CardTitle>
+            </div>
+            <CardDescription>Need a fresh perspective? Let our AI consultant help you rewrite your mission and refine your branding tone.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button asChild className="bg-accent hover:bg-accent/90">
+              <Link href="/onboarding">
+                Run AI Consultation <ArrowRight className="ml-2 size-4" />
+              </Link>
+            </Button>
+          </CardContent>
+        </Card>
+
         <Card>
           <CardHeader>
             <CardTitle>Organization Profile</CardTitle>
@@ -97,9 +122,9 @@ export default function SettingsPage() {
             <CardDescription>Connect your Stripe or localized payment gateway to accept digital payments.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            <div className="flex items-center justify-between p-4 border rounded-xl bg-accent/5 border-accent/20">
+            <div className="flex items-center justify-between p-4 border rounded-xl bg-emerald-50/50 border-emerald-100">
                <div className="flex items-center gap-4">
-                  <div className="bg-accent p-2 rounded-lg text-white">
+                  <div className="bg-emerald-500 p-2 rounded-lg text-white">
                     <CreditCard className="size-6" />
                   </div>
                   <div>

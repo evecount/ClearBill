@@ -2,7 +2,7 @@
 "use client"
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { CreditCard, FileText, Users, TrendingUp, ArrowUpRight, Plus, Settings } from "lucide-react"
+import { CreditCard, FileText, Users, TrendingUp, ArrowUpRight, Plus, Settings, Sparkles } from "lucide-react"
 import { MOCK_INVOICES, MOCK_CLIENTS } from "@/lib/mock-data"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
@@ -117,6 +117,15 @@ export default function DashboardPage() {
             <CardTitle>Quick Actions</CardTitle>
           </CardHeader>
           <CardContent className="grid gap-4">
+            <Link href="/onboarding" className="flex items-center gap-4 rounded-lg border p-4 bg-accent/5 hover:bg-accent/10 transition-colors border-accent/20">
+              <div className="bg-accent/20 p-2 rounded-full">
+                <Sparkles className="size-4 text-accent" />
+              </div>
+              <div>
+                <p className="text-sm font-bold text-accent">Activate AI Consultant</p>
+                <p className="text-xs text-muted-foreground">Refine your business brand & mission.</p>
+              </div>
+            </Link>
             <Link href="/dashboard/invoices/new" className="flex items-center gap-4 rounded-lg border p-4 hover:bg-muted/50 transition-colors">
               <div className="bg-primary/10 p-2 rounded-full">
                 <Plus className="size-4 text-primary" />
