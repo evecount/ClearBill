@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { CreditCard, ShieldCheck, Zap, ArrowRight, TrendingUp, Sparkles, Layout, Globe, Lock, FileText, Scale, Utensils, Shield, Hammer, BarChart3 } from "lucide-react"
+import { QuickAuditTool } from "@/components/landing/quick-audit-tool"
 
 export default function LandingPage() {
   return (
@@ -50,32 +51,51 @@ export default function LandingPage() {
         </section>
 
         {/* Market Rate Assurance Section */}
-        <section className="py-16 px-6 bg-accent/5 border-y border-accent/10">
-          <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center gap-8">
-            <div className="bg-white p-6 rounded-3xl shadow-xl border border-accent/10 md:w-1/2">
-              <div className="flex items-center gap-3 mb-4">
-                <BarChart3 className="size-6 text-accent" />
-                <h3 className="font-bold text-lg">Market Rate Benchmarking</h3>
+        <section className="py-24 px-6 bg-slate-50 border-y border-slate-100 overflow-hidden">
+          <div className="max-w-7xl mx-auto grid lg:grid-cols-2 items-center gap-16">
+            <div className="space-y-8">
+              <div className="space-y-4">
+                <h2 className="text-sm font-bold tracking-[0.3em] text-accent uppercase">Charge with Confidence</h2>
+                <h3 className="text-4xl md:text-5xl font-black text-primary leading-tight">
+                  Stop billing for labor. <br />
+                  <span className="text-accent">Start billing for value.</span>
+                </h3>
+                <p className="text-lg text-slate-600 leading-relaxed max-w-lg">
+                  Many independent professionals undercharge by <strong>40-75%</strong>. ClearBill uses AI to audit your regional market rates, ensuring every invoice honors your true worth.
+                </p>
               </div>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                Did you know many independent professionals undercharge by <strong>40-75%</strong>? ClearBill uses AI to analyze your service and regional data, ensuring every invoice you send reflects the true elite market rate for your expertise.
-              </p>
-              <div className="mt-4 p-3 bg-accent/5 rounded-xl border border-dashed border-accent/20">
-                <p className="text-[10px] font-black uppercase tracking-widest text-accent">Strategic Insight</p>
-                <p className="text-xs italic text-slate-600 mt-1">"Stop billing for labor. Start billing for the outcome."</p>
+              
+              <div className="grid sm:grid-cols-2 gap-6">
+                 <div className="space-y-3">
+                   <div className="bg-white p-3 rounded-xl border border-slate-100 shadow-sm w-fit">
+                     <BarChart3 className="size-6 text-accent" />
+                   </div>
+                   <h4 className="font-bold text-primary">Market Rate Benchmarking</h4>
+                   <p className="text-sm text-muted-foreground leading-relaxed">
+                     Real-time AI auditing that justifies elite fees and prevents undercharging.
+                   </p>
+                 </div>
+                 <div className="space-y-3">
+                   <div className="bg-white p-3 rounded-xl border border-slate-100 shadow-sm w-fit">
+                     <Scale className="size-6 text-blue-600" />
+                   </div>
+                   <h4 className="font-bold text-primary">Outcome Agreements</h4>
+                   <p className="text-sm text-muted-foreground leading-relaxed">
+                     AI-drafted contracts that protect your work and reinforce your professional standard.
+                   </p>
+                 </div>
               </div>
             </div>
-            <div className="md:w-1/2 space-y-4">
-              <h2 className="text-3xl font-bold text-primary">Charge with Confidence.</h2>
-              <p className="text-slate-600">
-                Never second-guess your pricing again. Our built-in benchmarking tool provides real-time regional averages for your job role, helping you command the fees your hard work actually deserves.
-              </p>
+
+            <div className="relative">
+              <div className="absolute -inset-4 bg-accent/10 rounded-[3rem] blur-2xl opacity-30 animate-pulse"></div>
+              <QuickAuditTool />
             </div>
           </div>
         </section>
 
         {/* Value Prop Section */}
-        <section className="py-24 px-6 bg-slate-50 border-b">
+        <section className="py-24 px-6 bg-white border-b">
           <div className="max-w-4xl mx-auto text-center space-y-12">
             <div className="space-y-4">
               <h2 className="text-sm font-bold tracking-[0.3em] text-accent uppercase">The ClearBill Standard</h2>
