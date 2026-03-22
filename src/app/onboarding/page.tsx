@@ -1,6 +1,7 @@
+
 "use client"
 
-import { useState } from "react"
+import { useState, useRef } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card"
@@ -9,7 +10,7 @@ import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
-import { ArrowRight, Loader2, ShieldCheck, Scissors, Music, HeartPulse, Code, Utensils, Hammer, Shield, Sparkles, Zap, Target, Star, Palette, PenTool, Home, TrendingUp, Briefcase, Landmark, CreditCard, Send, Camera, Upload, Globe, Link as LinkIcon } from "lucide-react"
+import { ArrowRight, Loader2, ShieldCheck, Scissors, Music, HeartPulse, Code, Utensils, Hammer, Shield, Sparkles, Zap, Target, Star, Palette, PenTool, Home, TrendingUp, Briefcase, Landmark, Camera, Upload, Link as LinkIcon } from "lucide-react"
 import { consultBusinessOnboarding, type OnboardingConsultantOutput } from "@/ai/flows/onboarding-consultant"
 import { useToast } from "@/hooks/use-toast"
 import { cn } from "@/lib/utils"
@@ -39,6 +40,8 @@ export default function OnboardingPage() {
   const auth = useAuth()
   const firestore = useFirestore()
   const { user } = useUser()
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  
   const [step, setStep] = useState(1)
   const [loading, setLoading] = useState(false)
   
@@ -59,6 +62,17 @@ export default function OnboardingPage() {
       return
     }
     setStep(2)
+  }
+
+  const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        setBasicFacts({ ...basicFacts, logoUrl: reader.result as string })
+      }
+      reader.readAsDataURL(file)
+    }
   }
 
   const handleConsult = async () => {
@@ -96,11 +110,10 @@ export default function OnboardingPage() {
     const orgId = user.uid
     const slug = proposal.suggestedName.toLowerCase().replace(/[^a-z0-9]/g, '-')
 
-    // Save Organization
     const orgData = {
       id: orgId,
       name: proposal.suggestedName,
-      logoUrl: basicFacts.logoUrl || `https://picsum.photos/seed/${orgId}/200/200`,
+      logoUrl: basicFacts.logoUrl || "",
       contactEmail: proposal.suggestedEmail,
       addressLine1: proposal.suggestedAddress,
       city: "",
@@ -121,7 +134,6 @@ export default function OnboardingPage() {
 
     setDocumentNonBlocking(doc(firestore, 'organizations', orgId), orgData, { merge: true })
 
-    // Save Draft Invoice
     const invoiceData = {
       organizationId: orgId,
       clientId: "first_client",
@@ -158,32 +170,41 @@ export default function OnboardingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4 py-12">
+    <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4 py-12 font-body selection:bg-accent/30">
       <div className="max-w-5xl w-full space-y-8">
         
         {step === 1 && (
           <div className="max-w-xl mx-auto w-full">
-             <Card className="shadow-2xl border-none rounded-[2.5rem] overflow-hidden">
+             <Card className="shadow-2xl border-none rounded-[2.5rem] overflow-hidden bg-white">
                 <CardHeader className="bg-slate-900 text-white p-10">
                   <CardTitle className="text-3xl font-black">The Foundation</CardTitle>
-                  <CardDescription className="text-slate-400">Let's start with the non-negotiable facts of your craft.</CardDescription>
+                  <CardDescription className="text-slate-400">Anchor your professional identity with the hard facts.</CardDescription>
                 </CardHeader>
                 <CardContent className="p-10 space-y-8">
                   <div className="flex flex-col items-center gap-4 mb-4">
                     <Label className="text-[10px] uppercase font-black tracking-widest text-muted-foreground self-start">Business Identity</Label>
-                    <div className="relative group cursor-pointer" onClick={() => {
-                      const seed = Math.floor(Math.random() * 1000);
-                      setBasicFacts({...basicFacts, logoUrl: `https://picsum.photos/seed/${seed}/200/200`})
-                    }}>
-                      <Avatar className="size-24 border-2 border-slate-200 shadow-sm transition-all group-hover:scale-105">
-                        <AvatarImage src={basicFacts.logoUrl || `https://picsum.photos/seed/default/200/200`} />
-                        <AvatarFallback><Camera className="size-8 text-slate-300" /></AvatarFallback>
+                    <input 
+                      type="file" 
+                      ref={fileInputRef} 
+                      className="hidden" 
+                      accept="image/*" 
+                      onChange={handleLogoUpload} 
+                    />
+                    <div 
+                      className="relative group cursor-pointer" 
+                      onClick={() => fileInputRef.current?.click()}
+                    >
+                      <Avatar className="size-32 border-2 border-slate-200 shadow-sm transition-all group-hover:scale-105 rounded-3xl overflow-hidden">
+                        <AvatarImage src={basicFacts.logoUrl} className="object-contain p-2" />
+                        <AvatarFallback className="bg-slate-50 rounded-3xl"><Camera className="size-10 text-slate-300" /></AvatarFallback>
                       </Avatar>
-                      <div className="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                        <Upload className="size-6 text-white" />
+                      <div className="absolute inset-0 bg-black/40 rounded-3xl flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                        <Upload className="size-8 text-white" />
                       </div>
                     </div>
-                    <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest">Click to Shuffle Logo</p>
+                    <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest">
+                      {basicFacts.logoUrl ? "Change Logo" : "Upload Brand Logo"}
+                    </p>
                   </div>
 
                   <div className="grid gap-6">
@@ -198,7 +219,7 @@ export default function OnboardingPage() {
                       />
                     </div>
                     <div className="space-y-3">
-                      <Label htmlFor="website" className="text-xs uppercase font-black tracking-widest text-muted-foreground">Professional Website (Optional)</Label>
+                      <Label htmlFor="website" className="text-xs uppercase font-black tracking-widest text-muted-foreground">Professional Website</Label>
                       <div className="relative">
                         <LinkIcon className="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
                         <Input 
@@ -209,7 +230,6 @@ export default function OnboardingPage() {
                           onChange={(e) => setBasicFacts({...basicFacts, website: e.target.value})}
                         />
                       </div>
-                      <p className="text-[10px] text-muted-foreground">We'll extract context and identity from your digital home.</p>
                     </div>
                     <div className="space-y-3">
                       <Label htmlFor="location" className="text-xs uppercase font-black tracking-widest text-muted-foreground">Primary Location</Label>
@@ -219,16 +239,6 @@ export default function OnboardingPage() {
                         className="h-14 rounded-2xl text-lg border-slate-200"
                         value={basicFacts.location}
                         onChange={(e) => setBasicFacts({...basicFacts, location: e.target.value})}
-                      />
-                    </div>
-                    <div className="space-y-3">
-                      <Label htmlFor="industry" className="text-xs uppercase font-black tracking-widest text-muted-foreground">Industry (Optional)</Label>
-                      <Input 
-                        id="industry" 
-                        placeholder="e.g. Muralist & Fine Art" 
-                        className="h-14 rounded-2xl text-lg border-slate-200"
-                        value={basicFacts.industry}
-                        onChange={(e) => setBasicFacts({...basicFacts, industry: e.target.value})}
                       />
                     </div>
                   </div>
@@ -244,15 +254,15 @@ export default function OnboardingPage() {
 
         {step === 2 && (
           <div className="max-w-4xl mx-auto w-full">
-            <Card className="shadow-2xl border-none rounded-[2.5rem] overflow-hidden">
+            <Card className="shadow-2xl border-none rounded-[2.5rem] overflow-hidden bg-white">
               <CardHeader className="bg-slate-900 text-white p-10 text-center">
                 <CardTitle className="text-3xl font-black">Strategic Intent</CardTitle>
-                <CardDescription className="text-slate-400">Describe your project or expertise, {basicFacts.businessName}.</CardDescription>
+                <CardDescription className="text-slate-400">What are we architecting today, {basicFacts.businessName}?</CardDescription>
               </CardHeader>
               <CardContent className="p-10 space-y-12">
                 <div className="space-y-6">
                   <div className="flex items-center justify-between">
-                    <Label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-black">Choose Your Professional Path</Label>
+                    <Label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-black">Professional Inspirations</Label>
                   </div>
                   <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
                     {QUICK_STARTS.map((qs) => (
@@ -278,12 +288,12 @@ export default function OnboardingPage() {
 
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <Label htmlFor="desc" className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-black">Or Describe Your Own Craft</Label>
+                    <Label htmlFor="desc" className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-black">Your Unique Craft</Label>
                     {description && <Button variant="link" size="sm" className="h-auto p-0 text-xs text-muted-foreground" onClick={() => setDescription("")}>Clear</Button>}
                   </div>
                   <Textarea 
                     id="desc"
-                    placeholder="e.g. I am a landscape architect focused on sustainable urban ecosystems..."
+                    placeholder="Describe the high-value project or expertise you want to bill for..."
                     className="min-h-[180px] text-xl p-6 rounded-3xl focus:ring-accent/20 border-slate-200 shadow-inner bg-slate-50/50 leading-relaxed"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
@@ -304,7 +314,7 @@ export default function OnboardingPage() {
                     </>
                   ) : (
                     <>
-                      Architect My First Invoice <ArrowRight className="ml-2 size-6 group-hover:translate-x-1 transition-transform" />
+                      Architect My Visual First-Look <ArrowRight className="ml-2 size-6 group-hover:translate-x-1 transition-transform" />
                     </>
                   )}
                 </Button>
@@ -321,7 +331,7 @@ export default function OnboardingPage() {
                </div>
                <h1 className="text-4xl font-black text-slate-900 tracking-tight">The Visual First-Look</h1>
                <p className="text-slate-500 text-lg max-w-2xl mx-auto">
-                 Based on your expertise, we've drafted your first high-value invoice. This is how the client sees your worth.
+                 This is how your client sees your worth. Everything you see can be refined later in Settings.
                </p>
              </div>
 
@@ -329,14 +339,16 @@ export default function OnboardingPage() {
                <Card className="lg:col-span-3 border-none shadow-2xl rounded-[3rem] overflow-hidden bg-white">
                  <div className="h-4 w-full" style={{ backgroundColor: `hsl(${proposal.brandColor})` }} />
                  <CardContent className="p-10 md:p-14 space-y-10">
-                   {/* Invoice Header Preview */}
                    <div className="flex justify-between items-start gap-8">
                       <div className="space-y-4 flex-1">
                         <div className="space-y-4">
-                           <Avatar className="size-16 border rounded-xl">
-                             <AvatarImage src={basicFacts.logoUrl || `https://picsum.photos/seed/default/200/200`} />
-                             <AvatarFallback>{proposal.suggestedName[0]}</AvatarFallback>
-                           </Avatar>
+                           <div className="size-20 bg-slate-50 rounded-2xl border flex items-center justify-center overflow-hidden">
+                             {basicFacts.logoUrl ? (
+                               <img src={basicFacts.logoUrl} alt="Logo" className="object-contain p-1" />
+                             ) : (
+                               <Landmark className="size-8 text-slate-300" />
+                             )}
+                           </div>
                            <div className="space-y-1">
                              <p className="text-[10px] uppercase font-black tracking-widest text-muted-foreground">From</p>
                              <h2 className="text-2xl font-black text-slate-900">{proposal.suggestedName}</h2>
@@ -345,7 +357,7 @@ export default function OnboardingPage() {
                         </div>
                       </div>
                       <div className="text-right space-y-1">
-                        <p className="text-[10px] uppercase font-black tracking-widest text-muted-foreground">Amount Due</p>
+                        <p className="text-[10px] uppercase font-black tracking-widest text-muted-foreground">Total Value</p>
                         <p className="text-4xl font-black tracking-tighter" style={{ color: `hsl(${proposal.brandColor})` }}>
                           ${proposal.suggestedLineItems.reduce((sum, i) => sum + i.price, 0).toLocaleString()}
                         </p>
@@ -354,7 +366,6 @@ export default function OnboardingPage() {
 
                    <Separator className="bg-slate-100" />
 
-                   {/* Line Items Preview */}
                    <div className="space-y-6">
                       <div className="grid grid-cols-12 gap-4">
                         <div className="col-span-9"><p className="text-[10px] uppercase font-black tracking-widest text-muted-foreground">Professional Outcome</p></div>
@@ -376,9 +387,8 @@ export default function OnboardingPage() {
 
                    <Separator className="bg-slate-100" />
 
-                   {/* Agreement Preview */}
                    <div className="p-6 bg-slate-50/50 rounded-2xl border border-dashed space-y-3">
-                      <p className="text-[10px] uppercase font-black tracking-widest text-muted-foreground">Strategic Win Agreement</p>
+                      <p className="text-[10px] uppercase font-black tracking-widest text-muted-foreground">Outcome Agreement</p>
                       <p className="text-xs text-slate-600 italic leading-relaxed">
                         "{proposal.missionStatement}"
                       </p>
@@ -388,44 +398,36 @@ export default function OnboardingPage() {
                      style={{ backgroundColor: `hsl(${proposal.brandColor})` }}
                      onClick={handleFinish}
                    >
-                     Launch Profile & Invoice <ArrowRight className="ml-2 size-6" />
+                     Save & Launch Ecosystem <ArrowRight className="ml-2 size-6" />
                    </Button>
-                   <p className="text-center text-[10px] text-muted-foreground font-bold uppercase tracking-widest mt-4">
-                     You can refine your identity and logo anytime in Settings.
-                   </p>
                  </CardContent>
                </Card>
 
-               {/* DNA Sidebar */}
                <div className="lg:col-span-2 space-y-6">
-                  <Card className="bg-slate-900 text-white rounded-3xl border-none p-8 space-y-6">
+                  <Card className="bg-slate-900 text-white rounded-3xl border-none p-8 space-y-6 shadow-xl">
                     <div className="flex items-center gap-3">
                       <Zap className="size-5 text-accent" />
-                      <h3 className="text-sm font-black uppercase tracking-widest">Growth Recommendation</h3>
+                      <h3 className="text-sm font-black uppercase tracking-widest">Growth Engine</h3>
                     </div>
                     <div className="space-y-4">
                       <div className="p-4 bg-white/5 rounded-2xl border border-white/10 space-y-1">
-                        <p className="text-[10px] uppercase font-black tracking-widest text-accent">Immediate Strategic Move</p>
+                        <p className="text-[10px] uppercase font-black tracking-widest text-accent">Strategic Move</p>
                         <p className="text-xs text-slate-300 leading-relaxed">{proposal.growthStrategy.initialFocus}</p>
                       </div>
                       <div className="p-4 bg-white/5 rounded-2xl border border-white/10 space-y-1">
-                        <p className="text-[10px] uppercase font-black tracking-widest text-emerald-400">Premium Yield Idea</p>
+                        <p className="text-[10px] uppercase font-black tracking-widest text-emerald-400">Yield Opportunity</p>
                         <p className="text-xs text-slate-300 leading-relaxed">{proposal.growthStrategy.premiumTierSuggestion}</p>
                       </div>
                     </div>
-                    <Separator className="bg-white/10" />
-                    <div className="text-center">
-                       <p className="text-[10px] text-slate-500 italic">"We don't bill for hours. We bill for the certainty of your success."</p>
-                    </div>
                   </Card>
 
-                  <div className="p-8 bg-white rounded-3xl border-2 border-slate-100 flex flex-col items-center gap-4 text-center">
+                  <div className="p-8 bg-white rounded-3xl border border-slate-200 flex flex-col items-center gap-4 text-center shadow-sm">
                     <div className="size-12 bg-emerald-500/10 rounded-full flex items-center justify-center">
                       <ShieldCheck className="size-6 text-emerald-500" />
                     </div>
-                    <h4 className="font-bold text-sm">Verified Identity Architecture</h4>
+                    <h4 className="font-bold text-sm">Persistent Identity Corpus</h4>
                     <p className="text-xs text-muted-foreground leading-relaxed">
-                      Your identity ecosystem is now synchronized across all portals.
+                      Your identity is now anchored in your private business corpus. You can refine any detail later in Settings.
                     </p>
                   </div>
                </div>
