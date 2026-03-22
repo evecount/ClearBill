@@ -9,10 +9,10 @@ import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { Textarea } from "@/components/ui/textarea"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
-import { Save, Sparkles, ArrowRight, Copy, ExternalLink, Globe, Building2, Link as LinkIcon, Landmark, Flag, DollarSign } from "lucide-react"
+import { Save, Sparkles, ArrowRight, Copy, ExternalLink, Globe, Building2, Link as LinkIcon, Landmark, Flag } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import Link from "next/link"
-import { useDoc, useUser } from "@/firebase"
+import { useDoc, useUser, useFirestore } from "@/firebase"
 import { useMemoFirebase } from "@/firebase/provider"
 import { doc, serverTimestamp } from "firebase/firestore"
 import { updateDocumentNonBlocking } from "@/firebase/non-blocking-updates"
@@ -21,6 +21,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 export default function SettingsPage() {
   const { toast } = useToast()
   const { user } = useUser()
+  const firestore = useFirestore()
   const [loading, setLoading] = useState(false)
   const [origin, setOrigin] = useState("")
 
@@ -29,9 +30,9 @@ export default function SettingsPage() {
   }, [])
 
   const orgRef = useMemoFirebase(() => {
-    if (!user) return null
-    return doc(user.auth.firestore, 'organizations', user.uid)
-  }, [user])
+    if (!user || !firestore) return null
+    return doc(firestore, 'organizations', user.uid)
+  }, [user, firestore])
 
   const { data: org, isLoading: isOrgLoading } = useDoc(orgRef)
 
@@ -340,7 +341,7 @@ export default function SettingsPage() {
           </CardFooter>
         </Card>
       </div>
-      <div className="h-20 md:hidden" /> {/* Spacer for bottom nav */}
+      <div className="h-20 md:hidden" />
     </div>
   )
 }

@@ -6,19 +6,20 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
-import { Plus, Search, MoreVertical, Trash2, Edit2, FileSignature, Copy, ExternalLink, Share2, Sparkles } from "lucide-react"
+import { Plus, Search, MoreVertical, Trash2, FileSignature, Copy, ExternalLink, Share2, Sparkles } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { useToast } from "@/hooks/use-toast"
 import Link from "next/link"
-import { useUser, useCollection } from "@/firebase"
+import { useUser, useCollection, useFirestore } from "@/firebase"
 import { useMemoFirebase } from "@/firebase/provider"
-import { collection, query, orderBy } from "firebase/firestore"
+import { collection, query, orderBy, doc } from "firebase/firestore"
 import { deleteDocumentNonBlocking } from "@/firebase/non-blocking-updates"
 
 export default function ProposalsPage() {
   const { toast } = useToast()
   const { user } = useUser()
+  const firestore = useFirestore()
   const [search, setSearch] = useState("")
   const [origin, setOrigin] = useState("")
 
@@ -27,12 +28,12 @@ export default function ProposalsPage() {
   }, [])
 
   const proposalsQuery = useMemoFirebase(() => {
-    if (!user) return null
+    if (!user || !firestore) return null
     return query(
-      collection(user.auth.firestore, 'organizations', user.uid, 'proposals'),
+      collection(firestore, 'organizations', user.uid, 'proposals'),
       orderBy('createdAt', 'desc')
     )
-  }, [user])
+  }, [user, firestore])
 
   const { data: proposals, isLoading } = useCollection(proposalsQuery)
 
@@ -41,8 +42,8 @@ export default function ProposalsPage() {
   ) || []
 
   const handleDelete = (id: string) => {
-    if (!user) return
-    const docRef = doc(user.auth.firestore, 'organizations', user.uid, 'proposals', id)
+    if (!user || !firestore) return
+    const docRef = doc(firestore, 'organizations', user.uid, 'proposals', id)
     deleteDocumentNonBlocking(docRef)
     toast({ title: "Proposal Deleted", description: "The strategic document has been removed." })
   }
@@ -173,8 +174,4 @@ export default function ProposalsPage() {
       )}
     </div>
   )
-}
-
-function doc(firestore: any, arg1: string, uid: string, arg3: string, id: string): any {
-  throw new Error("Function not implemented.")
 }

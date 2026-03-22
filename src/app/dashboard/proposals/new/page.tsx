@@ -9,11 +9,11 @@ import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { MOCK_CLIENTS, MOCK_ORG } from "@/lib/mock-data"
-import { ArrowLeft, Loader2, Sparkles, FileSignature, Target, Zap, CheckCircle2, Quote, BookOpen, Layers } from "lucide-react"
+import { ArrowLeft, Loader2, Sparkles, BookOpen, CheckCircle2, Quote, Layers } from "lucide-react"
 import Link from "next/link"
 import { useToast } from "@/hooks/use-toast"
 import { generateProposal, type ProposalGeneratorOutput } from "@/ai/flows/proposal-generator"
-import { useUser, useDoc } from "@/firebase"
+import { useUser, useDoc, useFirestore } from "@/firebase"
 import { useMemoFirebase } from "@/firebase/provider"
 import { doc, collection, serverTimestamp } from "firebase/firestore"
 import { addDocumentNonBlocking } from "@/firebase/non-blocking-updates"
@@ -24,17 +24,17 @@ export default function NewProposalPage() {
   const router = useRouter()
   const { toast } = useToast()
   const { user } = useUser()
+  const firestore = useFirestore()
   const [loading, setLoading] = useState(false)
   const [brief, setBrief] = useState("")
   const [selectedClient, setSelectedClient] = useState("")
   const [proposal, setProposal] = useState<ProposalGeneratorOutput | null>(null)
   const [selectedTierIndex, setSelectedTierIndex] = useState(0)
 
-  // Fetch real org data
   const orgRef = useMemoFirebase(() => {
-    if (!user) return null
-    return doc(user.auth.firestore, 'organizations', user.uid)
-  }, [user])
+    if (!user || !firestore) return null
+    return doc(firestore, 'organizations', user.uid)
+  }, [user, firestore])
   const { data: org } = useDoc(orgRef)
 
   const handleGenerate = async () => {
@@ -54,7 +54,6 @@ export default function NewProposalPage() {
         brandingTone: org?.brandColor ? "Cinematic and Value-First" : "Modern Professional"
       })
       
-      // Ensure the generated output honors the human-provided names
       setProposal({
         ...result,
         executiveSummary: result.executiveSummary.replace("[Client Name]", clientName).replace("[Business Name]", org?.name || "our team")
@@ -70,7 +69,7 @@ export default function NewProposalPage() {
   }
 
   const handleSave = () => {
-    if (!proposal || !user) return
+    if (!proposal || !user || !firestore) return
 
     const proposalData = {
       organizationId: user.uid,
@@ -84,7 +83,7 @@ export default function NewProposalPage() {
     }
 
     addDocumentNonBlocking(
-      collection(user.auth.firestore, 'organizations', user.uid, 'proposals'),
+      collection(firestore, 'organizations', user.uid, 'proposals'),
       proposalData
     )
 

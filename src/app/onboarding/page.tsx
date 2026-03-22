@@ -8,15 +8,14 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
-import { ArrowRight, Loader2, ShieldCheck, Scissors, Music, HeartPulse, Code, Utensils, Hammer, Shield, Sparkles, Zap, Target, Star, Palette, PenTool, Home, TrendingUp, Briefcase, Camera } from "lucide-react"
+import { ArrowRight, Loader2, ShieldCheck, Scissors, Music, HeartPulse, Code, Utensils, Hammer, Shield, Sparkles, Zap, Target, Star, Palette, PenTool, Home, TrendingUp, Briefcase } from "lucide-react"
 import { consultBusinessOnboarding, type OnboardingConsultantOutput } from "@/ai/flows/onboarding-consultant"
 import { useToast } from "@/hooks/use-toast"
 import { cn } from "@/lib/utils"
-import { useAuth, useUser } from "@/firebase"
+import { useAuth, useUser, useFirestore } from "@/firebase"
 import { initiateAnonymousSignIn } from "@/firebase/non-blocking-login"
 import { setDocumentNonBlocking } from "@/firebase/non-blocking-updates"
 import { doc, serverTimestamp } from "firebase/firestore"
-import { Separator } from "@/components/ui/separator"
 
 const QUICK_STARTS = [
   { label: "Artist", icon: Palette, text: "I am an artist creating a proposal for a museum to showcase a series of Mekong Delta inspired storytelling installations." },
@@ -37,8 +36,9 @@ export default function OnboardingPage() {
   const router = useRouter()
   const { toast } = useToast()
   const auth = useAuth()
+  const firestore = useFirestore()
   const { user } = useUser()
-  const [step, setStep] = useState(1) // 1: Basic Facts, 2: Strategic Context, 3: Review
+  const [step, setStep] = useState(1)
   const [loading, setLoading] = useState(false)
   
   const [basicFacts, setBasicFacts] = useState({
@@ -87,7 +87,7 @@ export default function OnboardingPage() {
   }
 
   const handleFinish = () => {
-    if (!proposal || !user) return
+    if (!proposal || !user || !firestore) return
 
     const orgId = user.uid
     const slug = proposal.suggestedName.toLowerCase().replace(/[^a-z0-9]/g, '-')
@@ -114,7 +114,7 @@ export default function OnboardingPage() {
       updatedAt: serverTimestamp()
     }
 
-    setDocumentNonBlocking(doc(user.auth.firestore, 'organizations', orgId), orgData, { merge: true })
+    setDocumentNonBlocking(doc(firestore, 'organizations', orgId), orgData, { merge: true })
 
     toast({ 
       title: "Identity Profile Saved", 
@@ -278,8 +278,6 @@ export default function OnboardingPage() {
                     <p className="text-sm text-slate-600 italic leading-relaxed font-medium">"{proposal?.missionStatement}"</p>
                   </div>
                 </div>
-
-                <Separator />
 
                 <div className="space-y-6">
                   <Label className="text-[10px] uppercase tracking-widest text-accent font-black block border-b pb-2">Growth Roadmap</Label>

@@ -1,22 +1,23 @@
+
 "use client"
 
 import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { CreditCard, FileText, Users, TrendingUp, ArrowUpRight, Plus, Sparkles, Copy, ExternalLink, Lightbulb, ArrowRight, Zap, Target, Star, ShieldCheck } from "lucide-react"
+import { CreditCard, FileText, Users, TrendingUp, ArrowUpRight, Plus, Sparkles, Copy, ExternalLink, ArrowRight, Zap, Target, Star, ShieldCheck } from "lucide-react"
 import { MOCK_INVOICES, MOCK_CLIENTS } from "@/lib/mock-data"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
 import { useToast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
-import { useDoc, useUser } from "@/firebase"
+import { useDoc, useUser, useFirestore } from "@/firebase"
 import { useMemoFirebase } from "@/firebase/provider"
 import { doc } from "firebase/firestore"
-import { Separator } from "@/components/ui/separator"
 
 export default function DashboardPage() {
   const { toast } = useToast()
   const { user } = useUser()
+  const firestore = useFirestore()
   const [origin, setOrigin] = useState("")
 
   useEffect(() => {
@@ -24,9 +25,9 @@ export default function DashboardPage() {
   }, [])
 
   const orgRef = useMemoFirebase(() => {
-    if (!user) return null
-    return doc(user.auth.firestore, 'organizations', user.uid)
-  }, [user])
+    if (!user || !firestore) return null
+    return doc(firestore, 'organizations', user.uid)
+  }, [user, firestore])
 
   const { data: org, isLoading: isOrgLoading } = useDoc(orgRef)
 
@@ -66,7 +67,6 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Stats Grid */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card className="border-none shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -121,9 +121,7 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-7">
-        {/* Main Content Area */}
         <div className="col-span-4 space-y-6">
-          {/* Strategic Growth Insights */}
           <Card className="border-accent/20 bg-slate-900 text-white overflow-hidden border-2">
             <div className="bg-accent h-1.5 w-full" />
             <CardHeader className="pb-3">
@@ -226,7 +224,6 @@ export default function DashboardPage() {
           </Card>
         </div>
 
-        {/* Sidebar Area */}
         <div className="col-span-3 space-y-6">
           <Card className="bg-primary text-white border-none shadow-xl">
             <CardHeader className="pb-2">
