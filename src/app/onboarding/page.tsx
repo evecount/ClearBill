@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useState } from "react"
@@ -7,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
-import { ArrowRight, Loader2, ShieldCheck, Scissors, Music, HeartPulse, Code, Utensils, Hammer, Shield, Sparkles, Zap, Target, Star, Palette, PenTool } from "lucide-react"
+import { ArrowRight, Loader2, ShieldCheck, Scissors, Music, HeartPulse, Code, Utensils, Hammer, Shield, Sparkles, Zap, Target, Star, Palette, PenTool, Home, TrendingUp, Briefcase, Camera } from "lucide-react"
 import { consultBusinessOnboarding, type OnboardingConsultantOutput } from "@/ai/flows/onboarding-consultant"
 import { useToast } from "@/hooks/use-toast"
 import { cn } from "@/lib/utils"
@@ -21,10 +22,15 @@ const QUICK_STARTS = [
   { label: "Artist", icon: Palette, text: "I am an artist creating a proposal for a museum to showcase a series of Mekong Delta inspired storytelling installations." },
   { label: "Graphic Designer", icon: PenTool, text: "I am a graphic designer creating a brand logo and visual identity system for a new sustainable fashion startup." },
   { label: "Personal Chef", icon: Utensils, text: "I am a private personal chef providing boutique catering for small dinner parties and customized weekly meal prep for busy families." },
-  { label: "Software Architect", icon: Code, text: "I provide high-end software architectural consulting and delivery management for scale-up startups." },
-  { label: "Handyman", icon: Hammer, text: "I provide high-quality home repair and maintenance services for local homeowners." },
-  { label: "Security Expert", icon: Shield, text: "I provide private security and executive protection for high-profile events and corporate offices." },
-  { label: "Wellness Coach", icon: HeartPulse, text: "I provide personalized health and longevity coaching for high-performance executives." }
+  { label: "Real Estate", icon: Home, text: "I am a luxury real estate agent providing high-trust property acquisition and portfolio management for high-net-worth individuals." },
+  { label: "Handyman", icon: Hammer, text: "I provide high-quality home repair and maintenance services, specializing in property asset protection and longevity." },
+  { label: "Software Expert", icon: Code, text: "I provide high-end software architectural consulting and delivery management for scale-up startups." },
+  { label: "Marketing", icon: TrendingUp, text: "I am a marketing freelancer producing outcome-based campaign strategies that prioritize ROI and brand authority." },
+  { label: "Security", icon: Shield, text: "I provide private security and executive protection for high-profile events and corporate leadership." },
+  { label: "Wellness", icon: HeartPulse, text: "I provide personalized health and longevity coaching for high-performance executives and founders." },
+  { label: "Trainer", icon: Briefcase, text: "I provide corporate training and leadership development workshops focused on organizational culture and outcomes." },
+  { label: "Music/Sound", icon: Music, text: "I provide world-class music production and sound engineering for cinematic projects and recording artists." },
+  { label: "Beauty/Aesthetics", icon: Scissors, text: "I am a luxury aesthetic artist providing high-trust beauty transformations and personalized skin health regimens." }
 ]
 
 export default function OnboardingPage() {
@@ -170,41 +176,53 @@ export default function OnboardingPage() {
         )}
 
         {step === 2 && (
-          <div className="max-w-2xl mx-auto w-full">
+          <div className="max-w-4xl mx-auto w-full">
             <Card className="shadow-2xl border-none rounded-3xl overflow-hidden">
               <CardHeader className="bg-slate-900 text-white p-8 text-center">
                 <CardTitle className="text-2xl">The Strategic Core</CardTitle>
                 <CardDescription className="text-slate-400">Describe your project or expertise, {basicFacts.businessName}.</CardDescription>
               </CardHeader>
-              <CardContent className="p-8 space-y-8">
-                <div className="space-y-3">
-                  <Label htmlFor="desc" className="text-[10px] uppercase tracking-widest text-muted-foreground font-black">Your Strategic Intent</Label>
-                  <Textarea 
-                    id="desc"
-                    placeholder="e.g. I am an artist creating a proposal for a museum."
-                    className="min-h-[180px] text-lg p-5 rounded-2xl focus:ring-accent/20 border-slate-200 shadow-inner bg-slate-50/50"
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                  />
-                </div>
-
+              <CardContent className="p-8 space-y-10">
                 <div className="space-y-4">
-                  <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-black">Quick Inspiration</Label>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex items-center justify-between">
+                    <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-black">Choose Your Professional Path</Label>
+                    <span className="text-[10px] text-muted-foreground italic">Click a role to start with a proven template</span>
+                  </div>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
                     {QUICK_STARTS.map((qs) => (
                       <button
                         key={qs.label}
                         onClick={() => setDescription(qs.text)}
                         className={cn(
-                          "flex items-center gap-2 px-4 py-2 rounded-xl text-sm border transition-all hover:bg-slate-50 text-left",
+                          "flex flex-col items-center gap-2 p-4 rounded-2xl text-xs border transition-all hover:bg-slate-50 text-center group",
                           description === qs.text ? "bg-accent border-accent text-white shadow-lg" : "bg-white border-slate-200 text-slate-600"
                         )}
                       >
-                        <qs.icon className="size-3 shrink-0" />
-                        {qs.label}
+                        <div className={cn(
+                          "p-2 rounded-xl mb-1 transition-transform group-hover:scale-110",
+                          description === qs.text ? "bg-white/20" : "bg-slate-50"
+                        )}>
+                          <qs.icon className="size-5 shrink-0" />
+                        </div>
+                        <span className="font-bold leading-tight">{qs.label}</span>
                       </button>
                     ))}
                   </div>
+                </div>
+
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="desc" className="text-[10px] uppercase tracking-widest text-muted-foreground font-black">Or Describe Your Own Craft</Label>
+                    {description && <Button variant="link" size="sm" className="h-auto p-0 text-xs text-muted-foreground" onClick={() => setDescription("")}>Clear</Button>}
+                  </div>
+                  <Textarea 
+                    id="desc"
+                    placeholder="e.g. I am a landscape architect focused on sustainable urban ecosystems..."
+                    className="min-h-[150px] text-lg p-5 rounded-2xl focus:ring-accent/20 border-slate-200 shadow-inner bg-slate-50/50"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                  />
+                  <p className="text-[10px] text-muted-foreground italic text-center">The more specific you are, the more cinematic your identity roadmap will be.</p>
                 </div>
               </CardContent>
               <CardFooter className="p-8 pt-0 gap-3">
@@ -291,6 +309,7 @@ export default function OnboardingPage() {
                 <Button className="w-full h-14 bg-accent hover:bg-accent/90 rounded-2xl text-lg font-bold shadow-xl" onClick={handleFinish}>
                   Launch My Profile <ArrowRight className="ml-2 size-5" />
                 </Button>
+                <p className="text-[10px] text-muted-foreground text-center">You can refine your mission, logo, and website later in Settings.</p>
               </CardFooter>
             </Card>
 
