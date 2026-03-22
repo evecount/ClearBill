@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useParams } from "next/navigation"
@@ -7,20 +8,33 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Separator } from "@/components/ui/separator"
-import { CreditCard, Download, CheckCircle2, ShieldCheck, Lock, Globe, Scale, FileText } from "lucide-react"
+import { CreditCard, Download, CheckCircle2, ShieldCheck, Lock, Globe, Scale, FileText, Landmark } from "lucide-react"
 import { useState } from "react"
 import { useToast } from "@/hooks/use-toast"
 import Image from "next/image"
+import { useDoc, useUser } from "@/firebase"
+import { useMemoFirebase } from "@/firebase/provider"
+import { doc } from "firebase/firestore"
 
 export default function ClientPortalPage() {
   const { invoiceId } = useParams()
   const { toast } = useToast()
   const [isPaid, setIsPaid] = useState(false)
   const [loading, setLoading] = useState(false)
+  const { user } = useUser()
+
+  // In a real app, we'd fetch the specific invoice and organization from Firestore.
+  // For MVP, we'll try to get the org data if a user is logged in (likely the merchant testing).
+  const orgRef = useMemoFirebase(() => {
+    if (!user) return null
+    return doc(user.auth.firestore, 'organizations', user.uid)
+  }, [user])
+
+  const { data: orgData } = useDoc(orgRef)
+  const org = orgData || MOCK_ORG
 
   const invoice = MOCK_INVOICES.find(i => i.id === invoiceId) || MOCK_INVOICES[0]
   const client = MOCK_CLIENTS.find(c => c.id === invoice.clientId)
-  const org = MOCK_ORG
 
   const handlePay = () => {
     setLoading(true)
@@ -36,6 +50,7 @@ export default function ClientPortalPage() {
   const total = subtotal + tax
 
   const brandColor = org.brandColor || '256 60% 55%'
+  const currencySymbol = org.currency === 'GBP' ? '£' : org.currency === 'EUR' ? '€' : '$'
 
   return (
     <div className="min-h-screen bg-slate-100 py-12 px-4 md:px-8">
@@ -45,7 +60,7 @@ export default function ClientPortalPage() {
           <div className="flex items-center gap-4">
             <div className="bg-white p-2 rounded-2xl shadow-sm border">
               <Image 
-                src={org.logoUrl} 
+                src={org.logoUrl || 'https://picsum.photos/seed/org1/200/200'} 
                 alt={org.name} 
                 width={56} 
                 height={56} 
@@ -87,6 +102,16 @@ export default function ClientPortalPage() {
                         <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">{client?.address}</p>
                         <p className="text-sm font-medium" style={{ color: `hsl(${brandColor})` }}>{client?.email}</p>
                       </div>
+                      
+                      {org.taxId && (
+                        <div className="pt-2 border-t border-dashed">
+                          <p className="text-[10px] uppercase font-bold tracking-[0.2em] text-muted-foreground">Merchant Tax ID</p>
+                          <div className="flex items-center gap-2 mt-1">
+                            <Landmark className="size-3 text-slate-400" />
+                            <p className="text-xs font-mono font-bold text-slate-700">{org.taxId}</p>
+                          </div>
+                        </div>
+                      )}
                     </div>
                     <div className="grid grid-cols-2 md:text-right gap-8">
                       <div className="space-y-1">
@@ -95,7 +120,7 @@ export default function ClientPortalPage() {
                       </div>
                       <div className="space-y-1">
                         <p className="text-[10px] uppercase font-bold tracking-[0.2em] text-muted-foreground">Strategic Total</p>
-                        <p className="text-sm font-bold text-slate-900">${total.toLocaleString()}</p>
+                        <p className="text-sm font-bold text-slate-900">{currencySymbol}{total.toLocaleString()}</p>
                       </div>
                       <div className="space-y-1">
                         <p className="text-[10px] uppercase font-bold tracking-[0.2em] text-muted-foreground">Issued</p>
@@ -126,7 +151,7 @@ export default function ClientPortalPage() {
                             <p className="font-semibold text-slate-900">{item.description}</p>
                           </TableCell>
                           <TableCell className="text-center text-slate-600">{item.quantity}</TableCell>
-                          <TableCell className="text-right font-semibold text-slate-900">${(item.quantity * item.price).toLocaleString()}</TableCell>
+                          <TableCell className="text-right font-semibold text-slate-900">{currencySymbol}{(item.quantity * item.price).toLocaleString()}</TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
@@ -137,16 +162,16 @@ export default function ClientPortalPage() {
                   <div className="w-full sm:w-[320px] space-y-4 p-6 bg-slate-50 rounded-2xl border border-dashed">
                     <div className="flex justify-between text-sm">
                       <span className="text-muted-foreground">Subtotal</span>
-                      <span className="font-medium text-slate-900">${subtotal.toLocaleString()}</span>
+                      <span className="font-medium text-slate-900">{currencySymbol}{subtotal.toLocaleString()}</span>
                     </div>
                     <div className="flex justify-between text-sm">
                       <span className="text-muted-foreground">Tax ({invoice.taxRate}%)</span>
-                      <span className="font-medium text-slate-900">${tax.toLocaleString()}</span>
+                      <span className="font-medium text-slate-900">{currencySymbol}{tax.toLocaleString()}</span>
                     </div>
                     <Separator />
                     <div className="flex justify-between items-baseline">
                       <span className="text-sm font-bold text-slate-900">Outcome Fee</span>
-                      <span className="text-3xl font-extrabold" style={{ color: `hsl(${brandColor})` }}>${total.toLocaleString()}</span>
+                      <span className="text-3xl font-extrabold" style={{ color: `hsl(${brandColor})` }}>{currencySymbol}{total.toLocaleString()}</span>
                     </div>
                   </div>
                 </div>

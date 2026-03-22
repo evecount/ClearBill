@@ -9,13 +9,14 @@ import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { Textarea } from "@/components/ui/textarea"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
-import { Save, Sparkles, ArrowRight, Copy, ExternalLink, Globe, Building2, Link as LinkIcon } from "lucide-react"
+import { Save, Sparkles, ArrowRight, Copy, ExternalLink, Globe, Building2, Link as LinkIcon, Landmark, Flag, DollarSign } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import Link from "next/link"
 import { useDoc, useUser } from "@/firebase"
 import { useMemoFirebase } from "@/firebase/provider"
 import { doc, serverTimestamp } from "firebase/firestore"
 import { updateDocumentNonBlocking } from "@/firebase/non-blocking-updates"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 export default function SettingsPage() {
   const { toast } = useToast()
@@ -39,6 +40,10 @@ export default function SettingsPage() {
     email: "",
     slug: "",
     address: "",
+    city: "",
+    country: "",
+    taxId: "",
+    currency: "USD",
     missionStatement: "",
     industry: "",
     brandColor: "256 60% 55%",
@@ -52,6 +57,10 @@ export default function SettingsPage() {
         email: org.contactEmail || "",
         slug: org.slug || "",
         address: org.addressLine1 || "",
+        city: org.city || "",
+        country: org.country || "USA",
+        taxId: org.taxId || "",
+        currency: org.currency || "USD",
         missionStatement: org.missionStatement || "",
         industry: org.industry || "",
         brandColor: org.brandColor || "256 60% 55%",
@@ -69,6 +78,10 @@ export default function SettingsPage() {
       contactEmail: formData.email,
       slug: formData.slug,
       addressLine1: formData.address,
+      city: formData.city,
+      country: formData.country,
+      taxId: formData.taxId,
+      currency: formData.currency,
       missionStatement: formData.missionStatement,
       industry: formData.industry,
       brandColor: formData.brandColor,
@@ -221,6 +234,19 @@ export default function SettingsPage() {
                 </div>
               </div>
               <div className="space-y-2">
+                <Label htmlFor="org-taxid" className="text-xs uppercase tracking-widest text-muted-foreground font-bold">Tax / Business ID (UEN, GST, VAT)</Label>
+                <div className="relative">
+                   <Landmark className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+                   <Input 
+                    id="org-taxid" 
+                    value={formData.taxId} 
+                    onChange={(e) => setFormData({...formData, taxId: e.target.value})}
+                    className="h-11 pl-10 rounded-xl"
+                    placeholder="e.g. UEN12345678X"
+                  />
+                </div>
+              </div>
+              <div className="space-y-2">
                 <Label htmlFor="org-email" className="text-xs uppercase tracking-widest text-muted-foreground font-bold">Support Email</Label>
                 <Input 
                   id="org-email" 
@@ -229,6 +255,34 @@ export default function SettingsPage() {
                   onChange={(e) => setFormData({...formData, email: e.target.value})}
                   className="h-11 rounded-xl"
                 />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="org-country" className="text-xs uppercase tracking-widest text-muted-foreground font-bold">Country</Label>
+                <div className="relative">
+                  <Flag className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+                  <Input 
+                    id="org-country" 
+                    value={formData.country} 
+                    onChange={(e) => setFormData({...formData, country: e.target.value})}
+                    className="h-11 pl-10 rounded-xl"
+                    placeholder="e.g. Singapore"
+                  />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="org-currency" className="text-xs uppercase tracking-widest text-muted-foreground font-bold">Currency</Label>
+                <Select value={formData.currency} onValueChange={(v) => setFormData({...formData, currency: v})}>
+                  <SelectTrigger className="h-11 rounded-xl">
+                    <SelectValue placeholder="Select Currency" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="USD">USD - US Dollar</SelectItem>
+                    <SelectItem value="SGD">SGD - Singapore Dollar</SelectItem>
+                    <SelectItem value="GBP">GBP - British Pound</SelectItem>
+                    <SelectItem value="EUR">EUR - Euro</SelectItem>
+                    <SelectItem value="AUD">AUD - Australian Dollar</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="org-website" className="text-xs uppercase tracking-widest text-muted-foreground font-bold">Professional Website</Label>

@@ -77,6 +77,8 @@ export default function OnboardingPage() {
       state: "",
       postalCode: "",
       country: "USA",
+      taxId: "", // To be filled by user in settings
+      currency: "USD",
       paymentGatewayType: "Stripe",
       brandColor: proposal.brandColor,
       missionStatement: proposal.missionStatement,
@@ -92,7 +94,7 @@ export default function OnboardingPage() {
 
     toast({ 
       title: "Identity Profile Saved", 
-      description: "Your professional profile is now live. You can further refine these details at any time in your Settings." 
+      description: "Your professional profile is now live. You can further refine these details and add your Tax ID at any time in your Settings." 
     })
     router.push("/dashboard")
   }

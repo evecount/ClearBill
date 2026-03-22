@@ -9,6 +9,12 @@ export type Organization = {
   missionStatement?: string;
   industry?: string;
   address?: string;
+  city?: string;
+  state?: string;
+  postalCode?: string;
+  country?: string;
+  taxId?: string; // UEN, GST, VAT, etc.
+  currency?: string;
   slug?: string;
   website?: string;
   growthStrategy?: any;
@@ -53,7 +59,13 @@ export const MOCK_ORG: Organization = {
   brandColor: '256 60% 55%',
   missionStatement: 'Providing world-class boutique consulting for independent creators.',
   industry: 'Professional Services',
-  address: '123 Corporate Way, San Francisco, CA',
+  address: '123 Corporate Way',
+  city: 'San Francisco',
+  state: 'CA',
+  postalCode: '94103',
+  country: 'USA',
+  taxId: 'UEN12345678X',
+  currency: 'USD',
   website: 'https://acme-solutions.io'
 };
 
