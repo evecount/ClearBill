@@ -5,7 +5,7 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Plus, Search, Mail, MapPin, MoreVertical, Trash2, Edit2, FileText, User, Building2 } from "lucide-react"
+import { Plus, Search, Mail, MapPin, MoreVertical, Trash2, Edit2, FileText, User, Building2, Loader2 } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger, DropdownMenuSeparator } from "@/components/ui/dropdown-menu"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
@@ -20,12 +20,13 @@ import { addDocumentNonBlocking, updateDocumentNonBlocking, deleteDocumentNonBlo
 export default function ClientsPage() {
   const { toast } = useToast()
   const router = useRouter()
-  const { user } = useUser()
+  const { user, isUserLoading } = useUser()
   const firestore = useFirestore()
   
   const [searchQuery, setSearchQuery] = useState("")
   const [isAddOpen, setIsAddOpen] = useState(false)
   const [isEditOpen, setIsEditOpen] = useState(false)
+  const [isSaving, setIsSaving] = useState(false)
   const [activeClient, setActiveClient] = useState<any>(null)
   const [clientForm, setClientForm] = useState({ name: "", company: "", email: "", address: "" })
 
@@ -45,37 +46,88 @@ export default function ClientsPage() {
     client.email.toLowerCase().includes(searchQuery.toLowerCase())
   ) || []
 
+  const handleOpenAddDialog = (open: boolean) => {
+    setIsAddOpen(open)
+    if (open) {
+      setClientForm({ name: "", company: "", email: "", address: "" })
+    }
+  }
+
   const handleAddClient = () => {
-    if (!clientForm.name || !clientForm.email || !user || !firestore) {
-      toast({ title: "Error", description: "Name and email are required.", variant: "destructive" })
+    if (isSaving) return
+
+    // Granular Validation
+    if (!user) {
+      toast({ title: "Authentication Required", description: "You must be logged in to add clients.", variant: "destructive" })
       return
     }
 
+    if (!firestore) {
+      toast({ title: "Database Error", description: "The strategic corpus is currently unavailable.", variant: "destructive" })
+      return
+    }
+
+    if (!clientForm.name.trim()) {
+      toast({ title: "Name Required", description: "Please enter a full name for this professional contact.", variant: "destructive" })
+      return
+    }
+
+    if (!clientForm.email.trim()) {
+      toast({ title: "Email Required", description: "A valid email is required for billing delivery.", variant: "destructive" })
+      return
+    }
+
+    setIsSaving(true)
     const clientData = {
       organizationId: user.uid,
-      ...clientForm,
+      name: clientForm.name.trim(),
+      company: clientForm.company.trim(),
+      email: clientForm.email.trim(),
+      address: clientForm.address.trim(),
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp()
     }
 
-    addDocumentNonBlocking(collection(firestore, 'organizations', user.uid, 'clients'), clientData)
-    setClientForm({ name: "", company: "", email: "", address: "" })
-    setIsAddOpen(false)
-    toast({ title: "Client Added", description: `${clientData.name} has been added to your directory.` })
+    try {
+      addDocumentNonBlocking(collection(firestore, 'organizations', user.uid, 'clients'), clientData)
+      toast({ title: "Client Added", description: `${clientData.name} has been added to your professional directory.` })
+      setIsAddOpen(false)
+    } catch (error) {
+      toast({ title: "Save Failed", description: "Could not architect client record. Please try again.", variant: "destructive" })
+    } finally {
+      setIsSaving(false)
+    }
   }
 
   const handleEditClick = (client: any) => {
     setActiveClient(client)
-    setClientForm({ name: client.name, company: client.company || "", email: client.email, address: client.address })
+    setClientForm({ 
+      name: client.name, 
+      company: client.company || "", 
+      email: client.email, 
+      address: client.address 
+    })
     setIsEditOpen(true)
   }
 
   const handleUpdateClient = () => {
     if (!user || !firestore || !activeClient) return
+
+    if (!clientForm.name.trim() || !clientForm.email.trim()) {
+      toast({ title: "Validation Error", description: "Name and email cannot be empty.", variant: "destructive" })
+      return
+    }
+
     const docRef = doc(firestore, 'organizations', user.uid, 'clients', activeClient.id)
-    updateDocumentNonBlocking(docRef, { ...clientForm, updatedAt: serverTimestamp() })
+    updateDocumentNonBlocking(docRef, { 
+      name: clientForm.name.trim(),
+      company: clientForm.company.trim(),
+      email: clientForm.email.trim(),
+      address: clientForm.address.trim(),
+      updatedAt: serverTimestamp() 
+    })
     setIsEditOpen(false)
-    toast({ title: "Client Updated", description: "Changes have been saved successfully." })
+    toast({ title: "Client Updated", description: "Strategic changes have been saved." })
   }
 
   const handleDelete = (id: string) => {
@@ -97,9 +149,9 @@ export default function ClientsPage() {
           <p className="text-muted-foreground">Manage your customer directory and billing details.</p>
         </div>
         
-        <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
+        <Dialog open={isAddOpen} onOpenChange={handleOpenAddDialog}>
           <DialogTrigger asChild>
-            <Button className="bg-accent hover:bg-accent/90" onClick={() => setClientForm({ name: "", company: "", email: "", address: "" })}>
+            <Button className="bg-accent hover:bg-accent/90">
               <Plus className="size-4 mr-2" /> Add Client
             </Button>
           </DialogTrigger>
@@ -111,23 +163,51 @@ export default function ClientsPage() {
             <div className="grid gap-4 py-4">
               <div className="grid gap-2">
                 <Label htmlFor="name">Full Name</Label>
-                <Input id="name" placeholder="e.g. Jane Doe" value={clientForm.name} onChange={(e) => setClientForm({ ...clientForm, name: e.target.value })} className="h-12 rounded-xl" />
+                <Input 
+                  id="name" 
+                  placeholder="e.g. Jane Doe" 
+                  value={clientForm.name} 
+                  onChange={(e) => setClientForm({ ...clientForm, name: e.target.value })} 
+                  className="h-12 rounded-xl" 
+                />
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="company">Company / Organization</Label>
-                <Input id="company" placeholder="e.g. Global Tech Partners" value={clientForm.company} onChange={(e) => setClientForm({ ...clientForm, company: e.target.value })} className="h-12 rounded-xl" />
+                <Input 
+                  id="company" 
+                  placeholder="e.g. Global Tech Partners" 
+                  value={clientForm.company} 
+                  onChange={(e) => setClientForm({ ...clientForm, company: e.target.value })} 
+                  className="h-12 rounded-xl" 
+                />
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="email">Email Address</Label>
-                <Input id="email" type="email" placeholder="jane@example.com" value={clientForm.email} onChange={(e) => setClientForm({ ...clientForm, email: e.target.value })} className="h-12 rounded-xl" />
+                <Input 
+                  id="email" 
+                  type="email" 
+                  placeholder="jane@example.com" 
+                  value={clientForm.email} 
+                  onChange={(e) => setClientForm({ ...clientForm, email: e.target.value })} 
+                  className="h-12 rounded-xl" 
+                />
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="address">Billing Address</Label>
-                <Input id="address" placeholder="123 Main St, City, Country" value={clientForm.address} onChange={(e) => setClientForm({ ...clientForm, address: e.target.value })} className="h-12 rounded-xl" />
+                <Input 
+                  id="address" 
+                  placeholder="123 Main St, City, Country" 
+                  value={clientForm.address} 
+                  onChange={(e) => setClientForm({ ...clientForm, address: e.target.value })} 
+                  className="h-12 rounded-xl" 
+                />
               </div>
             </div>
             <DialogFooter>
-              <Button onClick={handleAddClient} className="w-full h-12 bg-accent hover:bg-accent/90 rounded-xl">Save Client</Button>
+              <Button onClick={handleAddClient} disabled={isSaving} className="w-full h-12 bg-accent hover:bg-accent/90 rounded-xl">
+                {isSaving ? <Loader2 className="size-4 animate-spin mr-2" /> : null}
+                Save Client
+              </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
@@ -168,8 +248,11 @@ export default function ClientsPage() {
         <Input placeholder="Search clients by name, company or email..." className="pl-10 border-none shadow-none focus-visible:ring-0" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
       </div>
 
-      {isLoading ? (
-        <div className="py-24 text-center text-muted-foreground">Architecting directory...</div>
+      {isLoading || isUserLoading ? (
+        <div className="py-24 text-center text-muted-foreground flex flex-col items-center gap-2">
+          <Loader2 className="size-8 animate-spin text-accent" />
+          <span>Architecting directory...</span>
+        </div>
       ) : filteredClients.length > 0 ? (
         <Card className="overflow-hidden border-none shadow-lg rounded-2xl">
           <CardContent className="p-0">
