@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
-import { Sparkles, ArrowRight, Building2, Mail, MapPin, Loader2, ShieldCheck, Scissors, Briefcase, Music, Dumbbell, Star, Mic, Shield, GraduationCap, Hammer, PawPrint, Utensils, TrendingUp, Zap, Target, Lightbulb } from "lucide-react"
+import { Sparkles, ArrowRight, Building2, Mail, MapPin, Loader2, ShieldCheck, Scissors, Briefcase, Music, Dumbbell, Star, Mic, Shield, GraduationCap, Hammer, PawPrint, Utensils, TrendingUp, Zap, Target, Lightbulb, HeartPulse, Code } from "lucide-react"
 import { consultBusinessOnboarding, type OnboardingConsultantOutput } from "@/ai/flows/onboarding-consultant"
 import { useToast } from "@/hooks/use-toast"
 import Link from "next/link"
@@ -19,11 +19,12 @@ import { Separator } from "@/components/ui/separator"
 
 const QUICK_STARTS = [
   { label: "Personal Chef", icon: Utensils, text: "I am a private personal chef providing boutique catering for small dinner parties and customized weekly meal prep for busy families." },
-  { label: "Private Tutor", icon: GraduationCap, text: "I provide private SAT and college prep tutoring for high school students." },
+  { label: "Software Architect", icon: Code, text: "I provide high-end software architectural consulting and delivery management for scale-up startups." },
   { label: "Lash Artist", icon: Scissors, text: "I run a boutique eyelash studio providing luxury extensions and lash lifts." },
   { label: "Handyman", icon: Hammer, text: "I provide high-quality home repair and maintenance services for local homeowners." },
   { label: "Sound Engineer", icon: Music, text: "I am a freelance sound engineer specializing in podcast post-production and custom sound design." },
-  { label: "Security Expert", icon: Shield, text: "I provide private security and executive protection for high-profile events and corporate offices." }
+  { label: "Security Expert", icon: Shield, text: "I provide private security and executive protection for high-profile events and corporate offices." },
+  { label: "Wellness Coach", icon: HeartPulse, text: "I provide personalized health and longevity coaching for high-performance executives." }
 ]
 
 export default function OnboardingPage() {
@@ -107,11 +108,22 @@ export default function OnboardingPage() {
             <Card className="shadow-2xl border-none rounded-3xl overflow-hidden">
               <CardHeader className="bg-slate-900 text-white p-8">
                 <CardTitle className="text-2xl">Unpack your expertise</CardTitle>
-                <CardDescription className="text-slate-400">Our Strategic Orchestrator will pivot your business model toward Deep Water sovereignty.</CardDescription>
+                <CardDescription className="text-slate-400">Describe what you do in your own words. Our Strategic Orchestrator will architect the rest.</CardDescription>
               </CardHeader>
               <CardContent className="p-8 space-y-8">
+                <div className="space-y-3">
+                  <Label htmlFor="desc" className="text-[10px] uppercase tracking-widest text-muted-foreground font-black">Professional DNA</Label>
+                  <Textarea 
+                    id="desc"
+                    placeholder="e.g. I am a boutique marketing consultant for luxury brands, focusing on digital presence and elite brand positioning..."
+                    className="min-h-[180px] text-lg p-5 rounded-2xl focus:ring-accent/20 border-slate-200 shadow-inner bg-slate-50/50"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                  />
+                </div>
+
                 <div className="space-y-4">
-                  <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-black">Professional Nucleus</Label>
+                  <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-black">Or, Use a Strategic Nucleus</Label>
                   <div className="flex flex-wrap gap-2">
                     {QUICK_STARTS.map((qs) => (
                       <button
@@ -127,17 +139,6 @@ export default function OnboardingPage() {
                       </button>
                     ))}
                   </div>
-                </div>
-
-                <div className="space-y-3">
-                  <Label htmlFor="desc" className="text-[10px] uppercase tracking-widest text-muted-foreground font-black">Your Expertise</Label>
-                  <Textarea 
-                    id="desc"
-                    placeholder="Describe what you do... we will architect the rest."
-                    className="min-h-[150px] text-lg p-5 rounded-2xl focus:ring-accent/20 border-slate-200 shadow-inner bg-slate-50/50"
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                  />
                 </div>
               </CardContent>
               <CardFooter className="p-8 pt-0">

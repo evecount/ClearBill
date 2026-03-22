@@ -15,7 +15,9 @@ export const metadata: Metadata = {
     'handyman service quotes',
     'outcome based billing',
     'independent expert identity',
-    'B2B payment portals'
+    'B2B payment portals',
+    'consultant agreements',
+    'expert rate auditing'
   ],
   authors: [{ name: 'ClearBill Team' }],
   openGraph: {

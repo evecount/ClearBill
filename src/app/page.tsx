@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { CreditCard, ShieldCheck, Zap, ArrowRight, TrendingUp, Sparkles, Layout, Globe, Lock, FileText, Scale, Utensils, Shield, Hammer, BarChart3, Briefcase, Camera, Home, PenTool, CheckCircle } from "lucide-react"
+import { CreditCard, ShieldCheck, Zap, ArrowRight, TrendingUp, Sparkles, Layout, Globe, Lock, FileText, Scale, Utensils, Shield, Hammer, BarChart3, Briefcase, Camera, Home, PenTool, CheckCircle, HeartPulse, Code, Music, Scissors } from "lucide-react"
 import { QuickAuditTool } from "@/components/landing/quick-audit-tool"
 
 export default function LandingPage() {
@@ -110,11 +110,15 @@ export default function LandingPage() {
                 { title: "Real Estate Agents", icon: Home, desc: "Professional commission invoices and high-trust agent portals." },
                 { title: "Marketing Freelancers", icon: PenTool, desc: "Outcome-based contracts that highlight strategic campaign value." },
                 { title: "Sales Consultants", icon: TrendingUp, desc: "Success-fee tracking and professional performance summaries." },
-                { title: "Expert Trades", icon: Hammer, desc: "Service quotes that translate labor into 'Property Care Stewardship'." },
+                { title: "Expert Trades", icon: Hammer, desc: "Service quotes that translate labor into 'Property Asset Protection'." },
                 { title: "Creative Directors", icon: Camera, desc: "High-end portfolios integrated with secure B2B billing." },
                 { title: "Legal & Security", icon: Shield, desc: "AI-drafted compliance terms and professional risk mitigation agreements." },
                 { title: "Culinary Experts", icon: Utensils, desc: "Boutique catering portals for high-value client experiences." },
                 { title: "Corporate Trainers", icon: Briefcase, desc: "Structured workshop billing focused on organizational outcomes." },
+                { title: "Health & Wellness", icon: HeartPulse, desc: "Personal training and wellness plans focused on long-term vitality outcomes." },
+                { title: "Software Architects", icon: Code, desc: "Technical roadmaps and delivery verification for elite engineering." },
+                { title: "Music & Sound", icon: Music, desc: "Production and engineering billing for world-class sonic outcomes." },
+                { title: "Boutique Studios", icon: Scissors, desc: "Lash, hair, and aesthetic artists providing high-trust luxury experiences." },
               ].map((role) => (
                 <div key={role.title} className="p-6 rounded-2xl bg-slate-50 border border-slate-100 hover:border-accent/20 transition-all hover:bg-white hover:shadow-xl group">
                   <role.icon className="size-8 text-accent mb-4 group-hover:scale-110 transition-transform" />
