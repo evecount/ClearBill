@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
-import { Plus, Search, MoreVertical, Trash2, FileSignature, Copy, ExternalLink, Share2, Sparkles } from "lucide-react"
+import { Plus, Search, MoreVertical, Trash2, FileSignature, Copy, ExternalLink, Share2, Sparkles, Edit2 } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { useToast } from "@/hooks/use-toast"
@@ -123,8 +123,19 @@ export default function ProposalsPage() {
                           variant="ghost" 
                           size="icon" 
                           className="text-accent hover:text-accent hover:bg-accent/10"
+                          asChild
+                          title="Open Client Dashboard"
+                        >
+                          <Link href={`/proposal/${user?.uid}/${proposal.id}`} target="_blank">
+                             <ExternalLink className="size-4" />
+                          </Link>
+                        </Button>
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="text-muted-foreground hover:text-accent hover:bg-accent/10"
                           onClick={() => copyLink(proposal.id)}
-                          title="Share Dashboard"
+                          title="Copy Link"
                         >
                           <Share2 className="size-4" />
                         </Button>
@@ -136,13 +147,13 @@ export default function ProposalsPage() {
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                            <DropdownMenuItem onClick={() => copyLink(proposal.id)}>
-                              <Copy className="size-4 mr-2" /> Copy Dashboard Link
-                            </DropdownMenuItem>
                             <DropdownMenuItem asChild>
-                              <Link href={`/proposal/${user?.uid}/${proposal.id}`} target="_blank">
-                                <ExternalLink className="size-4 mr-2" /> Open Client View
-                              </Link>
+                               <Link href="/dashboard/proposals/new">
+                                 <Edit2 className="size-4 mr-2" /> Edit Strategy
+                               </Link>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => copyLink(proposal.id)}>
+                              <Copy className="size-4 mr-2" /> Copy Link
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem className="text-destructive" onClick={() => handleDelete(proposal.id)}>

@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
-import { Plus, Search, ExternalLink, MoreVertical, Copy, Trash2, Filter, Share2, Sparkles, Loader2, Calendar, FileText } from "lucide-react"
+import { Plus, Search, ExternalLink, MoreVertical, Copy, Trash2, Filter, Share2, Sparkles, Loader2, Calendar, FileText, Eye } from "lucide-react"
 import Link from "next/link"
 import { Input } from "@/components/ui/input"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
@@ -75,8 +75,6 @@ export default function InvoicesPage() {
     setLoadingEmail(true)
     const client = clients?.find(c => c.id === shareInvoice.clientId)
     
-    // Get org name for the AI
-    const orgRef = doc(firestore!, 'organizations', user.uid)
     try {
       const result = await generateInvoiceEmail({
         businessName: "Your Business",
@@ -100,7 +98,7 @@ export default function InvoicesPage() {
           <h1 className="text-3xl font-bold tracking-tight">Invoices</h1>
           <p className="text-muted-foreground">Manage and track your professional billing.</p>
         </div>
-        <Button asChild className="bg-accent hover:bg-accent/90 hidden md:flex">
+        <Button asChild className="bg-accent hover:bg-accent/90">
           <Link href="/dashboard/invoices/new">
             <Plus className="size-4 mr-2" /> New Invoice
           </Link>
@@ -168,6 +166,17 @@ export default function InvoicesPage() {
                             variant="ghost" 
                             size="icon" 
                             className="text-accent hover:text-accent hover:bg-accent/10"
+                            asChild
+                            title="Open Branded Portal"
+                          >
+                             <Link href={`/p/${invoice.id}`} target="_blank">
+                                <ExternalLink className="size-4" />
+                             </Link>
+                          </Button>
+                          <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            className="text-muted-foreground hover:text-accent hover:bg-accent/10"
                             onClick={() => {
                               setShareInvoice(invoice)
                               setAiEmail(null)
@@ -185,12 +194,10 @@ export default function InvoicesPage() {
                             <DropdownMenuContent align="end">
                               <DropdownMenuLabel>Actions</DropdownMenuLabel>
                               <DropdownMenuItem onClick={() => copyLink(invoice.id)}>
-                                <Copy className="size-4 mr-2" /> Copy Payment Link
+                                <Copy className="size-4 mr-2" /> Copy Link
                               </DropdownMenuItem>
-                              <DropdownMenuItem asChild>
-                                <Link href={`/p/${invoice.id}`} target="_blank">
-                                  <ExternalLink className="size-4 mr-2" /> Open Branded Portal
-                                </Link>
+                              <DropdownMenuItem disabled>
+                                <Sparkles className="size-4 mr-2" /> Refine Invoice (Soon)
                               </DropdownMenuItem>
                               <DropdownMenuSeparator />
                               <DropdownMenuItem 
