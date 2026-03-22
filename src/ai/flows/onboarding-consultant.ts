@@ -1,4 +1,3 @@
-
 'use server';
 /**
  * @fileOverview This file defines a Genkit flow for an AI Identity Architect & Growth Partner.
@@ -38,6 +37,7 @@ const OnboardingConsultantInputSchema = z.object({
   businessName: z.string().optional(),
   location: z.string().optional(),
   industry: z.string().optional(),
+  website: z.string().optional(),
 });
 export type OnboardingConsultantInput = z.infer<typeof OnboardingConsultantInputSchema>;
 
@@ -57,11 +57,12 @@ CRITICAL: Use these facts as the absolute source of truth. DO NOT INVENT OR ALTE
 - Business Name: {{{businessName}}}
 - Location: {{{location}}}
 - Provided Industry: {{{industry}}}
+- Website: {{{website}}}
 
 Context: "{{{userDescription}}}"
 
 Your task:
-1. IDENTITY: If the user provided a brief description like "I am an artist", expand this into a full professional mission that highlights "Outcome Certainty".
+1. IDENTITY: If the user provided a brief description like "I am an artist", expand this into a full professional mission that highlights "Outcome Certainty". Use the website to inform the tone.
 2. INVOICING: Generate 3-4 professional, outcome-based invoice line items that an expert in this specific field (e.g., an artist in Singapore, a plumber in Berlin) would typically bill for. 
 For an artist, include things like "Conceptual Development & Site Research", "Production & Material Procurement", "Strategic Installation Supervision".
 Assign elite, professional market rate prices.

@@ -1,4 +1,3 @@
-
 "use client"
 
 import { useState } from "react"
@@ -10,7 +9,7 @@ import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
-import { ArrowRight, Loader2, ShieldCheck, Scissors, Music, HeartPulse, Code, Utensils, Hammer, Shield, Sparkles, Zap, Target, Star, Palette, PenTool, Home, TrendingUp, Briefcase, Landmark, CreditCard, Send, Camera, Upload } from "lucide-react"
+import { ArrowRight, Loader2, ShieldCheck, Scissors, Music, HeartPulse, Code, Utensils, Hammer, Shield, Sparkles, Zap, Target, Star, Palette, PenTool, Home, TrendingUp, Briefcase, Landmark, CreditCard, Send, Camera, Upload, Globe, Link as LinkIcon } from "lucide-react"
 import { consultBusinessOnboarding, type OnboardingConsultantOutput } from "@/ai/flows/onboarding-consultant"
 import { useToast } from "@/hooks/use-toast"
 import { cn } from "@/lib/utils"
@@ -47,6 +46,7 @@ export default function OnboardingPage() {
     businessName: "",
     location: "",
     industry: "",
+    website: "",
     logoUrl: ""
   })
 
@@ -77,7 +77,8 @@ export default function OnboardingPage() {
         userDescription: description,
         businessName: basicFacts.businessName,
         location: basicFacts.location,
-        industry: basicFacts.industry
+        industry: basicFacts.industry,
+        website: basicFacts.website
       })
       
       setProposal(result)
@@ -112,7 +113,7 @@ export default function OnboardingPage() {
       missionStatement: proposal.missionStatement,
       industry: proposal.industry,
       slug: slug,
-      website: "",
+      website: basicFacts.website,
       growthStrategy: proposal.growthStrategy,
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp()
@@ -185,35 +186,51 @@ export default function OnboardingPage() {
                     <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest">Click to Shuffle Logo</p>
                   </div>
 
-                  <div className="space-y-3">
-                    <Label htmlFor="biz-name" className="text-xs uppercase font-black tracking-widest text-muted-foreground">Business Name</Label>
-                    <Input 
-                      id="biz-name" 
-                      placeholder="e.g. Silver Oak Restoration" 
-                      className="h-14 rounded-2xl text-lg border-slate-200"
-                      value={basicFacts.businessName}
-                      onChange={(e) => setBasicFacts({...basicFacts, businessName: e.target.value})}
-                    />
-                  </div>
-                  <div className="space-y-3">
-                    <Label htmlFor="location" className="text-xs uppercase font-black tracking-widest text-muted-foreground">Primary Location</Label>
-                    <Input 
-                      id="location" 
-                      placeholder="e.g. Berlin, Germany" 
-                      className="h-14 rounded-2xl text-lg border-slate-200"
-                      value={basicFacts.location}
-                      onChange={(e) => setBasicFacts({...basicFacts, location: e.target.value})}
-                    />
-                  </div>
-                  <div className="space-y-3">
-                    <Label htmlFor="industry" className="text-xs uppercase font-black tracking-widest text-muted-foreground">Industry (Optional)</Label>
-                    <Input 
-                      id="industry" 
-                      placeholder="e.g. Muralist & Fine Art" 
-                      className="h-14 rounded-2xl text-lg border-slate-200"
-                      value={basicFacts.industry}
-                      onChange={(e) => setBasicFacts({...basicFacts, industry: e.target.value})}
-                    />
+                  <div className="grid gap-6">
+                    <div className="space-y-3">
+                      <Label htmlFor="biz-name" className="text-xs uppercase font-black tracking-widest text-muted-foreground">Business Name</Label>
+                      <Input 
+                        id="biz-name" 
+                        placeholder="e.g. Silver Oak Restoration" 
+                        className="h-14 rounded-2xl text-lg border-slate-200"
+                        value={basicFacts.businessName}
+                        onChange={(e) => setBasicFacts({...basicFacts, businessName: e.target.value})}
+                      />
+                    </div>
+                    <div className="space-y-3">
+                      <Label htmlFor="website" className="text-xs uppercase font-black tracking-widest text-muted-foreground">Professional Website (Optional)</Label>
+                      <div className="relative">
+                        <LinkIcon className="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+                        <Input 
+                          id="website" 
+                          placeholder="https://yourwebsite.com" 
+                          className="h-14 pl-12 rounded-2xl text-lg border-slate-200"
+                          value={basicFacts.website}
+                          onChange={(e) => setBasicFacts({...basicFacts, website: e.target.value})}
+                        />
+                      </div>
+                      <p className="text-[10px] text-muted-foreground">We'll extract context and identity from your digital home.</p>
+                    </div>
+                    <div className="space-y-3">
+                      <Label htmlFor="location" className="text-xs uppercase font-black tracking-widest text-muted-foreground">Primary Location</Label>
+                      <Input 
+                        id="location" 
+                        placeholder="e.g. Berlin, Germany" 
+                        className="h-14 rounded-2xl text-lg border-slate-200"
+                        value={basicFacts.location}
+                        onChange={(e) => setBasicFacts({...basicFacts, location: e.target.value})}
+                      />
+                    </div>
+                    <div className="space-y-3">
+                      <Label htmlFor="industry" className="text-xs uppercase font-black tracking-widest text-muted-foreground">Industry (Optional)</Label>
+                      <Input 
+                        id="industry" 
+                        placeholder="e.g. Muralist & Fine Art" 
+                        className="h-14 rounded-2xl text-lg border-slate-200"
+                        value={basicFacts.industry}
+                        onChange={(e) => setBasicFacts({...basicFacts, industry: e.target.value})}
+                      />
+                    </div>
                   </div>
                 </CardContent>
                 <CardFooter className="p-10 pt-0">
