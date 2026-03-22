@@ -31,10 +31,10 @@ export default function LandingPage() {
             </div>
             <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-primary leading-[1.1]">
               Your Expertise. <br />
-              <span className="text-accent underline decoration-accent/20 underline-offset-8">Their Respect.</span>
+              <span className="text-accent underline decoration-accent/20 underline-offset-8">Clearly Valued.</span>
             </h1>
             <p className="text-xl md:text-2xl text-muted-foreground leading-relaxed max-w-3xl mx-auto">
-              You provide world-class service. **ClearBill** provides the professional identity architecture that ensures your clients treat you with the respect your hard work commands.
+              You provide world-class service. **ClearBill** provides the professional identity architecture that ensures your outcomes are recognized, quantified, and clearly valued.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-6">
               <Button size="lg" className="h-16 px-10 text-xl bg-accent hover:bg-accent/90 shadow-xl shadow-accent/20 group" asChild>
@@ -60,11 +60,11 @@ export default function LandingPage() {
               <div className="space-y-4">
                 <p className="text-lg font-medium text-slate-900">We believe self-employment is the most honest form of enterprise.</p>
                 <p className="text-muted-foreground leading-relaxed">
-                  Too often, independent experts—from personal chefs to security specialists—are forced to use generic, unbranded payment links that fail to reflect their professional weight. We're here to change that.
+                  Too often, independent experts—from personal chefs to security specialists—are forced to use generic, unbranded tools that fail to reflect their true worth. We're here to change that.
                 </p>
               </div>
               <div className="space-y-4">
-                <p className="text-lg font-medium text-slate-900">Identity is the foundation of B2B trust.</p>
+                <p className="text-lg font-medium text-slate-900">Value clarity is the foundation of B2B trust.</p>
                 <p className="text-muted-foreground leading-relaxed">
                   ClearBill isn't just a billing tool; it's a <strong>Professional Identity Ecosystem</strong>. We provide the digital infrastructure that honors your expertise and reflects the true value you provide to your clients.
                 </p>
@@ -76,7 +76,7 @@ export default function LandingPage() {
         <section className="py-20 px-6 max-w-7xl mx-auto border-t">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold text-primary">Elevate Your Client Experience</h2>
-            <p className="text-muted-foreground mt-2">Bridge the gap between your skill and the client's perception.</p>
+            <p className="text-muted-foreground mt-2">Bridge the gap between your skill and the client's perception of value.</p>
           </div>
           <div className="grid md:grid-cols-3 gap-12">
             <div className="group space-y-4 p-6 rounded-3xl hover:bg-slate-50 transition-colors">
@@ -92,9 +92,9 @@ export default function LandingPage() {
               <div className="bg-blue-500/10 p-3 rounded-2xl w-fit group-hover:scale-110 transition-transform">
                 <ShieldCheck className="size-8 text-blue-500" />
               </div>
-              <h3 className="text-2xl font-bold">Respect-First Architecture</h3>
+              <h3 className="text-2xl font-bold">Outcome-First Architecture</h3>
               <p className="text-muted-foreground leading-relaxed">
-                High-end clients hesitate to pay "raw" links. Our secure portals provide the enterprise-grade feeling that reduces payment friction.
+                High-end clients pay for certainty. Our secure portals provide the enterprise-grade feeling that reduces payment friction.
               </p>
             </div>
             <div className="group space-y-4 p-6 rounded-3xl hover:bg-slate-50 transition-colors">
@@ -116,7 +116,7 @@ export default function LandingPage() {
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-white text-xs font-bold uppercase tracking-widest">
                 The Identity Your Expertise Commands
               </div>
-              <h2 className="text-4xl md:text-5xl font-bold leading-tight">Professionalism is the key to longevity.</h2>
+              <h2 className="text-4xl md:text-5xl font-bold leading-tight">Clarity is the key to professional longevity.</h2>
               <p className="text-slate-400 text-lg leading-relaxed">
                 Your payment gateway is just a utility. Your identity is your reputation. ClearBill combines them into a seamless ecosystem that reflects your quality at every touchpoint.
               </p>
