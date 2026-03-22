@@ -47,15 +47,16 @@ export default function OnboardingPage() {
   const { toast } = useToast()
   const auth = useAuth()
   const firestore = useFirestore()
-  const { user } = useUser()
+  const { user, isUserLoading } = useUser()
   const fileInputRef = useRef<HTMLInputElement>(null)
   const scrollRef = useRef<HTMLDivElement>(null)
   
   const [messages, setMessages] = useState<ChatMessage[]>([
-    { role: 'assistant', content: "Welcome. Let's get your first professional invoice ready. To start, what's your business called and where are you based?", component: 'foundation' }
+    { role: 'assistant', content: "Welcome back. Let's get your first professional invoice ready. To start, what's your business called and where are you based?", component: 'foundation' }
   ])
   
   const [loading, setLoading] = useState(false)
+  const [isSyncing, setIsSyncing] = useState(true)
   const [basicFacts, setBasicFacts] = useState({
     businessName: "",
     location: "",
@@ -66,6 +67,29 @@ export default function OnboardingPage() {
   })
   const [description, setDescription] = useState("")
   const [proposal, setProposal] = useState<OnboardingConsultantOutput | null>(null)
+
+  // Fetch real org data to check for existing identity
+  const orgRef = useMemoFirebase(() => {
+    if (!user || !firestore) return null
+    return doc(firestore, 'organizations', user.uid)
+  }, [user, firestore])
+  const { data: existingOrg, isLoading: isOrgLoading } = useDoc(orgRef)
+
+  // 1. Anchor Identity Immediately
+  useEffect(() => {
+    if (!isUserLoading && !user && auth) {
+      initiateAnonymousSignIn(auth)
+    }
+  }, [user, isUserLoading, auth])
+
+  // 2. Redirect if Identity already exists
+  useEffect(() => {
+    if (!isOrgLoading && existingOrg) {
+      router.push('/dashboard')
+    } else if (!isOrgLoading) {
+      setIsSyncing(false)
+    }
+  }, [existingOrg, isOrgLoading, router])
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -110,10 +134,6 @@ export default function OnboardingPage() {
 
     setLoading(true)
     try {
-      if (!user && auth) {
-        initiateAnonymousSignIn(auth)
-      }
-
       const result = await consultBusinessOnboarding({ 
         userDescription: description,
         businessName: basicFacts.businessName,
@@ -196,6 +216,17 @@ export default function OnboardingPage() {
 
     toast({ title: "Invoice Ready", description: "Your professional billing ecosystem is live." })
     router.push("/dashboard")
+  }
+
+  if (isSyncing || isUserLoading || isOrgLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <div className="flex flex-col items-center gap-4">
+          <Loader2 className="size-8 animate-spin text-accent" />
+          <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Synchronizing Identity...</p>
+        </div>
+      </div>
+    )
   }
 
   return (
