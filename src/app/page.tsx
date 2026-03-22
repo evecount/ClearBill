@@ -27,14 +27,14 @@ export default function LandingPage() {
           <div className="max-w-4xl mx-auto space-y-6 relative">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 text-accent text-sm font-bold mb-4">
               <Sparkles className="size-4" />
-              <span>Transforming the Professional Identity of Self-Employment</span>
+              <span>Honoring the Professional Identity of Self-Employment</span>
             </div>
             <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-primary leading-[1.1]">
               Your Expertise. <br />
-              <span className="text-accent underline decoration-accent/20 underline-offset-8">Their Trust.</span>
+              <span className="text-accent underline decoration-accent/20 underline-offset-8">Their Respect.</span>
             </h1>
             <p className="text-xl md:text-2xl text-muted-foreground leading-relaxed max-w-3xl mx-auto">
-              You provide world-class service. **InvoiceSync** provides the professional identity architecture that ensures your clients treat you like a world-class enterprise.
+              You provide world-class service. **InvoiceSync** provides the professional identity architecture that ensures your clients treat you with the respect your hard work commands.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-6">
               <Button size="lg" className="h-16 px-10 text-xl bg-accent hover:bg-accent/90 shadow-xl shadow-accent/20 group" asChild>
@@ -54,19 +54,19 @@ export default function LandingPage() {
           <div className="max-w-4xl mx-auto text-center space-y-12">
             <div className="space-y-4">
               <h2 className="text-sm font-bold tracking-[0.3em] text-accent uppercase">Our Ethos</h2>
-              <h3 className="text-4xl font-bold text-primary">Dignity for Every Profession</h3>
+              <h3 className="text-4xl font-bold text-primary">Honoring Every Profession</h3>
             </div>
             <div className="grid md:grid-cols-2 gap-12 text-left">
               <div className="space-y-4">
                 <p className="text-lg font-medium text-slate-900">We believe self-employment is the most honest form of enterprise.</p>
                 <p className="text-muted-foreground leading-relaxed">
-                  Too often, independent experts—from personal chefs to security specialists—are forced to use generic, unbranded payment links that diminish their professional weight. We're here to change that.
+                  Too often, independent experts—from personal chefs to security specialists—are forced to use generic, unbranded payment links that fail to reflect their professional weight. We're here to change that.
                 </p>
               </div>
               <div className="space-y-4">
                 <p className="text-lg font-medium text-slate-900">Identity is the foundation of B2B trust.</p>
                 <p className="text-muted-foreground leading-relaxed">
-                  InvoiceSync isn't just a billing tool; it's a <strong>Professional Identity Ecosystem</strong>. We provide the digital infrastructure that honors your expertise and commands the respect (and fees) your hard work deserves.
+                  InvoiceSync isn't just a billing tool; it's a <strong>Professional Identity Ecosystem</strong>. We provide the digital infrastructure that honors your expertise and reflects the true value you provide to your clients.
                 </p>
               </div>
             </div>
@@ -76,7 +76,7 @@ export default function LandingPage() {
         <section className="py-20 px-6 max-w-7xl mx-auto border-t">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold text-primary">Elevate Your Client Experience</h2>
-            <p className="text-muted-foreground mt-2">Bridge the gap between your skill and the client's confidence.</p>
+            <p className="text-muted-foreground mt-2">Bridge the gap between your skill and the client's perception.</p>
           </div>
           <div className="grid md:grid-cols-3 gap-12">
             <div className="group space-y-4 p-6 rounded-3xl hover:bg-slate-50 transition-colors">
@@ -92,7 +92,7 @@ export default function LandingPage() {
               <div className="bg-blue-500/10 p-3 rounded-2xl w-fit group-hover:scale-110 transition-transform">
                 <ShieldCheck className="size-8 text-blue-500" />
               </div>
-              <h3 className="text-2xl font-bold">Trust-First Architecture</h3>
+              <h3 className="text-2xl font-bold">Respect-First Architecture</h3>
               <p className="text-muted-foreground leading-relaxed">
                 High-end clients hesitate to pay "raw" links. Our secure portals provide the enterprise-grade feeling that reduces payment friction.
               </p>
@@ -114,7 +114,7 @@ export default function LandingPage() {
           <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center relative z-10">
             <div className="space-y-6">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-white text-xs font-bold uppercase tracking-widest">
-                The Identity Your Expertise Deserves
+                The Identity Your Expertise Commands
               </div>
               <h2 className="text-4xl md:text-5xl font-bold leading-tight">Professionalism is the key to longevity.</h2>
               <p className="text-slate-400 text-lg leading-relaxed">
@@ -205,7 +205,7 @@ export default function LandingPage() {
               <span className="font-headline">InvoiceSync</span>
             </div>
             <p className="text-sm text-muted-foreground max-w-xs">
-              Empowering self-employment through professional identity ecosystems.
+              Honoring self-employment through professional identity ecosystems.
             </p>
           </div>
           <div className="flex gap-8 text-sm text-muted-foreground font-medium">
@@ -214,7 +214,7 @@ export default function LandingPage() {
             <Link href="#" className="hover:text-primary transition-colors">Support</Link>
           </div>
           <p className="text-xs text-muted-foreground">
-            © 2024 InvoiceSync. Dignity in every invoice.
+            © 2024 InvoiceSync. Honoring every expert.
           </p>
         </div>
       </footer>

@@ -4,12 +4,12 @@
 
 Instead of sending generic, unbranded payment links, **InvoiceSync** allows professionals—from personal chefs and lash artists to sound engineers and security experts—to architect a premium **Professional Identity** that wraps every client touchpoint in a secure, high-trust ecosystem.
 
-## ✨ Core Ethos: Dignity in Every Invoice
+## ✨ Core Ethos: Honoring the Independent Expert
 
 Self-employment is the most honest form of enterprise. We believe that independent expertise shouldn't be diminished by "raw" or "utilitarian" billing tools. 
 
 - **Identity First**: We don't just wrap payment links; we architect a professional facade that honors the expert's skill.
-- **Trust Architecture**: B2B trust is built on consistency. Our portals reduce payment friction by providing an enterprise-grade feeling.
+- **Respectful Architecture**: B2B trust is built on consistency. Our portals reduce payment friction by providing an enterprise-grade feeling.
 - **Empowering the Underserved**: We focus on professions often overlooked by premium branding tools (Handymen, Tutors, Performers, etc.).
 
 ## 🛠 Features
@@ -55,4 +55,4 @@ Your clients don't just see a bill; they enter your professional world:
 
 ---
 
-*© 2024 InvoiceSync. Dignity in every invoice. Built with passion for the independent professional.*
+*© 2024 InvoiceSync. Honoring every expert. Built with passion for the independent professional.*
