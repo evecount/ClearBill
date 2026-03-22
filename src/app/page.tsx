@@ -1,7 +1,6 @@
-
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { CreditCard, ShieldCheck, Zap, ArrowRight, TrendingUp, Users } from "lucide-react"
+import { CreditCard, ShieldCheck, Zap, ArrowRight, TrendingUp } from "lucide-react"
 
 export default function LandingPage() {
   return (
@@ -18,7 +17,7 @@ export default function LandingPage() {
             <Link href="/dashboard">Login</Link>
           </Button>
           <Button className="bg-accent hover:bg-accent/90" asChild>
-            <Link href="/dashboard">Get Started</Link>
+            <Link href="/onboarding">Get Started</Link>
           </Button>
         </div>
       </header>
@@ -35,7 +34,7 @@ export default function LandingPage() {
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
               <Button size="lg" className="h-14 px-8 text-lg bg-accent hover:bg-accent/90" asChild>
-                <Link href="/dashboard">
+                <Link href="/onboarding">
                   Create Your First Invoice <ArrowRight className="ml-2 size-5" />
                 </Link>
               </Button>
