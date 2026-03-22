@@ -1,7 +1,7 @@
 
 "use client"
 
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card"
@@ -10,11 +10,12 @@ import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
-import { ArrowRight, Loader2, ShieldCheck, Scissors, Music, HeartPulse, Code, Utensils, Hammer, Shield, Sparkles, Zap, Target, Star, Palette, PenTool, Home, TrendingUp, Briefcase, Landmark, Camera, Upload, Link as LinkIcon, MapPin } from "lucide-react"
+import { ArrowRight, Loader2, ShieldCheck, Scissors, Music, HeartPulse, Code, Utensils, Hammer, Shield, Sparkles, Zap, Target, Star, Palette, PenTool, Home, TrendingUp, Briefcase, Landmark, Camera, Upload, Link as LinkIcon, MapPin, Globe } from "lucide-react"
 import { consultBusinessOnboarding, type OnboardingConsultantOutput } from "@/ai/flows/onboarding-consultant"
 import { useToast } from "@/hooks/use-toast"
 import { cn } from "@/lib/utils"
-import { useAuth, useUser, useFirestore } from "@/firebase"
+import { useAuth, useUser, useFirestore, useDoc } from "@/firebase"
+import { useMemoFirebase } from "@/firebase/provider"
 import { initiateAnonymousSignIn } from "@/firebase/non-blocking-login"
 import { setDocumentNonBlocking, addDocumentNonBlocking } from "@/firebase/non-blocking-updates"
 import { doc, collection, serverTimestamp } from "firebase/firestore"
@@ -57,6 +58,27 @@ export default function OnboardingPage() {
   const [description, setDescription] = useState("")
   const [proposal, setProposal] = useState<OnboardingConsultantOutput | null>(null)
 
+  // Pre-fill from existing data if user is already logged in
+  const orgRef = useMemoFirebase(() => {
+    if (!user || !firestore) return null
+    return doc(firestore, 'organizations', user.uid)
+  }, [user, firestore])
+
+  const { data: existingOrg, isLoading: isOrgLoading } = useDoc(orgRef)
+
+  useEffect(() => {
+    if (existingOrg) {
+      setBasicFacts({
+        businessName: existingOrg.name || "",
+        location: `${existingOrg.city || ""}${existingOrg.country ? `, ${existingOrg.country}` : ""}`,
+        address: existingOrg.addressLine1 || "",
+        industry: existingOrg.industry || "",
+        website: existingOrg.website || "",
+        logoUrl: existingOrg.logoUrl || ""
+      })
+    }
+  }, [existingOrg])
+
   const handleNextToDescription = () => {
     if (!basicFacts.businessName || !basicFacts.location) {
       toast({ title: "Facts Required", description: "Please enter your business name and general location.", variant: "destructive" })
@@ -84,6 +106,7 @@ export default function OnboardingPage() {
 
     setLoading(true)
     try {
+      // If not logged in, initiate anonymous sign-in
       if (!user) {
         initiateAnonymousSignIn(auth)
       }
