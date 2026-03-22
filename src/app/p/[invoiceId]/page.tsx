@@ -7,7 +7,8 @@ import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/componen
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { CreditCard, Download, CheckCircle2 } from "lucide-react"
+import { Separator } from "@/components/ui/separator"
+import { CreditCard, Download, CheckCircle2, ShieldCheck, Lock, Globe } from "lucide-react"
 import { useState } from "react"
 import { useToast } from "@/hooks/use-toast"
 import Image from "next/image"
@@ -32,123 +33,166 @@ export default function ClientPortalPage() {
 
   const subtotal = invoice.items.reduce((sum, i) => sum + (i.quantity * i.price), 0)
   const tax = (subtotal * invoice.taxRate) / 100
+  const total = subtotal + tax
 
   return (
-    <div className="min-h-screen bg-[#EAEFF5] py-12 px-4 md:px-8">
+    <div className="min-h-screen bg-slate-100 py-12 px-4 md:px-8">
       <div className="max-w-4xl mx-auto space-y-8">
+        {/* Portal Header */}
         <div className="flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex items-center gap-4">
-            <Image 
-              src={MOCK_ORG.logoUrl} 
-              alt={MOCK_ORG.name} 
-              width={64} 
-              height={64} 
-              className="rounded-xl shadow-sm"
-              data-ai-hint="corporate logo"
-            />
+            <div className="bg-white p-2 rounded-2xl shadow-sm border">
+              <Image 
+                src={MOCK_ORG.logoUrl} 
+                alt={MOCK_ORG.name} 
+                width={56} 
+                height={56} 
+                className="rounded-xl"
+                data-ai-hint="corporate logo"
+              />
+            </div>
             <div>
-              <h1 className="text-2xl font-bold font-headline">{MOCK_ORG.name}</h1>
-              <p className="text-sm text-muted-foreground">{MOCK_ORG.email}</p>
+              <h1 className="text-2xl font-bold text-slate-900">{MOCK_ORG.name}</h1>
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                <ShieldCheck className="size-3 text-emerald-500" />
+                <span>Verified Payment Merchant</span>
+              </div>
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <Button variant="outline" size="sm">
-              <Download className="size-4 mr-2" /> PDF
+            <Button variant="outline" size="sm" className="bg-white">
+              <Download className="size-4 mr-2" /> Download PDF
             </Button>
-            <Badge variant={isPaid || invoice.status === 'Paid' ? 'default' : 'outline'} className={isPaid || invoice.status === 'Paid' ? 'bg-emerald-500 text-white' : 'text-orange-500 border-orange-200'}>
-              {isPaid || invoice.status === 'Paid' ? 'PAID' : 'PENDING PAYMENT'}
+            <Badge 
+              variant={isPaid || invoice.status === 'Paid' ? 'default' : 'outline'} 
+              className={isPaid || invoice.status === 'Paid' ? 'bg-emerald-500 text-white border-none px-4 py-1' : 'bg-orange-50 text-orange-600 border-orange-200 px-4 py-1'}
+            >
+              {isPaid || invoice.status === 'Paid' ? 'PAID' : 'PAYMENT DUE'}
             </Badge>
           </div>
         </div>
 
-        <Card className="border-none shadow-xl overflow-hidden">
+        <Card className="border-none shadow-2xl overflow-hidden rounded-3xl bg-white">
           <div className="h-2 bg-accent" />
-          <CardHeader className="flex flex-col sm:flex-row justify-between items-start gap-6 p-8">
-            <div className="space-y-1">
-              <p className="text-xs uppercase tracking-widest text-muted-foreground font-bold">Invoice To</p>
-              <h2 className="text-xl font-bold">{client?.name}</h2>
-              <p className="text-sm text-muted-foreground max-w-[200px]">{client?.address}</p>
-              <p className="text-sm text-muted-foreground">{client?.email}</p>
-            </div>
-            <div className="text-right space-y-2">
-              <div className="space-y-0.5">
-                <p className="text-xs uppercase tracking-widest text-muted-foreground font-bold">Invoice Number</p>
-                <p className="font-mono text-sm font-bold">{invoice.number}</p>
-              </div>
-              <div className="space-y-0.5">
-                <p className="text-xs uppercase tracking-widest text-muted-foreground font-bold">Issued Date</p>
-                <p className="text-sm">{invoice.issueDate}</p>
-              </div>
-              <div className="space-y-0.5">
-                <p className="text-xs uppercase tracking-widest text-muted-foreground font-bold">Due Date</p>
-                <p className="text-sm font-bold text-destructive">{invoice.dueDate}</p>
-              </div>
-            </div>
+          <CardHeader className="p-8 md:p-12">
+             <div className="flex flex-col md:flex-row justify-between gap-12">
+                <div className="space-y-6">
+                  <div className="space-y-1">
+                    <p className="text-[10px] uppercase font-bold tracking-[0.2em] text-muted-foreground">Billed To</p>
+                    <h2 className="text-2xl font-bold text-slate-900">{client?.name}</h2>
+                    <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">{client?.address}</p>
+                    <p className="text-sm font-medium text-accent">{client?.email}</p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 md:text-right gap-8">
+                  <div className="space-y-1">
+                    <p className="text-[10px] uppercase font-bold tracking-[0.2em] text-muted-foreground">Invoice No.</p>
+                    <p className="font-mono text-sm font-bold text-slate-900">{invoice.number}</p>
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-[10px] uppercase font-bold tracking-[0.2em] text-muted-foreground">Amount Due</p>
+                    <p className="text-sm font-bold text-slate-900">${total.toLocaleString()}</p>
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-[10px] uppercase font-bold tracking-[0.2em] text-muted-foreground">Issued</p>
+                    <p className="text-sm text-slate-900">{invoice.issueDate}</p>
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-[10px] uppercase font-bold tracking-[0.2em] text-muted-foreground">Due By</p>
+                    <p className="text-sm font-bold text-destructive">{invoice.dueDate}</p>
+                  </div>
+                </div>
+             </div>
           </CardHeader>
-          <CardContent className="p-8 pt-0">
-            <Table>
-              <TableHeader className="bg-muted/50">
-                <TableRow>
-                  <TableHead className="font-bold">Description</TableHead>
-                  <TableHead className="text-center font-bold">Qty</TableHead>
-                  <TableHead className="text-right font-bold">Unit Price</TableHead>
-                  <TableHead className="text-right font-bold">Amount</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {invoice.items.map((item) => (
-                  <TableRow key={item.id}>
-                    <TableCell className="py-4 font-medium">{item.description}</TableCell>
-                    <TableCell className="text-center">{item.quantity}</TableCell>
-                    <TableCell className="text-right">${item.price.toLocaleString()}</TableCell>
-                    <TableCell className="text-right font-medium">${(item.quantity * item.price).toLocaleString()}</TableCell>
+
+          <CardContent className="px-8 md:px-12">
+            <div className="rounded-2xl border overflow-hidden">
+              <Table>
+                <TableHeader className="bg-slate-50/50">
+                  <TableRow>
+                    <TableHead className="font-bold text-slate-900">Description</TableHead>
+                    <TableHead className="text-center font-bold text-slate-900">Qty</TableHead>
+                    <TableHead className="text-right font-bold text-slate-900">Amount</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {invoice.items.map((item) => (
+                    <TableRow key={item.id} className="hover:bg-transparent">
+                      <TableCell className="py-6">
+                        <p className="font-semibold text-slate-900">{item.description}</p>
+                      </TableCell>
+                      <TableCell className="text-center text-slate-600">{item.quantity}</TableCell>
+                      <TableCell className="text-right font-semibold text-slate-900">${(item.quantity * item.price).toLocaleString()}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
 
             <div className="mt-8 flex justify-end">
-              <div className="w-full sm:w-[300px] space-y-3">
+              <div className="w-full sm:w-[320px] space-y-4 p-6 bg-slate-50 rounded-2xl border border-dashed">
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Subtotal</span>
-                  <span>${subtotal.toLocaleString()}</span>
+                  <span className="font-medium text-slate-900">${subtotal.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Tax ({invoice.taxRate}%)</span>
-                  <span>${tax.toLocaleString()}</span>
+                  <span className="font-medium text-slate-900">${tax.toLocaleString()}</span>
                 </div>
                 <Separator />
-                <div className="flex justify-between text-xl font-bold">
-                  <span>Total Due</span>
-                  <span className="text-accent">${(subtotal + tax).toLocaleString()}</span>
+                <div className="flex justify-between items-baseline">
+                  <span className="text-sm font-bold text-slate-900">Total Amount</span>
+                  <span className="text-3xl font-extrabold text-accent">${total.toLocaleString()}</span>
                 </div>
               </div>
             </div>
           </CardContent>
-          <CardFooter className="bg-muted/30 p-8 flex flex-col sm:flex-row items-center justify-between gap-6">
-            <div className="flex items-center gap-3 text-muted-foreground">
-              <CreditCard className="size-5" />
-              <p className="text-sm">Securely processed by {MOCK_ORG.name}</p>
+
+          <CardFooter className="p-8 md:p-12 flex flex-col items-center gap-8 border-t mt-8">
+            <div className="flex flex-wrap justify-center gap-8">
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                <Lock className="size-3" />
+                <span>256-bit SSL Encryption</span>
+              </div>
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                <CreditCard className="size-3" />
+                <span>Major Cards Supported</span>
+              </div>
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                <Globe className="size-3" />
+                <span>Global Processing</span>
+              </div>
             </div>
+
             {isPaid ? (
-              <Button disabled className="bg-emerald-500 h-12 px-8 text-lg hover:bg-emerald-500 cursor-default opacity-100">
-                <CheckCircle2 className="size-5 mr-2" /> Paid
-              </Button>
+              <div className="flex flex-col items-center gap-4 text-center">
+                 <div className="bg-emerald-100 p-4 rounded-full">
+                    <CheckCircle2 className="size-12 text-emerald-600" />
+                 </div>
+                 <div>
+                    <h3 className="text-xl font-bold text-slate-900">Payment Received</h3>
+                    <p className="text-sm text-muted-foreground">A confirmation receipt has been sent to {client?.email}</p>
+                 </div>
+              </div>
             ) : (
               <Button 
                 onClick={handlePay} 
                 disabled={loading}
-                className="bg-accent hover:bg-accent/90 text-white h-12 px-12 text-lg shadow-lg shadow-accent/20 transition-all active:scale-95"
+                className="w-full sm:w-auto h-16 px-16 text-xl bg-accent hover:bg-accent/90 text-white rounded-2xl shadow-xl shadow-accent/20 transition-all hover:scale-[1.02] active:scale-95"
               >
-                {loading ? "Processing..." : "Pay Now"}
+                {loading ? "Processing Securely..." : "Pay with Card / Bank"}
               </Button>
             )}
           </CardFooter>
         </Card>
 
-        <p className="text-center text-xs text-muted-foreground">
-          Powered by InvoiceSync. All rights reserved.
-        </p>
+        <div className="flex flex-col items-center gap-4 py-8">
+           <p className="text-xs text-muted-foreground uppercase tracking-widest font-bold">Securely Powered By</p>
+           <div className="flex items-center gap-2 opacity-50 grayscale hover:grayscale-0 hover:opacity-100 transition-all">
+             <CreditCard className="size-5" />
+             <span className="text-lg font-bold">InvoiceSync</span>
+           </div>
+        </div>
       </div>
     </div>
   )
