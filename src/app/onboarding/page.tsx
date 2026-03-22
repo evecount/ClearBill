@@ -7,10 +7,10 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
-import { ArrowRight, Briefcase, Loader2, ShieldCheck, Scissors, Music, Dumbbell, Star, Mic, Shield, GraduationCap, Hammer, PawPrint, Utensils, TrendingUp, Zap, Target, Lightbulb, HeartPulse, Code, Sparkles } from "lucide-react"
+import { Input } from "@/components/ui/input"
+import { ArrowRight, Briefcase, Loader2, ShieldCheck, Scissors, Music, HeartPulse, Code, Utensils, Hammer, Shield, Sparkles, Zap, Target, Star, TrendingUp, Lightbulb } from "lucide-react"
 import { consultBusinessOnboarding, type OnboardingConsultantOutput } from "@/ai/flows/onboarding-consultant"
 import { useToast } from "@/hooks/use-toast"
-import Link from "next/link"
 import { cn } from "@/lib/utils"
 import { useAuth, useUser } from "@/firebase"
 import { initiateAnonymousSignIn } from "@/firebase/non-blocking-login"
@@ -33,14 +33,31 @@ export default function OnboardingPage() {
   const { toast } = useToast()
   const auth = useAuth()
   const { user } = useUser()
-  const [step, setStep] = useState(1)
+  const [step, setStep] = useState(1) // 1: Basic Facts, 2: Strategic Description, 3: Review
   const [loading, setLoading] = useState(false)
+  
+  // Basic Facts
+  const [basicFacts, setBasicFacts] = useState({
+    businessName: "",
+    location: "",
+    industry: ""
+  })
+
+  // Strategic Context
   const [description, setDescription] = useState("")
   const [proposal, setProposal] = useState<OnboardingConsultantOutput | null>(null)
 
+  const handleNextToDescription = () => {
+    if (!basicFacts.businessName || !basicFacts.location) {
+      toast({ title: "Facts Required", description: "Please enter your business name and location.", variant: "destructive" })
+      return
+    }
+    setStep(2)
+  }
+
   const handleConsult = async () => {
     if (!description.trim()) {
-      toast({ title: "Please tell us about your expertise", variant: "destructive" })
+      toast({ title: "Description Required", description: "Please describe your expertise.", variant: "destructive" })
       return
     }
 
@@ -50,9 +67,19 @@ export default function OnboardingPage() {
         initiateAnonymousSignIn(auth)
       }
 
-      const result = await consultBusinessOnboarding({ userDescription: description })
-      setProposal(result)
-      setStep(2)
+      // We pass the basic facts so the AI works within the human's constraints
+      const result = await consultBusinessOnboarding({ 
+        userDescription: `Business Name: ${basicFacts.businessName}. Industry: ${basicFacts.industry}. Context: ${description}` 
+      })
+      
+      // Override AI suggestions with human facts for total accuracy
+      setProposal({
+        ...result,
+        suggestedName: basicFacts.businessName,
+        suggestedAddress: basicFacts.location,
+        industry: basicFacts.industry || result.industry
+      })
+      setStep(3)
     } catch (error) {
       toast({ title: "Consultant Busy", description: "Please try again in a moment.", variant: "destructive" })
     } finally {
@@ -71,15 +98,13 @@ export default function OnboardingPage() {
       name: proposal.suggestedName,
       logoUrl: `https://picsum.photos/seed/${orgId}/200/200`,
       contactEmail: proposal.suggestedEmail,
-      contactPhone: "",
-      addressLine1: proposal.suggestedAddress.split(',')[0] || "",
-      city: proposal.suggestedAddress.split(',')[1]?.trim() || "",
+      addressLine1: proposal.suggestedAddress,
+      city: "",
       state: "",
       postalCode: "",
       country: "USA",
-      taxId: "", // To be filled by user in settings
+      taxId: "",
       currency: "USD",
-      paymentGatewayType: "Stripe",
       brandColor: proposal.brandColor,
       missionStatement: proposal.missionStatement,
       industry: proposal.industry,
@@ -94,7 +119,7 @@ export default function OnboardingPage() {
 
     toast({ 
       title: "Identity Profile Saved", 
-      description: "Your professional profile is now live. You can further refine these details and add your Tax ID at any time in your Settings." 
+      description: "Your professional profile is now live. You can edit these details any time in Settings." 
     })
     router.push("/dashboard")
   }
@@ -102,19 +127,68 @@ export default function OnboardingPage() {
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4 py-12">
       <div className="max-w-5xl w-full space-y-8">
-        {step === 1 ? (
+        
+        {step === 1 && (
+          <div className="max-w-xl mx-auto w-full">
+             <Card className="shadow-2xl border-none rounded-3xl overflow-hidden">
+                <CardHeader className="bg-slate-900 text-white p-8">
+                  <CardTitle className="text-2xl">The Professional Foundation</CardTitle>
+                  <CardDescription className="text-slate-400">Let's start with the non-negotiable facts of your craft.</CardDescription>
+                </CardHeader>
+                <CardContent className="p-8 space-y-6">
+                  <div className="space-y-2">
+                    <Label htmlFor="biz-name">Business Name</Label>
+                    <Input 
+                      id="biz-name" 
+                      placeholder="e.g. Silver Oak Restoration" 
+                      className="h-12 rounded-xl"
+                      value={basicFacts.businessName}
+                      onChange={(e) => setBasicFacts({...basicFacts, businessName: e.target.value})}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="location">Primary Location</Label>
+                    <Input 
+                      id="location" 
+                      placeholder="e.g. Austin, Texas" 
+                      className="h-12 rounded-xl"
+                      value={basicFacts.location}
+                      onChange={(e) => setBasicFacts({...basicFacts, location: e.target.value})}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="industry">Industry (Optional)</Label>
+                    <Input 
+                      id="industry" 
+                      placeholder="e.g. Master Carpentry" 
+                      className="h-12 rounded-xl"
+                      value={basicFacts.industry}
+                      onChange={(e) => setBasicFacts({...basicFacts, industry: e.target.value})}
+                    />
+                  </div>
+                </CardContent>
+                <CardFooter className="p-8 pt-0">
+                  <Button className="w-full h-14 bg-accent hover:bg-accent/90 rounded-xl text-lg font-bold" onClick={handleNextToDescription}>
+                    Next: Strategic Context <ArrowRight className="ml-2 size-5" />
+                  </Button>
+                </CardFooter>
+             </Card>
+          </div>
+        )}
+
+        {step === 2 && (
           <div className="max-w-2xl mx-auto w-full">
             <Card className="shadow-2xl border-none rounded-3xl overflow-hidden">
-              <CardHeader className="bg-slate-900 text-white p-8">
-                <CardTitle className="text-2xl">Tell us about your work</CardTitle>
-                <CardDescription className="text-slate-400">Describe what you do in your own words. We'll help you design a professional profile that honors your craft.</CardDescription>
+              <CardHeader className="bg-slate-900 text-white p-8 text-center">
+                <CardTitle className="text-2xl">The Strategic Core</CardTitle>
+                <CardDescription className="text-slate-400">How do you provide a win for your clients, {basicFacts.businessName}?</CardDescription>
               </CardHeader>
               <CardContent className="p-8 space-y-8">
                 <div className="space-y-3">
                   <Label htmlFor="desc" className="text-[10px] uppercase tracking-widest text-muted-foreground font-black">Your Expertise</Label>
                   <Textarea 
                     id="desc"
-                    placeholder="e.g. I am a boutique marketing consultant for luxury brands, focusing on digital presence and elite brand positioning..."
+                    placeholder="Describe your services in your own words..."
                     className="min-h-[180px] text-lg p-5 rounded-2xl focus:ring-accent/20 border-slate-200 shadow-inner bg-slate-50/50"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
@@ -122,15 +196,15 @@ export default function OnboardingPage() {
                 </div>
 
                 <div className="space-y-4">
-                  <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-black">Or, Start with a Profession</Label>
+                  <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-black">Quick Inspiration</Label>
                   <div className="flex flex-wrap gap-2">
                     {QUICK_STARTS.map((qs) => (
                       <button
                         key={qs.label}
                         onClick={() => setDescription(qs.text)}
                         className={cn(
-                          "flex items-center gap-2 px-4 py-2 rounded-xl text-sm border transition-all hover:bg-slate-50 active:scale-95",
-                          description === qs.text ? "bg-accent border-accent text-white shadow-lg shadow-accent/20" : "bg-white border-slate-200 text-slate-600"
+                          "flex items-center gap-2 px-4 py-2 rounded-xl text-sm border transition-all hover:bg-slate-50",
+                          description === qs.text ? "bg-accent border-accent text-white shadow-lg" : "bg-white border-slate-200 text-slate-600"
                         )}
                       >
                         <qs.icon className="size-3" />
@@ -140,33 +214,36 @@ export default function OnboardingPage() {
                   </div>
                 </div>
               </CardContent>
-              <CardFooter className="p-8 pt-0">
+              <CardFooter className="p-8 pt-0 gap-3">
+                <Button variant="ghost" className="h-14 px-6" onClick={() => setStep(1)}>Back</Button>
                 <Button 
-                  className="w-full h-16 text-lg bg-accent hover:bg-accent/90 shadow-xl shadow-accent/30 rounded-2xl group" 
+                  className="flex-1 h-14 text-lg bg-accent hover:bg-accent/90 shadow-xl rounded-xl group" 
                   onClick={handleConsult}
                   disabled={loading}
                 >
                   {loading ? (
                     <>
                       <Loader2 className="mr-2 h-6 w-6 animate-spin" />
-                      Analyzing Your Expertise...
+                      Architecting Profile...
                     </>
                   ) : (
                     <>
-                      Design My Professional Profile <ArrowRight className="ml-2 size-5 group-hover:translate-x-1 transition-transform" />
+                      Design My Identity <ArrowRight className="ml-2 size-5 group-hover:translate-x-1 transition-transform" />
                     </>
                   )}
                 </Button>
               </CardFooter>
             </Card>
           </div>
-        ) : (
+        )}
+
+        {step === 3 && (
           <div className="grid lg:grid-cols-5 gap-8 items-start animate-in fade-in slide-in-from-bottom-4 duration-700">
             <Card className="lg:col-span-3 shadow-2xl border-none overflow-hidden h-full rounded-3xl">
               <CardHeader className="bg-slate-900 text-white p-8">
                 <div className="flex justify-between items-center mb-4">
                   <div className="flex items-center gap-2 px-3 py-1 bg-accent rounded-full text-[10px] font-black tracking-widest text-white uppercase">
-                    <Zap className="size-3" /> Growth Roadmap
+                    <Zap className="size-3" /> Strategic DNA
                   </div>
                   <Sparkles className="size-5 text-accent" />
                 </div>
@@ -176,7 +253,7 @@ export default function OnboardingPage() {
               <CardContent className="p-8 space-y-10">
                 <div className="grid sm:grid-cols-2 gap-8">
                   <div className="space-y-2">
-                    <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-black">Recommended Tone</Label>
+                    <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-black">Identity Tone</Label>
                     <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-2xl border">
                       <div 
                         className="size-5 rounded-full border shadow-sm shrink-0" 
@@ -194,14 +271,14 @@ export default function OnboardingPage() {
                 <Separator />
 
                 <div className="space-y-6">
-                  <Label className="text-[10px] uppercase tracking-widest text-accent font-black block border-b pb-2">Recommended Growth Steps</Label>
+                  <Label className="text-[10px] uppercase tracking-widest text-accent font-black block border-b pb-2">Growth Roadmap</Label>
                   <div className="grid gap-4">
                     <div className="flex gap-4 items-start p-4 bg-emerald-50/50 rounded-2xl border border-emerald-100">
                       <div className="bg-emerald-100 p-2 rounded-xl shrink-0">
                         <Target className="size-4 text-emerald-600" />
                       </div>
                       <div className="space-y-1">
-                        <p className="text-sm font-bold text-slate-900">Initial Focus</p>
+                        <p className="text-sm font-bold text-slate-900">Immediate Focus</p>
                         <p className="text-xs text-muted-foreground leading-relaxed">{proposal?.growthStrategy.initialFocus}</p>
                       </div>
                     </div>
@@ -210,88 +287,51 @@ export default function OnboardingPage() {
                         <Star className="size-4 text-purple-600" />
                       </div>
                       <div className="space-y-1">
-                        <p className="text-sm font-bold text-slate-900">Premium Service Idea</p>
+                        <p className="text-sm font-bold text-slate-900">Premium Outcome</p>
                         <p className="text-xs text-muted-foreground leading-relaxed">{proposal?.growthStrategy.premiumTierSuggestion}</p>
                       </div>
                     </div>
-                    <div className="flex gap-4 items-start p-4 bg-blue-50/50 rounded-2xl border border-blue-100">
-                      <div className="bg-blue-100 p-2 rounded-xl shrink-0">
-                        <TrendingUp className="size-4 text-blue-600" />
-                      </div>
-                      <div className="space-y-1">
-                        <p className="text-sm font-bold text-slate-900">Ongoing Value Model</p>
-                        <p className="text-xs text-muted-foreground leading-relaxed">{proposal?.growthStrategy.recurringRevenueModel}</p>
-                      </div>
-                    </div>
                   </div>
-                  
-                  {proposal?.growthStrategy.agenticInsight && (
-                    <div className="p-4 bg-slate-900 text-white rounded-2xl space-y-2">
-                      <div className="flex items-center gap-2">
-                        <Lightbulb className="size-4 text-accent" />
-                        <span className="text-[10px] font-black uppercase tracking-widest">Growth Tip</span>
-                      </div>
-                      <p className="text-xs leading-relaxed text-slate-300 italic">
-                        "{proposal.growthStrategy.agenticInsight}"
-                      </p>
-                    </div>
-                  )}
                 </div>
               </CardContent>
               <CardFooter className="p-8 bg-slate-50 border-t flex flex-col gap-3">
-                <Button className="w-full h-14 bg-accent hover:bg-accent/90 rounded-2xl text-lg font-bold shadow-xl shadow-accent/20" onClick={handleFinish}>
-                  Save Profile & Get Started <ArrowRight className="ml-2 size-5" />
+                <Button className="w-full h-14 bg-accent hover:bg-accent/90 rounded-2xl text-lg font-bold shadow-xl" onClick={handleFinish}>
+                  Launch My Profile <ArrowRight className="ml-2 size-5" />
                 </Button>
-                <Button variant="ghost" className="w-full text-slate-500 hover:text-slate-900" onClick={() => setStep(1)}>
-                  Refine My Description
-                </Button>
+                <p className="text-[10px] text-center text-muted-foreground uppercase font-black tracking-widest">You can refine all details later in Settings</p>
               </CardFooter>
             </Card>
 
             <div className="lg:col-span-2 space-y-6 sticky top-24">
-              <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-black ml-1">Client Portal Preview</Label>
-              <div className="relative group">
-                <div 
-                  className="absolute -inset-1 rounded-[2.5rem] blur opacity-25 group-hover:opacity-40 transition duration-1000"
-                  style={{ backgroundColor: `hsl(${proposal?.brandColor || '256 60% 55%'})` }}
-                ></div>
-                <div className="relative bg-white rounded-3xl shadow-2xl border border-slate-100 overflow-hidden">
-                  <div className="p-6 bg-slate-50 border-b flex justify-between items-center">
-                    <div className="flex items-center gap-3">
-                      <div className="size-8 bg-slate-900 rounded-lg flex items-center justify-center">
-                        <span className="text-white text-xs font-bold">{proposal?.suggestedName?.[0]}</span>
-                      </div>
-                      <span className="text-xs font-bold text-slate-900">{proposal?.suggestedName}</span>
+              <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-black ml-1">Live Portal Preview</Label>
+              <div className="relative bg-white rounded-3xl shadow-2xl border border-slate-100 overflow-hidden">
+                <div className="p-6 bg-slate-50 border-b flex justify-between items-center">
+                  <div className="flex items-center gap-3">
+                    <div className="size-8 bg-slate-900 rounded-lg flex items-center justify-center text-white text-[10px] font-bold">
+                      {proposal?.suggestedName?.[0]}
                     </div>
-                    <ShieldCheck className="size-4 text-emerald-500" />
+                    <span className="text-[10px] font-bold text-slate-900">{proposal?.suggestedName}</span>
                   </div>
-                  <div className="p-8 space-y-6">
-                    <div className="flex justify-between items-start">
-                      <div className="space-y-1">
-                        <p className="text-[8px] uppercase font-bold text-muted-foreground">Billed To</p>
-                        <div className="h-3 w-32 bg-slate-100 rounded animate-pulse"></div>
-                      </div>
-                      <div className="text-right space-y-1">
-                        <p className="text-[8px] uppercase font-bold text-muted-foreground">Professional Fee</p>
-                        <p className="text-2xl font-black" style={{ color: `hsl(${proposal?.brandColor || '256 60% 55%'})` }}>$5,000.00</p>
-                      </div>
+                  <ShieldCheck className="size-4 text-emerald-500" />
+                </div>
+                <div className="p-8 space-y-6">
+                  <div className="flex justify-between items-start">
+                    <div className="space-y-1">
+                      <p className="text-[8px] uppercase font-bold text-muted-foreground">Billed To</p>
+                      <div className="h-2.5 w-24 bg-slate-100 rounded"></div>
                     </div>
-                    <div className="space-y-3">
-                      <div className="h-2 w-full bg-slate-50 rounded"></div>
-                      <div className="h-2 w-2/3 bg-slate-50 rounded"></div>
+                    <div className="text-right">
+                      <p className="text-[8px] uppercase font-bold text-muted-foreground">Strategic Fee</p>
+                      <p className="text-xl font-black" style={{ color: `hsl(${proposal?.brandColor || '256 60% 55%'})` }}>$1,250.00</p>
                     </div>
-                    <Button 
-                      disabled 
-                      className="w-full text-white h-12 rounded-xl shadow-lg"
-                      style={{ 
-                        backgroundColor: `hsl(${proposal?.brandColor || '256 60% 55%'})`,
-                        boxShadow: `0 10px 15px -3px hsla(${proposal?.brandColor}, 0.3)`
-                      }}
-                    >
-                      Confirm Completion
-                    </Button>
-                    <p className="text-[8px] text-center text-muted-foreground font-medium uppercase tracking-[0.2em]">Secure Branded Payment Portal</p>
                   </div>
+                  <Button 
+                    disabled 
+                    className="w-full text-white h-10 rounded-xl"
+                    style={{ backgroundColor: `hsl(${proposal?.brandColor || '256 60% 55%'})` }}
+                  >
+                    Pay Securely
+                  </Button>
                 </div>
               </div>
             </div>
