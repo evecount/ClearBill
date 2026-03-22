@@ -5,7 +5,7 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Plus, Search, Mail, MapPin, MoreVertical, Trash2, Edit2, FileText, User, Building2, Loader2, ShieldAlert, Sparkles } from "lucide-react"
+import { Plus, Search, Mail, MapPin, MoreVertical, Trash2, Edit2, FileText, User, Building2, Loader2, Sparkles } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger, DropdownMenuSeparator } from "@/components/ui/dropdown-menu"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
@@ -41,6 +41,48 @@ const STRATEGIC_LEADS = [
     company: "Peranakan Museum",
     email: "nhb_tpm_edu@nhb.gov.sg",
     address: "39 Armenian St, Singapore 179941"
+  },
+  {
+    name: "Science Centre Singapore",
+    company: "Science Centre Board",
+    email: "upstream@science.edu.sg",
+    address: "15 Science Centre Rd, Singapore 609081"
+  },
+  {
+    name: "National Gallery Singapore",
+    company: "National Gallery Singapore",
+    email: "info@nationalgallery.sg",
+    address: "1 St Andrew's Rd, Singapore 178957"
+  },
+  {
+    name: "Red Dot Design Museum",
+    company: "Red Dot Design Museum",
+    email: "museum@red-dot.sg",
+    address: "11 Marina Blvd, Singapore 018940"
+  },
+  {
+    name: "Lorong AI @ 22 Cross Street",
+    company: "Lorong AI Community",
+    email: "hello@lorong.ai",
+    address: "22 Cross St, Singapore 048421"
+  },
+  {
+    name: "Singapore National Library",
+    company: "National Library Board",
+    email: "enquiry@nlb.gov.sg",
+    address: "100 Victoria St, Singapore 188064"
+  },
+  {
+    name: "Alma House",
+    company: "Alma House Lifestyle",
+    email: "hello@almahouse.sg",
+    address: "22 New Industrial Rd, Singapore 536208"
+  },
+  {
+    name: "SAM at Tanjong Pagar Distripark",
+    company: "Singapore Art Museum",
+    email: "enquiries@singaporeartmuseum.sg",
+    address: "39 Keppel Rd, #01-02, Singapore 089065"
   }
 ]
 
@@ -89,8 +131,8 @@ export default function ClientsPage() {
         })
       })
       toast({ 
-        title: "Strategic Leads Injected", 
-        description: "Singapore's elite museum ecosystem has been added to your directory." 
+        title: "Strategic Ecosystem Injected", 
+        description: "Singapore's elite AI-focused museums and community hubs have been added to your directory." 
       })
     } catch (error) {
       toast({ title: "Injection Error", description: "Failed to seed leads.", variant: "destructive" })
@@ -111,8 +153,8 @@ export default function ClientsPage() {
 
     if (!user) {
       toast({ 
-        title: "Identity Not Found", 
-        description: "Your professional session is still initializing.", 
+        title: "Session Error", 
+        description: "Your session is initializing. Please wait.", 
         variant: "destructive" 
       })
       return
@@ -196,7 +238,7 @@ export default function ClientsPage() {
             disabled={isSeeding}
           >
             {isSeeding ? <Loader2 className="size-4 animate-spin mr-2" /> : <Sparkles className="size-4 mr-2" />}
-            Inject Singapore Leads
+            Inject Strategic Leads
           </Button>
 
           <Dialog open={isAddOpen} onOpenChange={handleOpenAddDialog}>
@@ -270,7 +312,7 @@ export default function ClientsPage() {
       <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
         <DialogContent className="rounded-3xl">
           <DialogHeader>
-            <DialogTitle>Edit Client Strategy</DialogTitle>
+            <DialogTitle>Edit Client</DialogTitle>
             <DialogDescription>Update the identity markers for {activeClient?.name}.</DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
@@ -292,7 +334,7 @@ export default function ClientsPage() {
             </div>
           </div>
           <DialogFooter>
-            <Button onClick={handleUpdateClient} className="w-full h-12 bg-accent hover:bg-accent/90 rounded-xl font-bold">Update Strategy</Button>
+            <Button onClick={handleUpdateClient} className="w-full h-12 bg-accent hover:bg-accent/90 rounded-xl font-bold">Update Details</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -375,7 +417,7 @@ export default function ClientsPage() {
             <Button onClick={() => setIsAddOpen(true)} className="bg-accent hover:bg-accent/90 font-bold">Add First Client</Button>
             <Button variant="outline" onClick={handleSeedLeads} disabled={isSeeding} className="border-accent text-accent">
                {isSeeding ? <Loader2 className="size-4 animate-spin mr-2" /> : <Sparkles className="size-4 mr-2" />}
-               Inject Museum Leads
+               Inject Strategic Leads
             </Button>
           </div>
         </div>
