@@ -25,7 +25,7 @@ import {
   SidebarGroupContent,
 } from "@/components/ui/sidebar"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { useDoc, useUser } from "@/firebase"
+import { useDoc, useUser, useFirestore } from "@/firebase"
 import { useMemoFirebase } from "@/firebase/provider"
 import { doc } from "firebase/firestore"
 import Link from "next/link"
@@ -34,11 +34,12 @@ import { usePathname } from "next/navigation"
 export function AppSidebar() {
   const pathname = usePathname()
   const { user } = useUser()
+  const firestore = useFirestore()
 
   const orgRef = useMemoFirebase(() => {
-    if (!user) return null
-    return doc(user.auth.firestore, 'organizations', user.uid)
-  }, [user])
+    if (!user || !firestore) return null
+    return doc(firestore, 'organizations', user.uid)
+  }, [user, firestore])
 
   const { data: org } = useDoc(orgRef)
 

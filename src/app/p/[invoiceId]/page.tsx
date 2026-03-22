@@ -12,7 +12,7 @@ import { CreditCard, Download, CheckCircle2, ShieldCheck, Lock, Globe, Scale, Fi
 import { useState } from "react"
 import { useToast } from "@/hooks/use-toast"
 import Image from "next/image"
-import { useDoc, useUser } from "@/firebase"
+import { useDoc, useUser, useFirestore } from "@/firebase"
 import { useMemoFirebase } from "@/firebase/provider"
 import { doc } from "firebase/firestore"
 
@@ -22,13 +22,14 @@ export default function ClientPortalPage() {
   const [isPaid, setIsPaid] = useState(false)
   const [loading, setLoading] = useState(false)
   const { user } = useUser()
+  const firestore = useFirestore()
 
   // In a real app, we'd fetch the specific invoice and organization from Firestore.
   // For MVP, we'll try to get the org data if a user is logged in (likely the merchant testing).
   const orgRef = useMemoFirebase(() => {
-    if (!user) return null
-    return doc(user.auth.firestore, 'organizations', user.uid)
-  }, [user])
+    if (!user || !firestore) return null
+    return doc(firestore, 'organizations', user.uid)
+  }, [user, firestore])
 
   const { data: orgData } = useDoc(orgRef)
   const org = orgData || MOCK_ORG

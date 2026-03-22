@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useParams } from "next/navigation"
@@ -9,7 +10,7 @@ import { Mail, ShieldCheck, CreditCard, ArrowRight, Loader2 } from "lucide-react
 import { useState } from "react"
 import { useToast } from "@/hooks/use-toast"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { useCollection, useUser } from "@/firebase"
+import { useCollection, useUser, useFirestore } from "@/firebase"
 import { useMemoFirebase } from "@/firebase/provider"
 import { collection, query, where } from "firebase/firestore"
 
@@ -21,13 +22,14 @@ export default function PublicOrgPage() {
   const [isLookupOpen, setIsLookupOpen] = useState(false)
   
   const { user } = useUser()
+  const firestore = useFirestore()
 
   // For MVP, we're assuming orgId is the slug or uid. 
   // In a real app, you'd fetch the org by slug first.
   const orgsQuery = useMemoFirebase(() => {
-    if (!user) return null
-    return query(collection(user.auth.firestore, 'organizations'), where('slug', '==', orgId))
-  }, [user, orgId])
+    if (!firestore || !orgId) return null
+    return query(collection(firestore, 'organizations'), where('slug', '==', orgId))
+  }, [firestore, orgId])
 
   const { data: orgs } = useCollection(orgsQuery)
   const org = orgs?.[0] || { name: "ClearBill Merchant", logoUrl: "", email: "" }
