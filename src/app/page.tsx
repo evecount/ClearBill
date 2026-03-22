@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { CreditCard, ShieldCheck, Zap, ArrowRight, TrendingUp, Sparkles, Layout, Globe, Lock } from "lucide-react"
+import { CreditCard, ShieldCheck, Zap, ArrowRight, TrendingUp, Sparkles, Layout, Globe, Lock, CheckCircle2 } from "lucide-react"
 
 export default function LandingPage() {
   return (
@@ -90,7 +90,7 @@ export default function LandingPage() {
           <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center relative z-10">
             <div className="space-y-6">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-white text-xs font-bold uppercase tracking-widest">
-                The "Branded Shell" Advantage
+                The "White-Label" Shell
               </div>
               <h2 className="text-4xl md:text-5xl font-bold leading-tight">Professionalism is the key to B2B longevity.</h2>
               <p className="text-slate-400 text-lg leading-relaxed">
@@ -118,26 +118,53 @@ export default function LandingPage() {
                   <div className="bg-white rounded-2xl p-6 md:p-8 space-y-6 text-slate-900">
                     <div className="flex justify-between items-center">
                       <div className="flex items-center gap-2">
-                        <div className="size-8 bg-slate-900 rounded-lg"></div>
-                        <div className="space-y-1">
-                          <div className="h-2 w-24 bg-slate-200 rounded"></div>
-                          <div className="h-1.5 w-16 bg-slate-100 rounded"></div>
+                        <div className="size-10 bg-slate-900 rounded-xl flex items-center justify-center text-white font-bold">L</div>
+                        <div className="space-y-0.5">
+                          <p className="text-sm font-bold">Lumina Creative</p>
+                          <p className="text-[10px] text-muted-foreground">Verified Merchant</p>
                         </div>
                       </div>
-                      <Badge className="bg-emerald-100 text-emerald-700 border-none">SECURE</Badge>
+                      <Badge className="bg-emerald-100 text-emerald-700 border-none px-2 py-0.5 flex items-center gap-1">
+                        <ShieldCheck className="size-2.5" /> SECURE
+                      </Badge>
                     </div>
+                    
                     <div className="space-y-4 pt-4">
-                       <div className="flex justify-between items-baseline">
-                         <div className="h-4 w-32 bg-slate-100 rounded"></div>
-                         <span className="text-2xl font-black text-accent">$4,250.00</span>
+                       <div className="flex justify-between items-start">
+                         <div className="space-y-1">
+                           <p className="text-[8px] uppercase font-bold text-muted-foreground tracking-widest">Billed To</p>
+                           <p className="text-xs font-bold">Global Tech Partners</p>
+                           <p className="text-[10px] text-muted-foreground">accounts@globaltech.com</p>
+                         </div>
+                         <div className="text-right space-y-1">
+                           <p className="text-[8px] uppercase font-bold text-muted-foreground tracking-widest">Total Amount</p>
+                           <span className="text-2xl font-black text-accent">$4,250.00</span>
+                         </div>
                        </div>
+                       
+                       <div className="space-y-2 border-t border-dashed pt-4">
+                         <div className="flex justify-between text-[10px]">
+                           <span className="font-medium text-slate-600">Visual Identity System Development</span>
+                           <span className="font-bold">$3,500.00</span>
+                         </div>
+                         <div className="flex justify-between text-[10px]">
+                           <span className="font-medium text-slate-600">Brand Strategy Workshop</span>
+                           <span className="font-bold">$750.00</span>
+                         </div>
+                       </div>
+
                        <Separator />
-                       <div className="h-10 bg-slate-900 rounded-xl"></div>
+                       
+                       <Button disabled className="w-full bg-slate-900 text-white h-12 rounded-xl text-sm font-bold shadow-lg shadow-slate-200">
+                         Pay Securely with Card
+                       </Button>
                     </div>
-                    <div className="flex justify-center gap-8 opacity-20 grayscale">
+
+                    <div className="flex justify-center gap-6 opacity-30 grayscale items-center">
                       <CreditCard className="size-4" />
                       <Lock className="size-4" />
                       <Globe className="size-4" />
+                      <span className="text-[10px] font-bold">Stripe</span>
                     </div>
                   </div>
                </div>
