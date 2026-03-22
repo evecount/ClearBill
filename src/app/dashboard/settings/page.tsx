@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { MOCK_ORG } from "@/lib/mock-data"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
-import { Upload, Save, Lock, CreditCard, RefreshCw, Sparkles, ArrowRight } from "lucide-react"
+import { Upload, Save, Lock, CreditCard, RefreshCw, Sparkles, ArrowRight, Copy, ExternalLink, Globe } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
@@ -26,12 +26,10 @@ export default function SettingsPage() {
     }, 1500)
   }
 
-  const handleLogoChange = () => {
-    toast({ title: "Logo Upload", description: "File explorer opened. Please select a square PNG or JPG." })
-  }
-
-  const handleUpdateCredentials = () => {
-    toast({ title: "Update Triggered", description: "Verification email sent to organization owner." })
+  const copyPublicLink = () => {
+    const url = `${window.location.origin}/u/${MOCK_ORG.id}`
+    navigator.clipboard.writeText(url)
+    toast({ title: "Link Copied", description: "Public profile link copied to clipboard." })
   }
 
   return (
@@ -68,6 +66,34 @@ export default function SettingsPage() {
 
         <Card>
           <CardHeader>
+            <CardTitle>Public Profile Link</CardTitle>
+            <CardDescription>Clients can visit this link to view their invoices and manage their account.</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center gap-4 p-4 border rounded-xl bg-slate-50">
+              <div className="bg-white p-2 rounded-lg border shadow-sm">
+                <Globe className="size-6 text-primary" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-bold truncate">{window.location.origin}/u/{MOCK_ORG.id}</p>
+                <p className="text-xs text-muted-foreground">Add this to your website or email signature.</p>
+              </div>
+              <div className="flex gap-2">
+                <Button size="sm" variant="outline" onClick={copyPublicLink}>
+                  <Copy className="size-3 mr-2" /> Copy
+                </Button>
+                <Button size="sm" variant="outline" asChild>
+                  <Link href={`/u/${MOCK_ORG.id}`} target="_blank">
+                    <ExternalLink className="size-3 mr-2" /> Visit
+                  </Link>
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
             <CardTitle>Organization Profile</CardTitle>
             <CardDescription>This information will appear on your client invoices.</CardDescription>
           </CardHeader>
@@ -78,17 +104,11 @@ export default function SettingsPage() {
                   <AvatarImage src={MOCK_ORG.logoUrl} alt={MOCK_ORG.name} />
                   <AvatarFallback>{MOCK_ORG.name[0]}</AvatarFallback>
                 </Avatar>
-                <div 
-                  className="absolute inset-0 bg-black/40 rounded-full opacity-0 group-hover:opacity-100 flex items-center justify-center cursor-pointer transition-opacity"
-                  onClick={handleLogoChange}
-                >
-                   <Upload className="size-6 text-white" />
-                </div>
               </div>
               <div className="space-y-1 text-center sm:text-left">
                 <h3 className="text-lg font-medium">Organization Logo</h3>
                 <p className="text-sm text-muted-foreground">Square image, at least 400x400px recommended.</p>
-                <Button variant="outline" size="sm" className="mt-2" onClick={handleLogoChange}>Change Logo</Button>
+                <Button variant="outline" size="sm" className="mt-2">Change Logo</Button>
               </div>
             </div>
 
@@ -112,54 +132,6 @@ export default function SettingsPage() {
           <CardFooter className="bg-muted/50 justify-end py-4">
              <Button className="bg-accent hover:bg-accent/90" onClick={handleSave} disabled={loading}>
                 <Save className="size-4 mr-2" /> {loading ? "Saving..." : "Save Profile"}
-             </Button>
-          </CardFooter>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Payment Gateway</CardTitle>
-            <CardDescription>Connect your Stripe or localized payment gateway to accept digital payments.</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="flex items-center justify-between p-4 border rounded-xl bg-emerald-50/50 border-emerald-100">
-               <div className="flex items-center gap-4">
-                  <div className="bg-emerald-500 p-2 rounded-lg text-white">
-                    <CreditCard className="size-6" />
-                  </div>
-                  <div>
-                    <p className="font-bold">Stripe Integration</p>
-                    <p className="text-sm text-muted-foreground">Accept credit cards, Apple Pay, and Google Pay.</p>
-                  </div>
-               </div>
-               <Badge className="bg-emerald-500">Connected</Badge>
-            </div>
-
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="api-key">Publishable API Key</Label>
-                  <span className="text-[10px] uppercase font-bold text-muted-foreground flex items-center gap-1">
-                    <Lock className="size-2" /> Encrypted
-                  </span>
-                </div>
-                <Input id="api-key" type="password" value="pk_live_************************" readOnly />
-              </div>
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="secret-key">Secret API Key</Label>
-                  <span className="text-[10px] uppercase font-bold text-muted-foreground flex items-center gap-1">
-                    <Lock className="size-2" /> Encrypted
-                  </span>
-                </div>
-                <Input id="secret-key" type="password" value="sk_live_************************" readOnly />
-              </div>
-            </div>
-          </CardContent>
-          <CardFooter className="bg-muted/50 justify-between py-4">
-             <p className="text-xs text-muted-foreground">Changes to API keys require immediate verification.</p>
-             <Button variant="outline" onClick={handleUpdateCredentials}>
-               <RefreshCw className="size-3 mr-2" /> Update Credentials
              </Button>
           </CardFooter>
         </Card>
