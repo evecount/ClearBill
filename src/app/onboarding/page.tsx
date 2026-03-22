@@ -1,4 +1,3 @@
-
 "use client"
 
 import { useState } from "react"
@@ -8,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
-import { ArrowRight, Briefcase, Loader2, ShieldCheck, Scissors, Music, HeartPulse, Code, Utensils, Hammer, Shield, Sparkles, Zap, Target, Star, TrendingUp, Lightbulb } from "lucide-react"
+import { ArrowRight, Loader2, ShieldCheck, Scissors, Music, HeartPulse, Code, Utensils, Hammer, Shield, Sparkles, Zap, Target, Star } from "lucide-react"
 import { consultBusinessOnboarding, type OnboardingConsultantOutput } from "@/ai/flows/onboarding-consultant"
 import { useToast } from "@/hooks/use-toast"
 import { cn } from "@/lib/utils"
@@ -33,17 +32,15 @@ export default function OnboardingPage() {
   const { toast } = useToast()
   const auth = useAuth()
   const { user } = useUser()
-  const [step, setStep] = useState(1) // 1: Basic Facts, 2: Strategic Description, 3: Review
+  const [step, setStep] = useState(1) // 1: Basic Facts, 2: Strategic Context, 3: Review
   const [loading, setLoading] = useState(false)
   
-  // Basic Facts
   const [basicFacts, setBasicFacts] = useState({
     businessName: "",
     location: "",
     industry: ""
   })
 
-  // Strategic Context
   const [description, setDescription] = useState("")
   const [proposal, setProposal] = useState<OnboardingConsultantOutput | null>(null)
 
@@ -67,18 +64,14 @@ export default function OnboardingPage() {
         initiateAnonymousSignIn(auth)
       }
 
-      // We pass the basic facts so the AI works within the human's constraints
       const result = await consultBusinessOnboarding({ 
-        userDescription: `Business Name: ${basicFacts.businessName}. Industry: ${basicFacts.industry}. Context: ${description}` 
+        userDescription: description,
+        businessName: basicFacts.businessName,
+        location: basicFacts.location,
+        industry: basicFacts.industry
       })
       
-      // Override AI suggestions with human facts for total accuracy
-      setProposal({
-        ...result,
-        suggestedName: basicFacts.businessName,
-        suggestedAddress: basicFacts.location,
-        industry: basicFacts.industry || result.industry
-      })
+      setProposal(result)
       setStep(3)
     } catch (error) {
       toast({ title: "Consultant Busy", description: "Please try again in a moment.", variant: "destructive" })
@@ -150,7 +143,7 @@ export default function OnboardingPage() {
                     <Label htmlFor="location">Primary Location</Label>
                     <Input 
                       id="location" 
-                      placeholder="e.g. Austin, Texas" 
+                      placeholder="e.g. Berlin, Germany" 
                       className="h-12 rounded-xl"
                       value={basicFacts.location}
                       onChange={(e) => setBasicFacts({...basicFacts, location: e.target.value})}
@@ -160,7 +153,7 @@ export default function OnboardingPage() {
                     <Label htmlFor="industry">Industry (Optional)</Label>
                     <Input 
                       id="industry" 
-                      placeholder="e.g. Master Carpentry" 
+                      placeholder="e.g. Muralist & Fine Art" 
                       className="h-12 rounded-xl"
                       value={basicFacts.industry}
                       onChange={(e) => setBasicFacts({...basicFacts, industry: e.target.value})}
@@ -181,14 +174,14 @@ export default function OnboardingPage() {
             <Card className="shadow-2xl border-none rounded-3xl overflow-hidden">
               <CardHeader className="bg-slate-900 text-white p-8 text-center">
                 <CardTitle className="text-2xl">The Strategic Core</CardTitle>
-                <CardDescription className="text-slate-400">How do you provide a win for your clients, {basicFacts.businessName}?</CardDescription>
+                <CardDescription className="text-slate-400">Describe your project or expertise, {basicFacts.businessName}.</CardDescription>
               </CardHeader>
               <CardContent className="p-8 space-y-8">
                 <div className="space-y-3">
-                  <Label htmlFor="desc" className="text-[10px] uppercase tracking-widest text-muted-foreground font-black">Your Expertise</Label>
+                  <Label htmlFor="desc" className="text-[10px] uppercase tracking-widest text-muted-foreground font-black">Your Strategic Intent</Label>
                   <Textarea 
                     id="desc"
-                    placeholder="Describe your services in your own words..."
+                    placeholder="e.g. I am an artist creating a proposal for a museum."
                     className="min-h-[180px] text-lg p-5 rounded-2xl focus:ring-accent/20 border-slate-200 shadow-inner bg-slate-50/50"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
@@ -224,7 +217,7 @@ export default function OnboardingPage() {
                   {loading ? (
                     <>
                       <Loader2 className="mr-2 h-6 w-6 animate-spin" />
-                      Architecting Profile...
+                      Architecting Identity...
                     </>
                   ) : (
                     <>
@@ -298,7 +291,6 @@ export default function OnboardingPage() {
                 <Button className="w-full h-14 bg-accent hover:bg-accent/90 rounded-2xl text-lg font-bold shadow-xl" onClick={handleFinish}>
                   Launch My Profile <ArrowRight className="ml-2 size-5" />
                 </Button>
-                <p className="text-[10px] text-center text-muted-foreground uppercase font-black tracking-widest">You can refine all details later in Settings</p>
               </CardFooter>
             </Card>
 

@@ -42,18 +42,17 @@ const proposalGeneratorPrompt = ai.definePrompt({
   name: 'proposalGeneratorPrompt',
   input: {schema: ProposalGeneratorInputSchema},
   output: {schema: ProposalGeneratorOutputSchema},
-  prompt: `You are a Strategic Co-Founder and Identity Architect for {{{businessName}}}.
-Your mission is to draft a high-value, cinematic project proposal for {{{clientName}}} based on this project brief: "{{{projectBrief}}}"
+  prompt: `You are a Strategic Identity Architect for {{{businessName}}}.
+You are drafting a proposal for {{{clientName}}}.
 
-The tone should be: {{{brandingTone}}}.
+Project Context: "{{{projectBrief}}}"
 
-Guidelines:
-1. Frame the project as a "Legend" or "Story" being built.
-2. NARRATIVE: Provide a "Narrative Script" block (like a film opening) that sets the emotional stakes.
-3. EPISODES: Break the work into 3-4 "Episodes" rather than just phases.
-4. INVESTMENT: Create 3 investment tiers starting from an MVP entry point to a full pilot.
-5. Focus on the "Strategic Win" for the client, not the labor of the expert.
-6. Use professional, evocative language that honors the expert's craft.`,
+Your Mission:
+1. If the brief is short (e.g., "I am an artist creating a proposal for a museum"), expand this into a multi-episode cinematic roadmap.
+2. NARRATIVE: Provide a "Narrative Script" block (like a film opening) that sets the emotional stakes of the project.
+3. EPISODES: Break the work into 3-4 "Episodes" (e.g., EP 01: The Discovery, EP 02: The Visionary Build, EP 03: The Cultural Legacy).
+4. Focus on the "Strategic Win" for the client, not the labor of the expert. 
+5. NEVER invent the Business Name or Client Name; use exactly what is provided in the input.`,
 });
 
 const proposalGeneratorFlow = ai.defineFlow(

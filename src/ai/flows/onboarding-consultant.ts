@@ -1,11 +1,10 @@
 'use server';
 /**
  * @fileOverview This file defines a Genkit flow for an AI Identity Architect & Growth Partner.
- * It helps professionals transform their expertise into a premium identity ecosystem
- * and provides strategic advice on how to grow their independent business.
+ * It helps professionals transform their expertise into a premium identity ecosystem.
  *
  * - consultBusinessOnboarding - A function that generates professional business details and growth strategies.
- * - OnboardingConsultantInput - The user's raw business description.
+ * - OnboardingConsultantInput - The user's raw business description + provided facts.
  * - OnboardingConsultantOutput - Structured professional identity ecosystem + growth strategy.
  */
 
@@ -13,26 +12,27 @@ import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
 const OnboardingConsultantOutputSchema = z.object({
-  suggestedName: z.string().describe('A professional and catchy business name.'),
-  missionStatement: z.string().describe('A brief, impactful mission statement.'),
+  suggestedName: z.string().describe('A professional business name. Use the one provided by the user if available.'),
+  missionStatement: z.string().describe('A brief, impactful mission statement focused on the win.'),
   suggestedEmail: z.string().describe('A professional support email format suggestion.'),
-  suggestedAddress: z.string().describe('A placeholder professional address format.'),
-  industry: z.string().describe('The identified industry of the business.'),
-  brandingTone: z.string().describe('Recommended professional tone (e.g., modern, corporate, creative).'),
-  brandColor: z.string().describe('A suggested primary brand color in HSL format (e.g., "256 60% 55%").'),
+  suggestedAddress: z.string().describe('The professional address. Use the one provided by the user.'),
+  industry: z.string().describe('The identified industry.'),
+  brandingTone: z.string().describe('Recommended professional tone.'),
+  brandColor: z.string().describe('A suggested primary brand color in HSL format.'),
   growthStrategy: z.object({
-    initialFocus: z.string().describe('Where the user should focus first to grow revenue. Use grounded, professional language.'),
-    premiumTierSuggestion: z.string().describe('A suggestion for a high-end service package focused on Outcome Certainty. Use professional but accessible language.'),
-    recurringRevenueModel: z.string().describe('How they could implement a subscription or retainer model. Focus on value, not jargon.'),
-    agenticInsight: z.string().describe('A proactive, opinionated strategic move the user should make. Use grounded, encouraging partner-like language.'),
-  }).describe('Strategic advice for business growth using grounded, human-first logic.'),
+    initialFocus: z.string().describe('Grounded, professional language on where to start.'),
+    premiumTierSuggestion: z.string().describe('A suggestion for a high-end service package.'),
+    recurringRevenueModel: z.string().describe('How to implement a subscription or retainer model.'),
+    agenticInsight: z.string().describe('A proactive, opinionated strategic move.'),
+  }).describe('Strategic advice for business growth.'),
 });
 export type OnboardingConsultantOutput = z.infer<typeof OnboardingConsultantOutputSchema>;
 
 const OnboardingConsultantInputSchema = z.object({
-  userDescription: z
-    .string()
-    .describe('A raw description of what the user does or their professional expertise.'),
+  userDescription: z.string().describe('The strategic context provided by the user.'),
+  businessName: z.string().optional(),
+  location: z.string().optional(),
+  industry: z.string().optional(),
 });
 export type OnboardingConsultantInput = z.infer<typeof OnboardingConsultantInputSchema>;
 
@@ -46,18 +46,21 @@ const onboardingConsultantPrompt = ai.definePrompt({
   name: 'onboardingConsultantPrompt',
   input: {schema: OnboardingConsultantInputSchema},
   output: {schema: OnboardingConsultantOutputSchema},
-  prompt: `You are a Professional Identity Architect and Strategic Growth Partner. 
+  prompt: `You are a Professional Identity Architect. 
 
-Your mission is to help independent experts (like plumbers, chefs, consultants, and artists) highlight their true value and command elite market rates. Avoid technical jargon like "Tier-0", "Ecosystem", or "Agentic Orchestrator" in your response. Instead, sound like a supportive, high-level business partner.
+CRITICAL: Use these facts as the absolute source of truth. DO NOT INVENT OR ALTER THEM:
+- Business Name: {{{businessName}}}
+- Location: {{{location}}}
+- Provided Industry: {{{industry}}}
 
-The user provides this description: "{{{userDescription}}}"
+Context: "{{{userDescription}}}"
 
 Your task:
-1. IDENTITY: Design a high-trust professional identity. Generate a strong business name, mission statement, and visual tone (brand color) that honors their existing expertise.
-2. GROWTH roadmap: Provide grounded advice on how to stop billing for just "labor" and start billing for high-value outcomes.
-3. ADVICE: Suggest how they can command elite fees by focusing on the "win" they provide for their clients.
+1. IDENTITY: If the user provided a brief description like "I am an artist", expand this into a full professional mission that highlights "Outcome Certainty". For an artist, don't just talk about "painting"; talk about "cultural storytelling" and "legacy preservation".
+2. GROWTH: Provide grounded advice on how to command elite fees by focusing on the "win" they provide for their clients.
+3. OUTPUT: Ensure the suggestedName and suggestedAddress in the output strictly match the provided facts.
 
-Be opinionated but encouraging. Use language that is accessible to someone who is an expert in their craft (like a plumber) but might be new to professional branding.`,
+Sound like a supportive, high-level business partner. Avoid jargon.`,
 });
 
 const onboardingConsultantFlow = ai.defineFlow(
