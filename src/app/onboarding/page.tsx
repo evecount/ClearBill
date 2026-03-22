@@ -88,7 +88,7 @@ export default function OnboardingPage() {
 
     setDocumentNonBlocking(doc(user.auth.firestore, 'organizations', orgId), orgData, { merge: true })
 
-    toast({ title: "Strategic DNA Locked", description: "Your Professional Identity Ecosystem is now live." })
+    toast({ title: "Identity Profile Saved", description: "Your professional profile is now live." })
     router.push("/dashboard")
   }
 
@@ -99,20 +99,20 @@ export default function OnboardingPage() {
           <div className="inline-flex items-center justify-center p-3 bg-accent/10 rounded-2xl mb-4">
             <Sparkles className="size-8 text-accent" />
           </div>
-          <h1 className="text-4xl font-bold tracking-tight text-slate-900">Tier-0 Identity Architect</h1>
-          <p className="text-lg text-muted-foreground">Architecting high-value professional ecosystems with Outcome Certainty.</p>
+          <h1 className="text-4xl font-bold tracking-tight text-slate-900">Identity Architect</h1>
+          <p className="text-lg text-muted-foreground">Highlight your value and charge what your expertise is worth.</p>
         </div>
 
         {step === 1 ? (
           <div className="max-w-2xl mx-auto w-full">
             <Card className="shadow-2xl border-none rounded-3xl overflow-hidden">
               <CardHeader className="bg-slate-900 text-white p-8">
-                <CardTitle className="text-2xl">Unpack your expertise</CardTitle>
-                <CardDescription className="text-slate-400">Describe what you do in your own words. Our Strategic Orchestrator will architect the rest.</CardDescription>
+                <CardTitle className="text-2xl">Tell us about your work</CardTitle>
+                <CardDescription className="text-slate-400">Describe what you do in your own words. We'll help you design a professional profile that honors your craft.</CardDescription>
               </CardHeader>
               <CardContent className="p-8 space-y-8">
                 <div className="space-y-3">
-                  <Label htmlFor="desc" className="text-[10px] uppercase tracking-widest text-muted-foreground font-black">Professional DNA</Label>
+                  <Label htmlFor="desc" className="text-[10px] uppercase tracking-widest text-muted-foreground font-black">Your Expertise</Label>
                   <Textarea 
                     id="desc"
                     placeholder="e.g. I am a boutique marketing consultant for luxury brands, focusing on digital presence and elite brand positioning..."
@@ -123,7 +123,7 @@ export default function OnboardingPage() {
                 </div>
 
                 <div className="space-y-4">
-                  <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-black">Or, Use a Strategic Nucleus</Label>
+                  <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-black">Or, Start with a Profession</Label>
                   <div className="flex flex-wrap gap-2">
                     {QUICK_STARTS.map((qs) => (
                       <button
@@ -150,11 +150,11 @@ export default function OnboardingPage() {
                   {loading ? (
                     <>
                       <Loader2 className="mr-2 h-6 w-6 animate-spin" />
-                      Architecting Strategic Win...
+                      Analyzing Your Expertise...
                     </>
                   ) : (
                     <>
-                      Architect Professional Ecosystem <ArrowRight className="ml-2 size-5 group-hover:translate-x-1 transition-transform" />
+                      Design My Professional Profile <ArrowRight className="ml-2 size-5 group-hover:translate-x-1 transition-transform" />
                     </>
                   )}
                 </Button>
@@ -168,7 +168,7 @@ export default function OnboardingPage() {
               <CardHeader className="bg-slate-900 text-white p-8">
                 <div className="flex justify-between items-center mb-4">
                   <div className="flex items-center gap-2 px-3 py-1 bg-accent rounded-full text-[10px] font-black tracking-widest text-white uppercase">
-                    <Zap className="size-3" /> Tier-0 Strategic Pivot
+                    <Zap className="size-3" /> Growth Roadmap
                   </div>
                   <Sparkles className="size-5 text-accent" />
                 </div>
@@ -179,7 +179,7 @@ export default function OnboardingPage() {
                 {/* Visual Identity Preview */}
                 <div className="grid sm:grid-cols-2 gap-8">
                   <div className="space-y-2">
-                    <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-black">Identity Tone</Label>
+                    <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-black">Recommended Tone</Label>
                     <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-2xl border">
                       <div 
                         className="size-5 rounded-full border shadow-sm shrink-0" 
@@ -189,7 +189,7 @@ export default function OnboardingPage() {
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-black">Sovereign Mission</Label>
+                    <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-black">Professional Mission</Label>
                     <p className="text-sm text-slate-600 italic leading-relaxed font-medium">"{proposal?.missionStatement}"</p>
                   </div>
                 </div>
@@ -198,14 +198,14 @@ export default function OnboardingPage() {
 
                 {/* Strategic Growth Roadmap */}
                 <div className="space-y-6">
-                  <Label className="text-[10px] uppercase tracking-widest text-accent font-black block border-b pb-2">Deep Water Strategy Roadmap</Label>
+                  <Label className="text-[10px] uppercase tracking-widest text-accent font-black block border-b pb-2">Recommended Growth Steps</Label>
                   <div className="grid gap-4">
                     <div className="flex gap-4 items-start p-4 bg-emerald-50/50 rounded-2xl border border-emerald-100">
                       <div className="bg-emerald-100 p-2 rounded-xl shrink-0">
                         <Target className="size-4 text-emerald-600" />
                       </div>
                       <div className="space-y-1">
-                        <p className="text-sm font-bold text-slate-900">Outcome Pivot</p>
+                        <p className="text-sm font-bold text-slate-900">Initial Focus</p>
                         <p className="text-xs text-muted-foreground leading-relaxed">{proposal?.growthStrategy.initialFocus}</p>
                       </div>
                     </div>
@@ -214,7 +214,7 @@ export default function OnboardingPage() {
                         <Star className="size-4 text-purple-600" />
                       </div>
                       <div className="space-y-1">
-                        <p className="text-sm font-bold text-slate-900">Premium Outcome Package</p>
+                        <p className="text-sm font-bold text-slate-900">Premium Service Idea</p>
                         <p className="text-xs text-muted-foreground leading-relaxed">{proposal?.growthStrategy.premiumTierSuggestion}</p>
                       </div>
                     </div>
@@ -223,7 +223,7 @@ export default function OnboardingPage() {
                         <TrendingUp className="size-4 text-blue-600" />
                       </div>
                       <div className="space-y-1">
-                        <p className="text-sm font-bold text-slate-900">Sovereign Subscription</p>
+                        <p className="text-sm font-bold text-slate-900">Ongoing Value Model</p>
                         <p className="text-xs text-muted-foreground leading-relaxed">{proposal?.growthStrategy.recurringRevenueModel}</p>
                       </div>
                     </div>
@@ -233,7 +233,7 @@ export default function OnboardingPage() {
                     <div className="p-4 bg-slate-900 text-white rounded-2xl space-y-2">
                       <div className="flex items-center gap-2">
                         <Lightbulb className="size-4 text-accent" />
-                        <span className="text-[10px] font-black uppercase tracking-widest">Autonomous Orchestrator Insight</span>
+                        <span className="text-[10px] font-black uppercase tracking-widest">Growth Tip</span>
                       </div>
                       <p className="text-xs leading-relaxed text-slate-300 italic">
                         "{proposal.growthStrategy.agenticInsight}"
@@ -244,17 +244,17 @@ export default function OnboardingPage() {
               </CardContent>
               <CardFooter className="p-8 bg-slate-50 border-t flex flex-col gap-3">
                 <Button className="w-full h-14 bg-accent hover:bg-accent/90 rounded-2xl text-lg font-bold shadow-xl shadow-accent/20" onClick={handleFinish}>
-                  Lock Strategic DNA & Launch <ArrowRight className="ml-2 size-5" />
+                  Save Profile & Get Started <ArrowRight className="ml-2 size-5" />
                 </Button>
                 <Button variant="ghost" className="w-full text-slate-500 hover:text-slate-900" onClick={() => setStep(1)}>
-                  Refine Strategic Nucleus
+                  Refine My Description
                 </Button>
               </CardFooter>
             </Card>
 
             {/* Portal Preview */}
             <div className="lg:col-span-2 space-y-6 sticky top-24">
-              <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-black ml-1">Ecosystem Preview</Label>
+              <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-black ml-1">Client Portal Preview</Label>
               <div className="relative group">
                 <div 
                   className="absolute -inset-1 rounded-[2.5rem] blur opacity-25 group-hover:opacity-40 transition duration-1000"
@@ -277,7 +277,7 @@ export default function OnboardingPage() {
                         <div className="h-3 w-32 bg-slate-100 rounded animate-pulse"></div>
                       </div>
                       <div className="text-right space-y-1">
-                        <p className="text-[8px] uppercase font-bold text-muted-foreground">Outcome Fee</p>
+                        <p className="text-[8px] uppercase font-bold text-muted-foreground">Professional Fee</p>
                         <p className="text-2xl font-black" style={{ color: `hsl(${proposal?.brandColor || '256 60% 55%'})` }}>$5,000.00</p>
                       </div>
                     </div>
@@ -293,9 +293,9 @@ export default function OnboardingPage() {
                         boxShadow: `0 10px 15px -3px hsla(${proposal?.brandColor}, 0.3)`
                       }}
                     >
-                      Verify Strategic Win
+                      Confirm Completion
                     </Button>
-                    <p className="text-[8px] text-center text-muted-foreground font-medium uppercase tracking-[0.2em]">Verified Professional Identity Ecosystem</p>
+                    <p className="text-[8px] text-center text-muted-foreground font-medium uppercase tracking-[0.2em]">Secure Branded Payment Portal</p>
                   </div>
                 </div>
               </div>

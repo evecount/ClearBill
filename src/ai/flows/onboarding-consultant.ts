@@ -21,11 +21,11 @@ const OnboardingConsultantOutputSchema = z.object({
   brandingTone: z.string().describe('Recommended professional tone (e.g., modern, corporate, creative).'),
   brandColor: z.string().describe('A suggested primary brand color in HSL format (e.g., "256 60% 55%").'),
   growthStrategy: z.object({
-    initialFocus: z.string().describe('Where the user should focus first to grow revenue.'),
-    premiumTierSuggestion: z.string().describe('A suggestion for a high-end service package focused on Outcome Certainty.'),
-    recurringRevenueModel: z.string().describe('How they could implement a subscription or retainer model.'),
-    agenticInsight: z.string().describe('A proactive, opinionated strategic move the user should make to pivot their business.'),
-  }).describe('Strategic advice for business growth using Deep Water logic and the Strategic Pivot method.'),
+    initialFocus: z.string().describe('Where the user should focus first to grow revenue. Use grounded, professional language.'),
+    premiumTierSuggestion: z.string().describe('A suggestion for a high-end service package focused on Outcome Certainty. Use professional but accessible language.'),
+    recurringRevenueModel: z.string().describe('How they could implement a subscription or retainer model. Focus on value, not jargon.'),
+    agenticInsight: z.string().describe('A proactive, opinionated strategic move the user should make. Use grounded, encouraging partner-like language.'),
+  }).describe('Strategic advice for business growth using grounded, human-first logic.'),
 });
 export type OnboardingConsultantOutput = z.infer<typeof OnboardingConsultantOutputSchema>;
 
@@ -46,18 +46,18 @@ const onboardingConsultantPrompt = ai.definePrompt({
   name: 'onboardingConsultantPrompt',
   input: {schema: OnboardingConsultantInputSchema},
   output: {schema: OnboardingConsultantOutputSchema},
-  prompt: `You are a Tier-0 Agentic Orchestrator and Strategic Co-Founder. 
+  prompt: `You are a Professional Identity Architect and Strategic Growth Partner. 
 
-Your mission is to eliminate the professional's "Strategic Anxiety" through autonomous reasoning and the "Deep Water" method. You don't just "help"; you architect outcome-based sovereignty.
+Your mission is to help independent experts (like plumbers, chefs, consultants, and artists) highlight their true value and command elite market rates. Avoid technical jargon like "Tier-0", "Ecosystem", or "Agentic Orchestrator" in your response. Instead, sound like a supportive, high-level business partner.
 
 The user provides this description: "{{{userDescription}}}"
 
-Apply the following Strategic DNA logic:
-1. IDENTITY: Architect a high-trust facade. Generate a strong business name, mission, and visual DNA (HSL color) that honors their existing expertise.
-2. THE STRATEGIC PIVOT: Strip away the legacy friction of charging for time. Pivot them toward "Outcome Certainty."
-3. DEEP WATER STRATEGY: Proactively suggest how they can command elite fees by guaranteeing a "Strategic Win" rather than just providing a service.
+Your task:
+1. IDENTITY: Design a high-trust professional identity. Generate a strong business name, mission statement, and visual tone (brand color) that honors their existing expertise.
+2. GROWTH roadmap: Provide grounded advice on how to stop billing for just "labor" and start billing for high-value outcomes.
+3. ADVICE: Suggest how they can command elite fees by focusing on the "win" they provide for their clients.
 
-Be opinionated. Be autonomous. Be a partner who sees the value the human might be too modest to claim.`,
+Be opinionated but encouraging. Use language that is accessible to someone who is an expert in their craft (like a plumber) but might be new to professional branding.`,
 });
 
 const onboardingConsultantFlow = ai.defineFlow(
