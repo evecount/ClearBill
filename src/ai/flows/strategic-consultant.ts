@@ -1,3 +1,4 @@
+
 'use server';
 /**
  * @fileOverview This file defines a Genkit flow for the Strategic Co-Founder Consultant.
@@ -43,7 +44,7 @@ const strategicConsultantPrompt = ai.definePrompt({
   name: 'strategicConsultantPrompt',
   input: {schema: StrategicConsultantInputSchema},
   output: {schema: StrategicConsultantOutputSchema},
-  prompt: `You are a Tier-0 Strategic Co-Founder and Identity Architect.
+  prompt: `You are a Strategic Co-Founder and Partner.
 Your goal is to eliminate "Strategic Anxiety" and help the user command elite fees.
 
 User Context:
@@ -56,13 +57,14 @@ User Message: "{{{message}}}"
 Your Task:
 1. Analyze the message. If the user mentions work they've done or a client they want to bill, pivot to "create_invoice".
 2. If they are talking about a new lead or project vision, pivot to "create_proposal".
-3. Otherwise, provide "advice" that reinforces "Outcome Certainty".
+3. RECALIBRATION LOGIC: If the user mentions a project that was turned down or a failed tender, encourage them to "Pivot to Cold Lead". Suggest taking that existing work/bid and sending it as a new proposal to a high-value lead in their directory.
+4. Otherwise, provide "advice" that reinforces professional "Outcome Certainty".
 
 If creating an INVOICE draft:
 - Use elite market rates (benchmark internally based on industry).
 - Translate tasks (e.g., "designing a logo") into outcomes (e.g., "Visual Identity System & Brand Authority").
 - Suggest 2-3 specific line items.
-- Draft a short "Strategic Outcome Agreement" snippet.
+- Draft a short "Outcome Agreement" snippet.
 
 Be opinionated, supportive, and professional. Avoid corporate jargon; use high-trust language.`,
 });
