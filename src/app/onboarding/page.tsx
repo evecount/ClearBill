@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
-import { Sparkles, ArrowRight, Building2, Mail, MapPin, Loader2, CheckCircle2, FileText, Globe, ShieldCheck, Palette, Camera, Scissors, Briefcase, Code, Music, Dumbbell, Star } from "lucide-react"
+import { Sparkles, ArrowRight, Building2, Mail, MapPin, Loader2, CheckCircle2, FileText, Globe, ShieldCheck, Palette, Camera, Scissors, Briefcase, Code, Music, Dumbbell, Star, Mic } from "lucide-react"
 import { consultBusinessOnboarding, type OnboardingConsultantOutput } from "@/ai/flows/onboarding-consultant"
 import { useToast } from "@/hooks/use-toast"
 import Link from "next/link"
@@ -49,6 +49,21 @@ const QUICK_STARTS = [
     label: "Personal Trainer",
     icon: Dumbbell,
     text: "I am a private personal trainer focusing on functional strength and mobility for busy corporate executives."
+  },
+  {
+    label: "Professional Comedian",
+    icon: Star,
+    text: "I am a stand-up comedian and corporate entertainer providing clean, high-energy comedy sets for galas, retreats, and private parties."
+  },
+  {
+    label: "Freelance Dancer",
+    icon: Music,
+    text: "I am a professional dancer and choreographer specializing in commercial performance and movement instruction for music videos and luxury events."
+  },
+  {
+    label: "Event Emcee",
+    icon: Mic,
+    text: "I am a professional master of ceremonies and event host, specializing in charity auctions, corporate conferences, and high-profile festivals."
   },
   {
     label: "Dev Consultant",
