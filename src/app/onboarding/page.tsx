@@ -52,7 +52,7 @@ export default function OnboardingPage() {
   const scrollRef = useRef<HTMLDivElement>(null)
   
   const [messages, setMessages] = useState<ChatMessage[]>([
-    { role: 'assistant', content: "Welcome. I'm your Strategic Identity Architect. To start, let's anchor the basic facts of your business. What's your business called and where are you based?", component: 'foundation' }
+    { role: 'assistant', content: "Welcome. Let's get your first professional invoice ready. To start, what's your business called and where are you based?", component: 'foundation' }
   ])
   
   const [loading, setLoading] = useState(false)
@@ -75,14 +75,14 @@ export default function OnboardingPage() {
 
   const handleSaveFoundation = () => {
     if (!basicFacts.businessName || !basicFacts.location) {
-      toast({ title: "Facts Required", description: "Name and location are the minimum anchors." })
+      toast({ title: "Details Required", description: "Business name and location are required to start." })
       return
     }
     
     setMessages(prev => [
       ...prev,
       { role: 'user', content: `My business is ${basicFacts.businessName}, based in ${basicFacts.location}.` },
-      { role: 'assistant', content: "Excellent. Now, for the most critical visual anchor—your brand logo. Upload it here so I can embed it into your professional ecosystem.", component: 'logo' }
+      { role: 'assistant', content: "Great. Now, let's add your logo to the invoice. Upload it here so I can professionally brand your documents.", component: 'logo' }
     ])
   }
 
@@ -95,7 +95,7 @@ export default function OnboardingPage() {
         setMessages(prev => [
           ...prev,
           { role: 'user', content: "Logo uploaded." },
-          { role: 'assistant', content: "Identity confirmed. Now, tell me about your unique craft. What is the 'Strategic Win' you deliver for your clients? Feel free to use one of our inspirations below.", component: 'description' }
+          { role: 'assistant', content: "Branding set. Now, tell me about the work you do. What services are we billing for today? You can use an inspiration below or describe it in your own words.", component: 'description' }
         ])
       }
       reader.readAsDataURL(file)
@@ -104,14 +104,14 @@ export default function OnboardingPage() {
 
   const handleConsult = async () => {
     if (!description.trim()) {
-      toast({ title: "Strategic Intent Required", description: "Describe your expertise to architect a win." })
+      toast({ title: "Work Description Required", description: "Please describe the services to be billed." })
       return
     }
 
     setLoading(true)
     try {
-      if (!user) {
-        initiateAnonymousSignIn(auth!)
+      if (!user && auth) {
+        initiateAnonymousSignIn(auth)
       }
 
       const result = await consultBusinessOnboarding({ 
@@ -127,10 +127,10 @@ export default function OnboardingPage() {
       setMessages(prev => [
         ...prev,
         { role: 'user', content: description },
-        { role: 'assistant', content: "I have architected your professional ecosystem. Your sample invoice and identity roadmap are ready.", component: 'final' }
+        { role: 'assistant', content: "I've drafted your first elite invoice based on your expertise. Take a look at the preview below.", component: 'final' }
       ])
     } catch (error) {
-      toast({ title: "Consultant Busy", description: "Please try again in a moment.", variant: "destructive" })
+      toast({ title: "Partner Busy", description: "Please try again in a moment.", variant: "destructive" })
     } finally {
       setLoading(false)
     }
@@ -194,7 +194,7 @@ export default function OnboardingPage() {
         })
       })
 
-    toast({ title: "Identity Launched", description: "Your ecosystem is live." })
+    toast({ title: "Invoice Ready", description: "Your professional billing ecosystem is live." })
     router.push("/dashboard")
   }
 
@@ -208,12 +208,12 @@ export default function OnboardingPage() {
               <Bot className="size-5" />
             </div>
             <div>
-              <h1 className="text-xl font-black tracking-tight">Identity Architect</h1>
-              <p className="text-[10px] text-muted-foreground font-black uppercase tracking-widest">Sovereign Onboarding Active</p>
+              <h1 className="text-xl font-black tracking-tight">Start Your First Invoice</h1>
+              <p className="text-[10px] text-muted-foreground font-black uppercase tracking-widest">Professional Onboarding</p>
             </div>
           </div>
           <Badge variant="outline" className="text-accent border-accent text-[10px] font-black uppercase tracking-widest">
-            Tier-0 Protocol
+            Ready to Bill
           </Badge>
         </div>
 
@@ -265,7 +265,7 @@ export default function OnboardingPage() {
                           </div>
                         </div>
                         <Button className="w-full bg-accent hover:bg-accent/90 h-12 rounded-xl font-black" onClick={handleSaveFoundation}>
-                          Save Foundation <ArrowRight className="size-4 ml-2" />
+                          Continue <ArrowRight className="size-4 ml-2" />
                         </Button>
                       </Card>
                     )}
@@ -283,7 +283,7 @@ export default function OnboardingPage() {
                           </div>
                         </div>
                         <Button variant="outline" className="border-accent text-accent hover:bg-accent/5 rounded-xl px-8" onClick={() => fileInputRef.current?.click()}>
-                          Click to Select Brand Logo
+                          Click to Upload Logo
                         </Button>
                       </div>
                     )}
@@ -307,7 +307,7 @@ export default function OnboardingPage() {
                         </div>
                         <div className="relative">
                           <Textarea 
-                            placeholder="Describe your expertise..." 
+                            placeholder="e.g. I provided 20 hours of logo design and brand strategy..." 
                             className="min-h-[140px] rounded-2xl p-5 text-base border-slate-200 bg-slate-50 shadow-inner"
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
@@ -361,7 +361,7 @@ export default function OnboardingPage() {
                                style={{ backgroundColor: `hsl(${proposal.brandColor})` }}
                                onClick={handleFinish}
                              >
-                               Confirm & Go to Dashboard <ArrowRight className="ml-2 size-5" />
+                               Confirm & Create My Invoice <ArrowRight className="ml-2 size-5" />
                              </Button>
                            </CardContent>
                          </Card>
