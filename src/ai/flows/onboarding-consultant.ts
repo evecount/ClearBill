@@ -1,3 +1,4 @@
+
 'use server';
 /**
  * @fileOverview This file defines a Genkit flow for an AI Identity Architect & Growth Partner.
@@ -15,7 +16,7 @@ const OnboardingConsultantOutputSchema = z.object({
   suggestedName: z.string().describe('A professional business name. Use the one provided by the user if available.'),
   missionStatement: z.string().describe('A brief, impactful mission statement focused on the win.'),
   suggestedEmail: z.string().describe('A professional support email format suggestion.'),
-  suggestedAddress: z.string().describe('The professional address. Use the one provided by the user.'),
+  suggestedAddress: z.string().describe('The professional address. Use the one provided by the user if available.'),
   industry: z.string().describe('The identified industry.'),
   brandingTone: z.string().describe('Recommended professional tone.'),
   brandColor: z.string().describe('A suggested primary brand color in HSL format.'),
@@ -36,6 +37,7 @@ const OnboardingConsultantInputSchema = z.object({
   userDescription: z.string().describe('The strategic context provided by the user.'),
   businessName: z.string().optional(),
   location: z.string().optional(),
+  address: z.string().optional(),
   industry: z.string().optional(),
   website: z.string().optional(),
 });
@@ -55,7 +57,8 @@ const onboardingConsultantPrompt = ai.definePrompt({
 
 CRITICAL: Use these facts as the absolute source of truth. DO NOT INVENT OR ALTER THEM:
 - Business Name: {{{businessName}}}
-- Location: {{{location}}}
+- General Location: {{{location}}}
+- Precise Address: {{{address}}}
 - Provided Industry: {{{industry}}}
 - Website: {{{website}}}
 
@@ -64,9 +67,7 @@ Context: "{{{userDescription}}}"
 Your task:
 1. IDENTITY: If the user provided a brief description like "I am an artist", expand this into a full professional mission that highlights "Outcome Certainty". Use the website to inform the tone.
 2. INVOICING: Generate 3-4 professional, outcome-based invoice line items that an expert in this specific field (e.g., an artist in Singapore, a plumber in Berlin) would typically bill for. 
-For an artist, include things like "Conceptual Development & Site Research", "Production & Material Procurement", "Strategic Installation Supervision".
-Assign elite, professional market rate prices.
-3. GROWTH: Provide grounded advice on how to command elite fees by focusing on the "win" they provide for their clients.
+3. ADDRESS: Ensure the suggestedAddress in the output strictly matches the provided "Precise Address" fact. If only a location is provided, use that.
 4. OUTPUT: Ensure the suggestedName and suggestedAddress in the output strictly match the provided facts.
 
 Sound like a supportive, high-level business partner. Avoid jargon.`,

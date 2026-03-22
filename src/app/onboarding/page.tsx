@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
-import { ArrowRight, Loader2, ShieldCheck, Scissors, Music, HeartPulse, Code, Utensils, Hammer, Shield, Sparkles, Zap, Target, Star, Palette, PenTool, Home, TrendingUp, Briefcase, Landmark, Camera, Upload, Link as LinkIcon } from "lucide-react"
+import { ArrowRight, Loader2, ShieldCheck, Scissors, Music, HeartPulse, Code, Utensils, Hammer, Shield, Sparkles, Zap, Target, Star, Palette, PenTool, Home, TrendingUp, Briefcase, Landmark, Camera, Upload, Link as LinkIcon, MapPin } from "lucide-react"
 import { consultBusinessOnboarding, type OnboardingConsultantOutput } from "@/ai/flows/onboarding-consultant"
 import { useToast } from "@/hooks/use-toast"
 import { cn } from "@/lib/utils"
@@ -48,6 +48,7 @@ export default function OnboardingPage() {
   const [basicFacts, setBasicFacts] = useState({
     businessName: "",
     location: "",
+    address: "",
     industry: "",
     website: "",
     logoUrl: ""
@@ -58,7 +59,7 @@ export default function OnboardingPage() {
 
   const handleNextToDescription = () => {
     if (!basicFacts.businessName || !basicFacts.location) {
-      toast({ title: "Facts Required", description: "Please enter your business name and location.", variant: "destructive" })
+      toast({ title: "Facts Required", description: "Please enter your business name and general location.", variant: "destructive" })
       return
     }
     setStep(2)
@@ -91,6 +92,7 @@ export default function OnboardingPage() {
         userDescription: description,
         businessName: basicFacts.businessName,
         location: basicFacts.location,
+        address: basicFacts.address,
         industry: basicFacts.industry,
         website: basicFacts.website
       })
@@ -115,11 +117,11 @@ export default function OnboardingPage() {
       name: proposal.suggestedName,
       logoUrl: basicFacts.logoUrl || "",
       contactEmail: proposal.suggestedEmail,
-      addressLine1: proposal.suggestedAddress,
-      city: "",
+      addressLine1: basicFacts.address || proposal.suggestedAddress,
+      city: basicFacts.location.split(',')[0]?.trim() || "",
       state: "",
       postalCode: "",
-      country: proposal.suggestedAddress.split(',').pop()?.trim() || "USA",
+      country: basicFacts.location.split(',').pop()?.trim() || "USA",
       taxId: "",
       currency: "USD",
       brandColor: proposal.brandColor,
@@ -231,15 +233,33 @@ export default function OnboardingPage() {
                         />
                       </div>
                     </div>
-                    <div className="space-y-3">
-                      <Label htmlFor="location" className="text-xs uppercase font-black tracking-widest text-muted-foreground">Primary Location</Label>
-                      <Input 
-                        id="location" 
-                        placeholder="e.g. Berlin, Germany" 
-                        className="h-14 rounded-2xl text-lg border-slate-200"
-                        value={basicFacts.location}
-                        onChange={(e) => setBasicFacts({...basicFacts, location: e.target.value})}
-                      />
+                    <div className="grid grid-cols-1 gap-6">
+                      <div className="space-y-3">
+                        <Label htmlFor="location" className="text-xs uppercase font-black tracking-widest text-muted-foreground">General Location (City, Country)</Label>
+                        <div className="relative">
+                          <Globe className="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+                          <Input 
+                            id="location" 
+                            placeholder="e.g. Berlin, Germany" 
+                            className="h-14 pl-12 rounded-2xl text-lg border-slate-200"
+                            value={basicFacts.location}
+                            onChange={(e) => setBasicFacts({...basicFacts, location: e.target.value})}
+                          />
+                        </div>
+                      </div>
+                      <div className="space-y-3">
+                        <Label htmlFor="address" className="text-xs uppercase font-black tracking-widest text-muted-foreground">Professional Billing Address</Label>
+                        <div className="relative">
+                          <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+                          <Input 
+                            id="address" 
+                            placeholder="e.g. 123 Studio Way, Unit 4" 
+                            className="h-14 pl-12 rounded-2xl text-lg border-slate-200"
+                            value={basicFacts.address}
+                            onChange={(e) => setBasicFacts({...basicFacts, address: e.target.value})}
+                          />
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </CardContent>
