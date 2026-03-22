@@ -7,10 +7,11 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
-import { Sparkles, ArrowRight, Building2, Mail, MapPin, Loader2, CheckCircle2 } from "lucide-react"
+import { Sparkles, ArrowRight, Building2, Mail, MapPin, Loader2, CheckCircle2, FileText, Globe, ShieldCheck } from "lucide-react"
 import { consultBusinessOnboarding, type OnboardingConsultantOutput } from "@/ai/flows/onboarding-consultant"
 import { useToast } from "@/hooks/use-toast"
 import Link from "next/link"
+import { Separator } from "@/components/ui/separator"
 
 export default function OnboardingPage() {
   const router = useRouter()
@@ -44,117 +45,177 @@ export default function OnboardingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4">
-      <div className="max-w-2xl w-full space-y-8">
+    <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4 py-12">
+      <div className="max-w-4xl w-full space-y-8">
         <div className="text-center space-y-2">
           <div className="inline-flex items-center justify-center p-3 bg-accent/10 rounded-2xl mb-4">
             <Sparkles className="size-8 text-accent" />
           </div>
-          <h1 className="text-3xl font-bold tracking-tight">AI Business Consultant</h1>
-          <p className="text-muted-foreground">Let's build your professional brand identity in seconds.</p>
+          <h1 className="text-4xl font-bold tracking-tight text-slate-900">AI Brand Architect</h1>
+          <p className="text-lg text-muted-foreground">Transforming your ideas into a professional payment ecosystem.</p>
         </div>
 
         {step === 1 ? (
-          <Card className="shadow-xl border-none">
-            <CardHeader>
-              <CardTitle>Tell us about your venture</CardTitle>
-              <CardDescription>What do you do? Who are your clients? Don't worry about being professional yet—just speak from the heart.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="desc">Your Story</Label>
-                <Textarea 
-                  id="desc"
-                  placeholder="e.g., I'm a freelance web designer helping local bakeries get online. I love minimalist aesthetics and fast turnaround times."
-                  className="min-h-[150px] text-lg p-4"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                />
-              </div>
-            </CardContent>
-            <CardFooter>
-              <Button 
-                className="w-full h-12 text-lg bg-accent hover:bg-accent/90" 
-                onClick={handleConsult}
-                disabled={loading}
-              >
-                {loading ? (
-                  <>
-                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                    Analyzing your business...
-                  </>
-                ) : (
-                  <>
-                    Generate My Brand <ArrowRight className="ml-2 size-5" />
-                  </>
-                )}
-              </Button>
-            </CardFooter>
-          </Card>
-        ) : (
-          <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <Card className="shadow-xl border-none">
-              <CardHeader className="bg-accent text-white rounded-t-lg">
-                <div className="flex justify-between items-center">
-                  <div>
-                    <CardTitle className="text-2xl">{proposal?.suggestedName}</CardTitle>
-                    <p className="text-accent-foreground/80 font-medium">{proposal?.industry}</p>
-                  </div>
-                  <CheckCircle2 className="size-8" />
-                </div>
+          <div className="max-w-2xl mx-auto w-full">
+            <Card className="shadow-2xl border-none">
+              <CardHeader>
+                <CardTitle>Describe your venture</CardTitle>
+                <CardDescription>What do you do? Who are your clients? Our AI will build the professional "shell" your business deserves.</CardDescription>
               </CardHeader>
-              <CardContent className="pt-8 space-y-6">
-                <div className="grid gap-6 sm:grid-cols-2">
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2 text-muted-foreground">
-                      <Building2 className="size-4" />
-                      <span className="text-xs font-bold uppercase tracking-wider">Tone</span>
-                    </div>
-                    <p className="font-medium text-slate-800">{proposal?.brandingTone}</p>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2 text-muted-foreground">
-                      <Mail className="size-4" />
-                      <span className="text-xs font-bold uppercase tracking-wider">Support Email</span>
-                    </div>
-                    <p className="font-medium text-slate-800">{proposal?.suggestedEmail}</p>
-                  </div>
-                  <div className="sm:col-span-2 space-y-2">
-                    <div className="flex items-center gap-2 text-muted-foreground">
-                      <MapPin className="size-4" />
-                      <span className="text-xs font-bold uppercase tracking-wider">Address Format</span>
-                    </div>
-                    <p className="font-medium text-slate-800">{proposal?.suggestedAddress}</p>
-                  </div>
-                </div>
-
-                <div className="p-4 bg-muted/50 rounded-xl border border-dashed border-muted-foreground/20">
-                  <p className="text-sm italic text-muted-foreground text-center">
-                    "{proposal?.missionStatement}"
-                  </p>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="desc">Your Business Narrative</Label>
+                  <Textarea 
+                    id="desc"
+                    placeholder="e.g., I run a boutique photography studio in Brooklyn. I focus on high-end architectural shots for real estate firms."
+                    className="min-h-[150px] text-lg p-4"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                  />
                 </div>
               </CardContent>
-              <CardFooter className="flex gap-3">
-                <Button variant="outline" className="flex-1" onClick={() => setStep(1)}>
-                  Refine Description
-                </Button>
-                <Button className="flex-1 bg-accent hover:bg-accent/90" onClick={handleFinish}>
-                  Apply & Go to Dashboard
+              <CardFooter>
+                <Button 
+                  className="w-full h-14 text-lg bg-accent hover:bg-accent/90 shadow-lg shadow-accent/20" 
+                  onClick={handleConsult}
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <>
+                      <Loader2 className="mr-2 h-6 w-6 animate-spin" />
+                      Architecting your brand...
+                    </>
+                  ) : (
+                    <>
+                      Generate Brand Identity <ArrowRight className="ml-2 size-5" />
+                    </>
+                  )}
                 </Button>
               </CardFooter>
             </Card>
-            <p className="text-center text-xs text-muted-foreground">
-              You can further customize these details in your settings later.
-            </p>
+          </div>
+        ) : (
+          <div className="grid lg:grid-cols-2 gap-8 items-start animate-in fade-in slide-in-from-bottom-4 duration-700">
+            {/* Brand Details Card */}
+            <Card className="shadow-xl border-none overflow-hidden h-full">
+              <CardHeader className="bg-slate-900 text-white p-8">
+                <div className="flex justify-between items-center mb-4">
+                  <Badge className="bg-accent text-white border-none px-3 py-1">AI PROPOSAL</Badge>
+                  <Sparkles className="size-5 text-accent" />
+                </div>
+                <CardTitle className="text-3xl font-bold">{proposal?.suggestedName}</CardTitle>
+                <p className="text-slate-400 font-medium">{proposal?.industry}</p>
+              </CardHeader>
+              <CardContent className="p-8 space-y-8">
+                <div className="grid gap-6">
+                  <div className="space-y-1">
+                    <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">Brand Tone</Label>
+                    <p className="text-lg font-medium text-slate-800">{proposal?.brandingTone}</p>
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">Mission Statement</Label>
+                    <p className="text-slate-600 italic leading-relaxed">"{proposal?.missionStatement}"</p>
+                  </div>
+                  <div className="grid sm:grid-cols-2 gap-6 pt-4 border-t">
+                    <div className="space-y-1">
+                      <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">Support Link</Label>
+                      <div className="flex items-center gap-2 text-sm font-medium text-slate-700">
+                        <Mail className="size-3 text-accent" /> {proposal?.suggestedEmail}
+                      </div>
+                    </div>
+                    <div className="space-y-1">
+                      <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">Office Shell</Label>
+                      <div className="flex items-center gap-2 text-sm font-medium text-slate-700">
+                        <MapPin className="size-3 text-accent" /> {proposal?.suggestedAddress?.split(',')[0]}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+              <CardFooter className="p-8 bg-slate-50 border-t flex flex-col gap-3">
+                <Button className="w-full h-12 bg-accent hover:bg-accent/90" onClick={handleFinish}>
+                  Accept Brand & Continue <ArrowRight className="ml-2 size-4" />
+                </Button>
+                <Button variant="ghost" className="w-full" onClick={() => setStep(1)}>
+                  Redesign Identity
+                </Button>
+              </CardFooter>
+            </Card>
+
+            {/* Live Shell Preview */}
+            <div className="space-y-4">
+              <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold ml-1">Live Shell Preview</Label>
+              <div className="relative group">
+                <div className="absolute -inset-1 bg-gradient-to-r from-accent/50 to-blue-500/50 rounded-3xl blur opacity-25 group-hover:opacity-40 transition duration-1000"></div>
+                <div className="relative bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden">
+                  <div className="p-6 bg-slate-50 border-b flex justify-between items-center">
+                    <div className="flex items-center gap-3">
+                      <div className="size-8 bg-slate-900 rounded-lg flex items-center justify-center">
+                        <span className="text-white text-xs font-bold">{proposal?.suggestedName?.[0]}</span>
+                      </div>
+                      <span className="text-sm font-bold text-slate-900">{proposal?.suggestedName}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                       <ShieldCheck className="size-4 text-emerald-500" />
+                       <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Secure Portal</span>
+                    </div>
+                  </div>
+                  <div className="p-8 space-y-6">
+                    <div className="flex justify-between items-start">
+                      <div className="space-y-1">
+                        <p className="text-[8px] uppercase font-bold text-muted-foreground">Billed To</p>
+                        <div className="h-3 w-32 bg-slate-200 rounded animate-pulse"></div>
+                      </div>
+                      <div className="text-right space-y-1">
+                        <p className="text-[8px] uppercase font-bold text-muted-foreground">Amount Due</p>
+                        <p className="text-xl font-black text-accent">$2,500.00</p>
+                      </div>
+                    </div>
+                    <div className="space-y-3">
+                      <div className="flex justify-between border-b pb-2">
+                        <div className="h-2 w-48 bg-slate-100 rounded"></div>
+                        <div className="h-2 w-12 bg-slate-100 rounded"></div>
+                      </div>
+                      <div className="flex justify-between border-b pb-2">
+                        <div className="h-2 w-32 bg-slate-100 rounded"></div>
+                        <div className="h-2 w-12 bg-slate-100 rounded"></div>
+                      </div>
+                    </div>
+                    <Button disabled className="w-full bg-slate-900 text-white h-10 rounded-xl">
+                      Pay Securely
+                    </Button>
+                    <div className="pt-4 flex justify-center items-center gap-4 opacity-30 grayscale scale-75">
+                      <Globe className="size-4" />
+                      <ShieldCheck className="size-4" />
+                      <div className="text-[10px] font-bold">Stripe</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="p-4 rounded-xl bg-blue-50 border border-blue-100">
+                <p className="text-xs text-blue-700 flex gap-2">
+                  <Sparkles className="size-3 shrink-0" />
+                  This is the "shell" your clients see. It replaces generic banking links with your unique professional identity.
+                </p>
+              </div>
+            </div>
           </div>
         )}
 
-        <div className="text-center">
-          <Link href="/dashboard" className="text-sm text-muted-foreground hover:underline">
+        <div className="text-center pt-8">
+          <Link href="/dashboard" className="text-sm text-muted-foreground hover:text-accent transition-colors">
             Skip for now and enter manually
           </Link>
         </div>
       </div>
     </div>
+  )
+}
+
+function Badge({ children, className }: { children: React.ReactNode, className?: string }) {
+  return (
+    <span className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ${className}`}>
+      {children}
+    </span>
   )
 }

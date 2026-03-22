@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { CreditCard, ShieldCheck, Zap, ArrowRight, TrendingUp, Sparkles } from "lucide-react"
+import { CreditCard, ShieldCheck, Zap, ArrowRight, TrendingUp, Sparkles, Layout, Globe, Lock } from "lucide-react"
 
 export default function LandingPage() {
   return (
@@ -23,124 +23,147 @@ export default function LandingPage() {
       </header>
 
       <main className="flex-1">
-        <section className="py-24 px-6 text-center space-y-8 bg-gradient-to-b from-primary/[0.03] to-transparent">
-          <div className="max-w-4xl mx-auto space-y-6">
+        <section className="py-24 px-6 text-center space-y-8 bg-gradient-to-b from-primary/[0.03] to-transparent overflow-hidden">
+          <div className="max-w-4xl mx-auto space-y-6 relative">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 text-accent text-sm font-bold mb-4">
               <Sparkles className="size-4" />
-              <span>AI-Powered Branding for Small Business</span>
+              <span>The Branding Layer for B2B Payments</span>
             </div>
-            <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-primary leading-tight">
+            <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-primary leading-[1.1]">
               Your Brand. Their Payments. <br />
-              <span className="text-accent">Zero Friction.</span>
+              <span className="text-accent underline decoration-accent/20 underline-offset-8">Zero Friction.</span>
             </h1>
             <p className="text-xl md:text-2xl text-muted-foreground leading-relaxed max-w-3xl mx-auto">
-              Stop sending generic payment links. InvoiceSync provides a premium, white-label portal that builds trust and gets you paid 3x faster.
+              Generic payment links are for casual transfers. **InvoiceSync** provides the professional white-label "shell" that high-ticket clients trust.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-6">
-              <Button size="lg" className="h-16 px-10 text-xl bg-accent hover:bg-accent/90 shadow-lg shadow-accent/20" asChild>
+              <Button size="lg" className="h-16 px-10 text-xl bg-accent hover:bg-accent/90 shadow-xl shadow-accent/20 group" asChild>
                 <Link href="/onboarding">
-                  Build Your Branded Portal <ArrowRight className="ml-2 size-6" />
+                  Build Your Branded Portal <ArrowRight className="ml-2 size-6 group-hover:translate-x-1 transition-transform" />
                 </Link>
               </Button>
               <Button size="lg" variant="outline" className="h-16 px-10 text-xl">
-                View Live Demo
+                How It Works
               </Button>
             </div>
-            <p className="text-sm text-muted-foreground pt-4">
-              Connects with Stripe, PayPal, and major banks.
-            </p>
           </div>
         </section>
 
-        <section className="py-20 px-6 max-w-7xl mx-auto">
+        <section className="py-20 px-6 max-w-7xl mx-auto border-t">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl font-bold text-primary">Why Use a Branding Shell?</h2>
+            <p className="text-muted-foreground mt-2">Bridge the gap between your hard work and the client's bank account.</p>
+          </div>
           <div className="grid md:grid-cols-3 gap-12">
-            <div className="space-y-4">
-              <div className="bg-accent/10 p-3 rounded-2xl w-fit">
-                <Zap className="size-8 text-accent" />
+            <div className="group space-y-4 p-6 rounded-3xl hover:bg-slate-50 transition-colors">
+              <div className="bg-accent/10 p-3 rounded-2xl w-fit group-hover:scale-110 transition-transform">
+                <Layout className="size-8 text-accent" />
               </div>
-              <h3 className="text-2xl font-bold">Not Just a Gateway</h3>
-              <p className="text-muted-foreground">
-                While other gateways look like banks, we look like <strong>you</strong>. Custom logos, colors, and mission statements on every link.
+              <h3 className="text-2xl font-bold">White-Label UI</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                Most gateways look like raw banks. We look like <strong>you</strong>. Custom logos, mission statements, and your unique business tone on every invoice.
               </p>
             </div>
-            <div className="space-y-4">
-              <div className="bg-blue-500/10 p-3 rounded-2xl w-fit">
+            <div className="group space-y-4 p-6 rounded-3xl hover:bg-slate-50 transition-colors">
+              <div className="bg-blue-500/10 p-3 rounded-2xl w-fit group-hover:scale-110 transition-transform">
                 <ShieldCheck className="size-8 text-blue-500" />
               </div>
-              <h3 className="text-2xl font-bold">Trust-First Portals</h3>
-              <p className="text-muted-foreground">
-                Clients hesitate to pay raw links. Our secure, branded portals provide the enterprise-grade feeling that closes B2B deals.
+              <h3 className="text-2xl font-bold">Trust-First Architecture</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                Large clients hesitate to pay "raw" links. Our secure portals provide the enterprise-grade feeling that reduces payment friction by 70%.
               </p>
             </div>
-            <div className="space-y-4">
-              <div className="bg-emerald-500/10 p-3 rounded-2xl w-fit">
-                <TrendingUp className="size-8 text-emerald-500" />
+            <div className="group space-y-4 p-6 rounded-3xl hover:bg-slate-50 transition-colors">
+              <div className="bg-emerald-500/10 p-3 rounded-2xl w-fit group-hover:scale-110 transition-transform">
+                <Zap className="size-8 text-emerald-500" />
               </div>
-              <h3 className="text-2xl font-bold">AI Brand Consultant</h3>
-              <p className="text-muted-foreground">
-                Don't have a marketing team? Our AI agent helps you craft a professional identity and tone in seconds.
+              <h3 className="text-2xl font-bold">Instant Branded Pages</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                Simply connect your gateway (Stripe/PayPal) once. Every link you generate thereafter is wrapped in your high-end professional brand identity.
               </p>
             </div>
           </div>
         </section>
 
-        <section className="py-20 px-6 bg-primary text-white">
-          <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
+        <section className="py-24 px-6 bg-slate-900 text-white relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-32 bg-accent/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+          <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center relative z-10">
             <div className="space-y-6">
-              <h2 className="text-4xl font-bold">The "White-Label" Shell Your Business Deserves</h2>
-              <p className="text-primary-foreground/80 text-lg">
-                We bridge the gap between your hard work and your payment gateway. InvoiceSync provides the professional presentation that makes large clients feel confident working with small teams.
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-white text-xs font-bold uppercase tracking-widest">
+                The "Branded Shell" Advantage
+              </div>
+              <h2 className="text-4xl md:text-5xl font-bold leading-tight">Professionalism is the key to B2B longevity.</h2>
+              <p className="text-slate-400 text-lg leading-relaxed">
+                Your payment gateway is just a utility. Your brand is your reputation. InvoiceSync combines them into a seamless "shell" that reflects your commitment to quality at every touchpoint.
               </p>
-              <div className="grid sm:grid-cols-2 gap-6 pt-4">
-                <div className="flex items-center gap-3">
-                  <div className="bg-white/10 p-1.5 rounded-full"><CheckCircle2 className="size-5" /></div>
-                  <span>Instant Branded Links</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="bg-white/10 p-1.5 rounded-full"><CheckCircle2 className="size-5" /></div>
-                  <span>AI Description Suggester</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="bg-white/10 p-1.5 rounded-full"><CheckCircle2 className="size-5" /></div>
-                  <span>Client-Specific Billing</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="bg-white/10 p-1.5 rounded-full"><CheckCircle2 className="size-5" /></div>
-                  <span>Mobile-First Portals</span>
-                </div>
+              <div className="grid sm:grid-cols-2 gap-4 pt-4">
+                {[
+                  "Branded Checkout Pages",
+                  "AI Brand Identity Agent",
+                  "Client Billing History Portals",
+                  "Secure SSL Trust Badges",
+                  "Custom Mission Displays",
+                  "Professional Tone Control"
+                ].map((feature) => (
+                  <div key={feature} className="flex items-center gap-3">
+                    <div className="bg-accent p-1 rounded-full"><ShieldCheck className="size-3" /></div>
+                    <span className="text-sm font-medium">{feature}</span>
+                  </div>
+                ))}
               </div>
             </div>
-            <div className="bg-white/10 border border-white/20 rounded-3xl p-8 backdrop-blur-sm aspect-video flex items-center justify-center relative overflow-hidden group">
-               <div className="absolute inset-0 bg-gradient-to-tr from-accent/20 to-transparent" />
-               <CreditCard className="size-32 text-white/50 group-hover:scale-110 transition-transform duration-500" />
-               <div className="absolute bottom-4 left-4 right-4 bg-white/20 p-4 rounded-xl border border-white/10 backdrop-blur-md">
-                 <div className="flex items-center gap-3">
-                   <div className="size-8 bg-white rounded-full" />
-                   <div className="space-y-1 flex-1">
-                     <div className="h-2 w-24 bg-white/40 rounded" />
-                     <div className="h-2 w-16 bg-white/20 rounded" />
-                   </div>
-                   <div className="text-xs font-bold">$2,400.00</div>
-                 </div>
+            <div className="relative group">
+               <div className="absolute -inset-1 bg-gradient-to-tr from-accent to-blue-500 rounded-3xl blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
+               <div className="relative bg-white/5 border border-white/10 rounded-3xl p-1 md:p-4 backdrop-blur-sm shadow-2xl overflow-hidden">
+                  <div className="bg-white rounded-2xl p-6 md:p-8 space-y-6 text-slate-900">
+                    <div className="flex justify-between items-center">
+                      <div className="flex items-center gap-2">
+                        <div className="size-8 bg-slate-900 rounded-lg"></div>
+                        <div className="space-y-1">
+                          <div className="h-2 w-24 bg-slate-200 rounded"></div>
+                          <div className="h-1.5 w-16 bg-slate-100 rounded"></div>
+                        </div>
+                      </div>
+                      <Badge className="bg-emerald-100 text-emerald-700 border-none">SECURE</Badge>
+                    </div>
+                    <div className="space-y-4 pt-4">
+                       <div className="flex justify-between items-baseline">
+                         <div className="h-4 w-32 bg-slate-100 rounded"></div>
+                         <span className="text-2xl font-black text-accent">$4,250.00</span>
+                       </div>
+                       <Separator />
+                       <div className="h-10 bg-slate-900 rounded-xl"></div>
+                    </div>
+                    <div className="flex justify-center gap-8 opacity-20 grayscale">
+                      <CreditCard className="size-4" />
+                      <Lock className="size-4" />
+                      <Globe className="size-4" />
+                    </div>
+                  </div>
                </div>
             </div>
           </div>
         </section>
       </main>
 
-      <footer className="py-12 border-t px-6">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
-          <div className="flex items-center gap-2 font-bold text-primary/50">
-            <CreditCard className="size-5" />
-            <span className="font-headline">InvoiceSync</span>
+      <footer className="py-12 border-t px-6 bg-slate-50">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6 text-center md:text-left">
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center justify-center md:justify-start gap-2 font-bold text-primary">
+              <CreditCard className="size-5" />
+              <span className="font-headline">InvoiceSync</span>
+            </div>
+            <p className="text-sm text-muted-foreground max-w-xs">
+              The professional white-label "shell" for modern small business billing.
+            </p>
           </div>
-          <div className="flex gap-8 text-sm text-muted-foreground">
-            <Link href="#" className="hover:text-primary">Privacy</Link>
-            <Link href="#" className="hover:text-primary">Terms</Link>
-            <Link href="#" className="hover:text-primary">Support</Link>
+          <div className="flex gap-8 text-sm text-muted-foreground font-medium">
+            <Link href="#" className="hover:text-primary transition-colors">Privacy</Link>
+            <Link href="#" className="hover:text-primary transition-colors">Terms</Link>
+            <Link href="#" className="hover:text-primary transition-colors">Support</Link>
           </div>
-          <p className="text-sm text-muted-foreground">
-            © 2024 InvoiceSync. All rights reserved.
+          <p className="text-xs text-muted-foreground">
+            © 2024 InvoiceSync. Built for professionals.
           </p>
         </div>
       </footer>
@@ -148,22 +171,14 @@ export default function LandingPage() {
   )
 }
 
-function CheckCircle2({ className }: { className?: string }) {
+function Badge({ children, className }: { children: React.ReactNode, className?: string }) {
   return (
-    <svg 
-      xmlns="http://www.w3.org/2000/svg" 
-      width="24" 
-      height="24" 
-      viewBox="0 0 24 24" 
-      fill="none" 
-      stroke="currentColor" 
-      strokeWidth="2" 
-      strokeLinecap="round" 
-      strokeLinejoin="round" 
-      className={className}
-    >
-      <circle cx="12" cy="12" r="10" />
-      <path d="m9 12 2 2 4-4" />
-    </svg>
+    <span className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-[10px] font-bold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ${className}`}>
+      {children}
+    </span>
   )
+}
+
+function Separator() {
+  return <div className="h-[1px] w-full bg-slate-100" />
 }
