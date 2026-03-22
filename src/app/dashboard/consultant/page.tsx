@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Sparkles, Send, Loader2, CreditCard, FileSignature, Zap, Target, ArrowRight, ShieldCheck, User, Bot } from "lucide-react"
+import { Sparkles, Send, Loader2, CreditCard, FileSignature, Zap, Target, ArrowRight, ShieldCheck, User, Bot, UserPlus, Building2, Mail, MapPin } from "lucide-react"
 import { consultStrategicPartner, type StrategicConsultantOutput } from "@/ai/flows/strategic-consultant"
 import { useUser, useFirestore, useDoc, useCollection } from "@/firebase"
 import { useMemoFirebase } from "@/firebase/provider"
@@ -15,6 +15,7 @@ import { useToast } from "@/hooks/use-toast"
 import { useRouter } from "next/navigation"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
+import { addDocumentNonBlocking } from "@/firebase/non-blocking-updates"
 
 type Message = {
   role: 'user' | 'assistant'
@@ -32,7 +33,7 @@ export default function ConsultantPage() {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'assistant',
-      content: "I'm your Strategic Partner. Tell me about the work you've done or the project you're envisioning. I'll help you architect the win."
+      content: "I'm your Strategic Partner. Tell me about the work you've done, or paste unstructured information about a new lead. I'll architect the outcome."
     }
   ])
   const scrollRef = useRef<HTMLDivElement>(null)
@@ -87,21 +88,35 @@ export default function ConsultantPage() {
 
   const handleLaunchInvoice = (data: StrategicConsultantOutput['draftData']) => {
     if (!user || !firestore || !data) return
-    
-    toast({ 
-      title: "Architecting Invoice...", 
-      description: `Launching strategic billing for ${data.clientName || 'your client'}.` 
-    })
-    
+    toast({ title: "Architecting Invoice...", description: `Launching strategic billing for ${data.clientName || 'your client'}.` })
     router.push('/dashboard/invoices/new') 
+  }
+
+  const handleSaveClient = (data: StrategicConsultantOutput['draftData']) => {
+    if (!user || !firestore || !data) return
+    
+    const clientData = {
+      organizationId: user.uid,
+      name: data.clientName || "New Strategic Contact",
+      company: data.company || "",
+      email: data.email || "",
+      address: data.address || "",
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp()
+    }
+
+    addDocumentNonBlocking(collection(firestore, 'organizations', user.uid, 'clients'), clientData)
+      .then(() => {
+        toast({ title: "Lead Injected", description: `${clientData.name} is now in your strategic directory.` })
+      })
   }
 
   return (
     <div className="flex flex-col h-[calc(100vh-140px)] max-w-5xl mx-auto space-y-6">
       <div className="flex items-center justify-between px-4">
         <div>
-          <h1 className="text-3xl font-black tracking-tight">Strategic Partner</h1>
-          <p className="text-muted-foreground">Conversational billing architecture for your professional outcomes.</p>
+          <h1 className="text-3xl font-black tracking-tight text-slate-900">Strategic Partner</h1>
+          <p className="text-muted-foreground">Conversational architecture for your professional outcomes.</p>
         </div>
         <Badge variant="outline" className="border-accent text-accent bg-accent/5 font-black uppercase tracking-widest text-[10px] px-3 py-1">
           Partner Mode Active
@@ -133,6 +148,44 @@ export default function ConsultantPage() {
                     {m.content}
                   </div>
 
+                  {/* ACTION CARD: CREATE CLIENT */}
+                  {m.data?.suggestedAction === 'create_client' && m.data.draftData && (
+                    <Card className="border-emerald-500/20 bg-emerald-50/10 overflow-hidden rounded-[3rem] animate-in fade-in slide-in-from-bottom-4 duration-500 w-full max-w-xl">
+                      <div className="h-2 w-full bg-emerald-500" />
+                      <CardHeader className="p-8 pb-4">
+                        <div className="flex items-center justify-between mb-2">
+                          <p className="text-[10px] font-black uppercase tracking-widest text-emerald-600">New Strategic Lead Found</p>
+                          <UserPlus className="size-5 text-emerald-500" />
+                        </div>
+                        <CardTitle className="text-2xl font-bold">{m.data.draftData.clientName || "Contact Identified"}</CardTitle>
+                        <CardDescription className="text-base">Structured from your conversation.</CardDescription>
+                      </CardHeader>
+                      <CardContent className="p-8 pt-0 space-y-6">
+                        <div className="space-y-3">
+                          <div className="flex items-center gap-3 py-2 border-b border-dashed">
+                            <Building2 className="size-4 text-slate-400" />
+                            <span className="font-bold text-slate-700">{m.data.draftData.company || "Unknown Company"}</span>
+                          </div>
+                          <div className="flex items-center gap-3 py-2 border-b border-dashed">
+                            <Mail className="size-4 text-slate-400" />
+                            <span className="text-slate-600">{m.data.draftData.email || "Email Not Provided"}</span>
+                          </div>
+                          <div className="flex items-center gap-3 py-2 border-b border-dashed">
+                            <MapPin className="size-4 text-slate-400" />
+                            <span className="text-slate-600 text-xs">{m.data.draftData.address || "Address Not Provided"}</span>
+                          </div>
+                        </div>
+                        <Button 
+                          className="w-full bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl h-14 text-lg font-bold shadow-2xl shadow-emerald-500/20 transition-transform active:scale-95"
+                          onClick={() => handleSaveClient(m.data?.draftData)}
+                        >
+                          Inject Lead to Directory <ArrowRight className="size-5 ml-3" />
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  )}
+
+                  {/* ACTION CARD: CREATE INVOICE */}
                   {m.data?.suggestedAction === 'create_invoice' && m.data.draftData && (
                     <Card className="border-accent/20 bg-accent/5 overflow-hidden rounded-[3rem] animate-in fade-in slide-in-from-bottom-4 duration-500 w-full max-w-xl">
                       <div className="h-2 w-full bg-accent" />
@@ -188,7 +241,7 @@ export default function ConsultantPage() {
           <div className="relative flex items-center gap-4 max-w-5xl mx-auto">
             <div className="relative flex-1 group">
               <Input 
-                placeholder="e.g. 'I just finished a 10 hour branding project for SAM Singapore...'" 
+                placeholder="e.g. 'Add this lead: Alex from SAM museum, alex@sam.sg...'" 
                 className="h-16 rounded-[2rem] pr-20 bg-white border-2 border-slate-100 shadow-xl text-lg px-8 focus-visible:ring-accent/20 focus-visible:border-accent/30 transition-all"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
@@ -207,7 +260,7 @@ export default function ConsultantPage() {
           </div>
           <div className="flex items-center gap-2 mt-4 justify-center opacity-40">
             <Sparkles className="size-3 text-accent" />
-            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-900">Partner is processing your professional context</span>
+            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-900">Partner is extracting professional context</span>
           </div>
         </div>
       </div>

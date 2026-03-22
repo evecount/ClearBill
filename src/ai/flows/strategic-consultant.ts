@@ -2,7 +2,7 @@
 'use server';
 /**
  * @fileOverview This file defines a Genkit flow for the Strategic Co-Founder Consultant.
- * It transforms conversational input into structured strategic actions (Invoices, Proposals, Advice).
+ * It transforms conversational input into structured strategic actions (Invoices, Proposals, Leads).
  */
 
 import {ai} from '@/ai/genkit';
@@ -20,10 +20,12 @@ export type StrategicConsultantInput = z.infer<typeof StrategicConsultantInputSc
 
 const StrategicConsultantOutputSchema = z.object({
   reply: z.string().describe('The conversational response from the AI.'),
-  suggestedAction: z.enum(['advice', 'create_invoice', 'create_proposal']).default('advice'),
+  suggestedAction: z.enum(['advice', 'create_invoice', 'create_proposal', 'create_client']).default('advice'),
   draftData: z.object({
     clientName: z.string().optional(),
     company: z.string().optional(),
+    email: z.string().optional(),
+    address: z.string().optional(),
     title: z.string().optional(),
     lineItems: z.array(z.object({
       description: z.string(),
@@ -55,14 +57,19 @@ User Context:
 User Message: "{{{message}}}"
 
 Your Task:
-1. Analyze the message. If the user mentions work they've done or a client they want to bill, pivot to "create_invoice".
-2. If they are talking about a new lead or project vision, pivot to "create_proposal".
-3. RECALIBRATION LOGIC: If the user mentions a project that was turned down or a failed tender, encourage them to "Pivot to Cold Lead". Suggest taking that existing work/bid and sending it as a new proposal to a high-value lead in their directory.
-4. Otherwise, provide "advice" that reinforces professional "Outcome Certainty".
+1. LEAD EXTRACTION: If the user provides info about a new contact, museum, or business (even if unstructured), pivot to "create_client". Extract Name, Company, Email, and Address. 
+2. RESEARCH: If details are missing but the entity is a well-known institution (e.g., a specific Singapore museum), use your internal knowledge to suggest the most appropriate curatorial or innovation contact points.
+3. INVOICING: If the user mentions work done or a client to bill, pivot to "create_invoice".
+4. PROPOSALS: If they talk about a new lead or vision, pivot to "create_proposal".
+5. Otherwise, provide "advice" that reinforces professional "Outcome Certainty".
+
+If extracting a CLIENT:
+- Populate draftData with: clientName, company, email, and address.
+- In your reply, mention that you've structured these details and filled in any gaps where possible.
 
 If creating an INVOICE draft:
-- Use elite market rates (benchmark internally based on industry).
-- Translate tasks (e.g., "designing a logo") into outcomes (e.g., "Visual Identity System & Brand Authority").
+- Use elite market rates.
+- Translate tasks into outcomes.
 - Suggest 2-3 specific line items.
 - Draft a short "Outcome Agreement" snippet.
 
