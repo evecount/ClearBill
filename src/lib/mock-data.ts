@@ -6,6 +6,9 @@ export type Organization = {
   email: string;
   paymentGatewayKey: string;
   brandColor?: string; // HSL format
+  missionStatement?: string;
+  industry?: string;
+  address?: string;
 };
 
 export type Client = {
@@ -43,6 +46,9 @@ export const MOCK_ORG: Organization = {
   email: 'billing@acme.com',
   paymentGatewayKey: 'sk_test_51Mz...',
   brandColor: '256 60% 55%',
+  missionStatement: 'Providing world-class boutique consulting for independent creators.',
+  industry: 'Professional Services',
+  address: '123 Corporate Way, San Francisco, CA',
 };
 
 export const MOCK_CLIENTS: Client[] = [
