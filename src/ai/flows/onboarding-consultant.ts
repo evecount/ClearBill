@@ -25,6 +25,7 @@ const OnboardingConsultantOutputSchema = z.object({
   suggestedAddress: z.string().describe('A placeholder professional address format.'),
   industry: z.string().describe('The identified industry of the business.'),
   brandingTone: z.string().describe('Recommended branding tone (e.g., modern, corporate, creative).'),
+  brandColor: z.string().describe('A suggested primary brand color in HSL format (e.g., "256 60% 55%"). Pick something that matches the industry and tone.'),
 });
 export type OnboardingConsultantOutput = z.infer<typeof OnboardingConsultantOutputSchema>;
 
@@ -47,8 +48,8 @@ Your goal is to help them professionalize their brand for invoicing.
 1. Generate a strong, memorable business name.
 2. Draft a concise mission statement for their client portal.
 3. Suggest a professional industry category.
-4. Provide a realistic professional email and address structure based on their business type.
-5. Define their branding tone to help them choose colors and logos.
+4. Provide a realistic professional email and address structure.
+5. Define their branding tone and a matching HSL color for their "shell".
 
 Be encouraging and professional.`,
 });

@@ -5,6 +5,7 @@ export type Organization = {
   logoUrl: string;
   email: string;
   paymentGatewayKey: string;
+  brandColor?: string; // HSL format
 };
 
 export type Client = {
@@ -41,6 +42,7 @@ export const MOCK_ORG: Organization = {
   logoUrl: 'https://picsum.photos/seed/org1/200/200',
   email: 'billing@acme.com',
   paymentGatewayKey: 'sk_test_51Mz...',
+  brandColor: '256 60% 55%',
 };
 
 export const MOCK_CLIENTS: Client[] = [

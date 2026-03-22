@@ -1,4 +1,3 @@
-
 "use client"
 
 import { useState } from "react"
@@ -6,19 +5,23 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
-import { MOCK_INVOICES as INITIAL_INVOICES, MOCK_CLIENTS } from "@/lib/mock-data"
-import { Plus, Search, ExternalLink, MoreVertical, Copy, Trash2, Filter, Download, Send, Share2 } from "lucide-react"
+import { MOCK_INVOICES as INITIAL_INVOICES, MOCK_CLIENTS, MOCK_ORG } from "@/lib/mock-data"
+import { Plus, Search, ExternalLink, MoreVertical, Copy, Trash2, Filter, Download, Send, Share2, Sparkles, Loader2 } from "lucide-react"
 import Link from "next/link"
 import { Input } from "@/components/ui/input"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { useToast } from "@/hooks/use-toast"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
+import { generateInvoiceEmail, type InvoiceEmailOutput } from "@/ai/flows/invoice-email-generator"
+import { Textarea } from "@/components/ui/textarea"
 
 export default function InvoicesPage() {
   const { toast } = useToast()
   const [invoices, setInvoices] = useState(INITIAL_INVOICES)
   const [search, setSearch] = useState("")
   const [shareInvoice, setShareInvoice] = useState<any>(null)
+  const [aiEmail, setAiEmail] = useState<InvoiceEmailOutput | null>(null)
+  const [loadingEmail, setLoadingEmail] = useState(false)
 
   const filteredInvoices = invoices.filter(inv => {
     const client = MOCK_CLIENTS.find(c => c.id === inv.clientId)
@@ -37,6 +40,26 @@ export default function InvoicesPage() {
   const handleDelete = (id: string) => {
     setInvoices(invoices.filter(i => i.id !== id))
     toast({ title: "Invoice Deleted", description: "The invoice has been removed." })
+  }
+
+  const handleGenerateAiEmail = async () => {
+    if (!shareInvoice) return
+    setLoadingEmail(true)
+    const client = MOCK_CLIENTS.find(c => c.id === shareInvoice.clientId)
+    try {
+      const result = await generateInvoiceEmail({
+        businessName: MOCK_ORG.name,
+        clientName: client?.name || "Client",
+        invoiceNumber: shareInvoice.number,
+        amount: `$${shareInvoice.total.toLocaleString()}`,
+        brandingTone: "Professional and encouraging"
+      })
+      setAiEmail(result)
+    } catch (error) {
+      toast({ title: "AI Error", description: "Could not generate email snippet.", variant: "destructive" })
+    } finally {
+      setLoadingEmail(false)
+    }
   }
 
   return (
@@ -116,7 +139,10 @@ export default function InvoicesPage() {
                             variant="ghost" 
                             size="icon" 
                             className="text-accent hover:text-accent hover:bg-accent/10"
-                            onClick={() => setShareInvoice(invoice)}
+                            onClick={() => {
+                              setShareInvoice(invoice)
+                              setAiEmail(null)
+                            }}
                             title="Share Link"
                           >
                             <Share2 className="size-4" />
@@ -168,10 +194,10 @@ export default function InvoicesPage() {
           <DialogHeader>
             <DialogTitle>Share Branded Portal</DialogTitle>
             <DialogDescription>
-              Copy the unique payment link for this invoice to send to your client.
+              Copy the unique payment link or generate an AI email to send to your client.
             </DialogDescription>
           </DialogHeader>
-          <div className="space-y-4 py-4">
+          <div className="space-y-6 py-4">
             <div className="space-y-2">
               <p className="text-sm font-medium">Payment Link</p>
               <div className="flex items-center gap-2 p-3 bg-muted rounded-lg border">
@@ -183,11 +209,46 @@ export default function InvoicesPage() {
                 </Button>
               </div>
             </div>
-            <div className="space-y-2">
-              <p className="text-sm font-medium">Email Template</p>
-              <div className="p-3 bg-muted/30 rounded-lg border text-sm italic text-muted-foreground">
-                "Hello, please find your invoice {shareInvoice?.number} ready for review and secure payment at the link below..."
+
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <p className="text-sm font-medium">Email Delivery Snippet</p>
+                <Button 
+                  size="sm" 
+                  variant="ghost" 
+                  className="h-7 text-accent hover:text-accent hover:bg-accent/10"
+                  onClick={handleGenerateAiEmail}
+                  disabled={loadingEmail}
+                >
+                  {loadingEmail ? <Loader2 className="size-3 animate-spin mr-2" /> : <Sparkles className="size-3 mr-2" />}
+                  {aiEmail ? "Re-generate" : "Generate with AI"}
+                </Button>
               </div>
+              
+              {aiEmail ? (
+                <div className="space-y-3 animate-in fade-in slide-in-from-top-1">
+                  <div className="p-3 bg-muted/50 rounded-lg border text-sm space-y-2">
+                    <p className="font-bold text-[10px] uppercase tracking-wider text-muted-foreground">Subject</p>
+                    <p>{aiEmail.subject}</p>
+                    <Separator className="my-2" />
+                    <p className="font-bold text-[10px] uppercase tracking-wider text-muted-foreground">Body</p>
+                    <div className="whitespace-pre-wrap text-muted-foreground">
+                      {aiEmail.body.replace('[PAYMENT_LINK]', `${window.location.origin}/p/${shareInvoice?.id}`)}
+                    </div>
+                  </div>
+                  <Button className="w-full text-xs h-8" variant="outline" onClick={() => {
+                    const text = `Subject: ${aiEmail.subject}\n\n${aiEmail.body.replace('[PAYMENT_LINK]', `${window.location.origin}/p/${shareInvoice?.id}`)}`;
+                    navigator.clipboard.writeText(text);
+                    toast({ title: "Email Copied", description: "Subject and body copied to clipboard." });
+                  }}>
+                    <Copy className="size-3 mr-2" /> Copy Full Email
+                  </Button>
+                </div>
+              ) : (
+                <div className="p-4 bg-slate-50 border border-dashed rounded-lg text-center">
+                  <p className="text-xs text-muted-foreground italic">Click "Generate with AI" to craft a professional email snippet for this link.</p>
+                </div>
+              )}
             </div>
           </div>
           <DialogFooter className="sm:justify-start">
@@ -198,7 +259,7 @@ export default function InvoicesPage() {
                 setShareInvoice(null)
               }}
             >
-              <Copy className="size-4 mr-2" /> Copy & Close
+              <Copy className="size-4 mr-2" /> Copy Link & Close
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -1,4 +1,3 @@
-
 "use client"
 
 import { useParams } from "next/navigation"
@@ -21,6 +20,7 @@ export default function ClientPortalPage() {
 
   const invoice = MOCK_INVOICES.find(i => i.id === invoiceId) || MOCK_INVOICES[0]
   const client = MOCK_CLIENTS.find(c => c.id === invoice.clientId)
+  const org = MOCK_ORG
 
   const handlePay = () => {
     setLoading(true)
@@ -35,6 +35,8 @@ export default function ClientPortalPage() {
   const tax = (subtotal * invoice.taxRate) / 100
   const total = subtotal + tax
 
+  const brandColor = org.brandColor || '256 60% 55%'
+
   return (
     <div className="min-h-screen bg-slate-100 py-12 px-4 md:px-8">
       <div className="max-w-4xl mx-auto space-y-8">
@@ -43,8 +45,8 @@ export default function ClientPortalPage() {
           <div className="flex items-center gap-4">
             <div className="bg-white p-2 rounded-2xl shadow-sm border">
               <Image 
-                src={MOCK_ORG.logoUrl} 
-                alt={MOCK_ORG.name} 
+                src={org.logoUrl} 
+                alt={org.name} 
                 width={56} 
                 height={56} 
                 className="rounded-xl"
@@ -52,7 +54,7 @@ export default function ClientPortalPage() {
               />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-slate-900">{MOCK_ORG.name}</h1>
+              <h1 className="text-2xl font-bold text-slate-900">{org.name}</h1>
               <div className="flex items-center gap-2 text-xs text-muted-foreground">
                 <ShieldCheck className="size-3 text-emerald-500" />
                 <span>Verified Payment Merchant</span>
@@ -73,7 +75,7 @@ export default function ClientPortalPage() {
         </div>
 
         <Card className="border-none shadow-2xl overflow-hidden rounded-3xl bg-white">
-          <div className="h-2 bg-accent" />
+          <div className="h-2" style={{ backgroundColor: `hsl(${brandColor})` }} />
           <CardHeader className="p-8 md:p-12">
              <div className="flex flex-col md:flex-row justify-between gap-12">
                 <div className="space-y-6">
@@ -81,7 +83,7 @@ export default function ClientPortalPage() {
                     <p className="text-[10px] uppercase font-bold tracking-[0.2em] text-muted-foreground">Billed To</p>
                     <h2 className="text-2xl font-bold text-slate-900">{client?.name}</h2>
                     <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">{client?.address}</p>
-                    <p className="text-sm font-medium text-accent">{client?.email}</p>
+                    <p className="text-sm font-medium" style={{ color: `hsl(${brandColor})` }}>{client?.email}</p>
                   </div>
                 </div>
                 <div className="grid grid-cols-2 md:text-right gap-8">
@@ -142,7 +144,7 @@ export default function ClientPortalPage() {
                 <Separator />
                 <div className="flex justify-between items-baseline">
                   <span className="text-sm font-bold text-slate-900">Total Amount</span>
-                  <span className="text-3xl font-extrabold text-accent">${total.toLocaleString()}</span>
+                  <span className="text-3xl font-extrabold" style={{ color: `hsl(${brandColor})` }}>${total.toLocaleString()}</span>
                 </div>
               </div>
             </div>
@@ -178,7 +180,11 @@ export default function ClientPortalPage() {
               <Button 
                 onClick={handlePay} 
                 disabled={loading}
-                className="w-full sm:w-auto h-16 px-16 text-xl bg-accent hover:bg-accent/90 text-white rounded-2xl shadow-xl shadow-accent/20 transition-all hover:scale-[1.02] active:scale-95"
+                className="w-full sm:w-auto h-16 px-16 text-xl text-white rounded-2xl shadow-xl transition-all hover:scale-[1.02] active:scale-95"
+                style={{ 
+                  backgroundColor: `hsl(${brandColor})`,
+                  boxShadow: `0 20px 25px -5px hsla(${brandColor}, 0.2)`
+                }}
               >
                 {loading ? "Processing Securely..." : "Pay with Card / Bank"}
               </Button>

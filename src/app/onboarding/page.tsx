@@ -110,7 +110,13 @@ export default function OnboardingPage() {
                 <div className="grid gap-6">
                   <div className="space-y-1">
                     <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">Brand Tone</Label>
-                    <p className="text-lg font-medium text-slate-800">{proposal?.brandingTone}</p>
+                    <div className="flex items-center gap-3">
+                      <div 
+                        className="size-4 rounded-full border shadow-sm" 
+                        style={{ backgroundColor: `hsl(${proposal?.brandColor || '256 60% 55%'})` }} 
+                      />
+                      <p className="text-lg font-medium text-slate-800">{proposal?.brandingTone}</p>
+                    </div>
                   </div>
                   <div className="space-y-1">
                     <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">Mission Statement</Label>
@@ -146,7 +152,10 @@ export default function OnboardingPage() {
             <div className="space-y-4">
               <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold ml-1">Live Shell Preview</Label>
               <div className="relative group">
-                <div className="absolute -inset-1 bg-gradient-to-r from-accent/50 to-blue-500/50 rounded-3xl blur opacity-25 group-hover:opacity-40 transition duration-1000"></div>
+                <div 
+                  className="absolute -inset-1 rounded-3xl blur opacity-25 group-hover:opacity-40 transition duration-1000"
+                  style={{ backgroundColor: `hsl(${proposal?.brandColor || '256 60% 55%'})` }}
+                ></div>
                 <div className="relative bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden">
                   <div className="p-6 bg-slate-50 border-b flex justify-between items-center">
                     <div className="flex items-center gap-3">
@@ -168,7 +177,7 @@ export default function OnboardingPage() {
                       </div>
                       <div className="text-right space-y-1">
                         <p className="text-[8px] uppercase font-bold text-muted-foreground">Amount Due</p>
-                        <p className="text-xl font-black text-accent">$2,500.00</p>
+                        <p className="text-xl font-black" style={{ color: `hsl(${proposal?.brandColor || '256 60% 55%'})` }}>$2,500.00</p>
                       </div>
                     </div>
                     <div className="space-y-3">
@@ -181,7 +190,11 @@ export default function OnboardingPage() {
                         <div className="h-2 w-12 bg-slate-100 rounded"></div>
                       </div>
                     </div>
-                    <Button disabled className="w-full bg-slate-900 text-white h-10 rounded-xl">
+                    <Button 
+                      disabled 
+                      className="w-full text-white h-10 rounded-xl"
+                      style={{ backgroundColor: `hsl(${proposal?.brandColor || '256 60% 55%'})` }}
+                    >
                       Pay Securely
                     </Button>
                     <div className="pt-4 flex justify-center items-center gap-4 opacity-30 grayscale scale-75">
@@ -195,7 +208,7 @@ export default function OnboardingPage() {
               <div className="p-4 rounded-xl bg-blue-50 border border-blue-100">
                 <p className="text-xs text-blue-700 flex gap-2">
                   <Sparkles className="size-3 shrink-0" />
-                  This is the "shell" your clients see. It replaces generic banking links with your unique professional identity.
+                  Notice how the "shell" color adapts to your brand identity. This creates instant trust for your high-ticket clients.
                 </p>
               </div>
             </div>
