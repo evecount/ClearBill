@@ -2,10 +2,11 @@
 "use client"
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { CreditCard, FileText, Users, TrendingUp, ArrowUpRight, ArrowDownRight, Plus, Settings } from "lucide-react"
+import { CreditCard, FileText, Users, TrendingUp, ArrowUpRight, Plus, Settings } from "lucide-react"
 import { MOCK_INVOICES, MOCK_CLIENTS } from "@/lib/mock-data"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
+import Link from "next/link"
 
 export default function DashboardPage() {
   const pendingAmount = MOCK_INVOICES
@@ -116,7 +117,7 @@ export default function DashboardPage() {
             <CardTitle>Quick Actions</CardTitle>
           </CardHeader>
           <CardContent className="grid gap-4">
-            <div className="flex items-center gap-4 rounded-lg border p-4 hover:bg-muted/50 cursor-pointer transition-colors">
+            <Link href="/dashboard/invoices/new" className="flex items-center gap-4 rounded-lg border p-4 hover:bg-muted/50 transition-colors">
               <div className="bg-primary/10 p-2 rounded-full">
                 <Plus className="size-4 text-primary" />
               </div>
@@ -124,8 +125,8 @@ export default function DashboardPage() {
                 <p className="text-sm font-medium">Create New Invoice</p>
                 <p className="text-xs text-muted-foreground">Quickly bill a client for services.</p>
               </div>
-            </div>
-            <div className="flex items-center gap-4 rounded-lg border p-4 hover:bg-muted/50 cursor-pointer transition-colors">
+            </Link>
+            <Link href="/dashboard/clients" className="flex items-center gap-4 rounded-lg border p-4 hover:bg-muted/50 transition-colors">
               <div className="bg-accent/10 p-2 rounded-full">
                 <Users className="size-4 text-accent" />
               </div>
@@ -133,8 +134,8 @@ export default function DashboardPage() {
                 <p className="text-sm font-medium">Add Client</p>
                 <p className="text-xs text-muted-foreground">Expand your customer base.</p>
               </div>
-            </div>
-            <div className="flex items-center gap-4 rounded-lg border p-4 hover:bg-muted/50 cursor-pointer transition-colors">
+            </Link>
+            <Link href="/dashboard/settings" className="flex items-center gap-4 rounded-lg border p-4 hover:bg-muted/50 transition-colors">
               <div className="bg-blue-500/10 p-2 rounded-full">
                 <Settings className="size-4 text-blue-500" />
               </div>
@@ -142,7 +143,7 @@ export default function DashboardPage() {
                 <p className="text-sm font-medium">Payment Settings</p>
                 <p className="text-xs text-muted-foreground">Connect Stripe or your bank.</p>
               </div>
-            </div>
+            </Link>
           </CardContent>
         </Card>
       </div>
