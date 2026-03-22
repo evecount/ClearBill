@@ -5,7 +5,7 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Plus, Search, Mail, MapPin, MoreVertical, Trash2, Edit2, FileText, User, Building2, Loader2, ShieldAlert } from "lucide-react"
+import { Plus, Search, Mail, MapPin, MoreVertical, Trash2, Edit2, FileText, User, Building2, Loader2, ShieldAlert, Sparkles } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger, DropdownMenuSeparator } from "@/components/ui/dropdown-menu"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
@@ -17,6 +17,33 @@ import { useMemoFirebase } from "@/firebase/provider"
 import { collection, query, orderBy, serverTimestamp, doc } from "firebase/firestore"
 import { addDocumentNonBlocking, updateDocumentNonBlocking, deleteDocumentNonBlocking } from "@/firebase/non-blocking-updates"
 
+const STRATEGIC_LEADS = [
+  {
+    name: "National Museum of Singapore (NMS)",
+    company: "National Heritage Board",
+    email: "DigiMuse@nhb.gov.sg",
+    address: "93 Stamford Rd, Singapore 178897"
+  },
+  {
+    name: "ArtScience Museum",
+    company: "Marina Bay Sands",
+    email: "MuseumEnquiries@marinabaysands.com",
+    address: "6 Bayfront Ave, Singapore 018974"
+  },
+  {
+    name: "Singapore Art Museum (SAM)",
+    company: "Singapore Art Museum",
+    email: "residencies@singaporeartmuseum.sg",
+    address: "39 Keppel Rd, Tanjong Pagar Distripark, Singapore 089065"
+  },
+  {
+    name: "Peranakan Museum",
+    company: "Peranakan Museum",
+    email: "nhb_tpm_edu@nhb.gov.sg",
+    address: "39 Armenian St, Singapore 179941"
+  }
+]
+
 export default function ClientsPage() {
   const { toast } = useToast()
   const router = useRouter()
@@ -27,6 +54,7 @@ export default function ClientsPage() {
   const [isAddOpen, setIsAddOpen] = useState(false)
   const [isEditOpen, setIsEditOpen] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
+  const [isSeeding, setIsSeeding] = useState(false)
   const [activeClient, setActiveClient] = useState<any>(null)
   const [clientForm, setClientForm] = useState({ name: "", company: "", email: "", address: "" })
 
@@ -46,6 +74,31 @@ export default function ClientsPage() {
     client.email.toLowerCase().includes(searchQuery.toLowerCase())
   ) || []
 
+  const handleSeedLeads = async () => {
+    if (!user || !firestore || isSeeding) return
+    setIsSeeding(true)
+    
+    try {
+      const colRef = collection(firestore, 'organizations', user.uid, 'clients')
+      STRATEGIC_LEADS.forEach(lead => {
+        addDocumentNonBlocking(colRef, {
+          ...lead,
+          organizationId: user.uid,
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp()
+        })
+      })
+      toast({ 
+        title: "Strategic Leads Injected", 
+        description: "Singapore's elite museum ecosystem has been added to your directory." 
+      })
+    } catch (error) {
+      toast({ title: "Injection Error", description: "Failed to seed leads.", variant: "destructive" })
+    } finally {
+      setIsSeeding(false)
+    }
+  }
+
   const handleOpenAddDialog = (open: boolean) => {
     setIsAddOpen(open)
     if (open) {
@@ -56,24 +109,17 @@ export default function ClientsPage() {
   const handleAddClient = () => {
     if (isSaving) return
 
-    // Explicit Identity Check
     if (!user) {
       toast({ 
         title: "Identity Not Found", 
-        description: "Your professional session is still initializing. Please wait a moment.", 
+        description: "Your professional session is still initializing.", 
         variant: "destructive" 
       })
       return
     }
 
-    // Factual Validation
-    if (!clientForm.name.trim()) {
-      toast({ title: "Name Required", description: "Every professional contact needs a full name.", variant: "destructive" })
-      return
-    }
-
-    if (!clientForm.email.trim()) {
-      toast({ title: "Email Required", description: "A contact email is required for secure delivery.", variant: "destructive" })
+    if (!clientForm.name.trim() || !clientForm.email.trim()) {
+      toast({ title: "Facts Required", description: "Name and email are required to anchor a client.", variant: "destructive" })
       return
     }
 
@@ -88,15 +134,12 @@ export default function ClientsPage() {
       updatedAt: serverTimestamp()
     }
 
-    try {
-      addDocumentNonBlocking(collection(firestore, 'organizations', user.uid, 'clients'), clientData)
-      toast({ title: "Client Saved", description: `${clientData.name} has been added to your strategic directory.` })
-      setIsAddOpen(false)
-    } catch (error) {
-      toast({ title: "Archival Error", description: "Could not persist client data. Please try again.", variant: "destructive" })
-    } finally {
-      setIsSaving(false)
-    }
+    addDocumentNonBlocking(collection(firestore, 'organizations', user.uid, 'clients'), clientData)
+      .then(() => {
+        toast({ title: "Client Saved", description: `${clientData.name} has been added to your directory.` })
+        setIsAddOpen(false)
+        setIsSaving(false)
+      })
   }
 
   const handleEditClick = (client: any) => {
@@ -114,7 +157,7 @@ export default function ClientsPage() {
     if (!user || !firestore || !activeClient) return
 
     if (!clientForm.name.trim() || !clientForm.email.trim()) {
-      toast({ title: "Validation Fault", description: "Identity markers (name/email) cannot be empty.", variant: "destructive" })
+      toast({ title: "Validation Fault", description: "Name/email cannot be empty.", variant: "destructive" })
       return
     }
 
@@ -127,7 +170,7 @@ export default function ClientsPage() {
       updatedAt: serverTimestamp() 
     })
     setIsEditOpen(false)
-    toast({ title: "Client Refined", description: "Strategic updates have been persisted." })
+    toast({ title: "Client Updated", description: "Professional details persisted." })
   }
 
   const handleDelete = (id: string) => {
@@ -145,71 +188,83 @@ export default function ClientsPage() {
           <p className="text-muted-foreground">Your directory of professional partnerships.</p>
         </div>
         
-        <Dialog open={isAddOpen} onOpenChange={handleOpenAddDialog}>
-          <DialogTrigger asChild>
-            <Button className="bg-accent hover:bg-accent/90">
-              <Plus className="size-4 mr-2" /> Add Client
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="rounded-3xl">
-            <DialogHeader>
-              <DialogTitle>New Professional Contact</DialogTitle>
-              <DialogDescription>Define the facts for your new client relationship.</DialogDescription>
-            </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <div className="grid gap-2">
-                <Label htmlFor="name">Full Name</Label>
-                <Input 
-                  id="name" 
-                  placeholder="e.g. Alex Rivera" 
-                  value={clientForm.name} 
-                  onChange={(e) => setClientForm({ ...clientForm, name: e.target.value })} 
-                  className="h-12 rounded-xl" 
-                />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="company">Company / Organization</Label>
-                <div className="relative">
-                  <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+        <div className="flex flex-wrap gap-2">
+          <Button 
+            variant="outline" 
+            className="border-accent text-accent hover:bg-accent/5"
+            onClick={handleSeedLeads}
+            disabled={isSeeding}
+          >
+            {isSeeding ? <Loader2 className="size-4 animate-spin mr-2" /> : <Sparkles className="size-4 mr-2" />}
+            Inject Singapore Leads
+          </Button>
+
+          <Dialog open={isAddOpen} onOpenChange={handleOpenAddDialog}>
+            <DialogTrigger asChild>
+              <Button className="bg-accent hover:bg-accent/90">
+                <Plus className="size-4 mr-2" /> Add Client
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="rounded-3xl">
+              <DialogHeader>
+                <DialogTitle>New Professional Contact</DialogTitle>
+                <DialogDescription>Define the facts for your new client relationship.</DialogDescription>
+              </DialogHeader>
+              <div className="grid gap-4 py-4">
+                <div className="grid gap-2">
+                  <Label htmlFor="name">Full Name</Label>
                   <Input 
-                    id="company" 
-                    placeholder="e.g. Nexus Creative" 
-                    value={clientForm.company} 
-                    onChange={(e) => setClientForm({ ...clientForm, company: e.target.value })} 
-                    className="h-12 pl-10 rounded-xl" 
+                    id="name" 
+                    placeholder="e.g. Alex Rivera" 
+                    value={clientForm.name} 
+                    onChange={(e) => setClientForm({ ...clientForm, name: e.target.value })} 
+                    className="h-12 rounded-xl" 
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="company">Company / Organization</Label>
+                  <div className="relative">
+                    <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+                    <Input 
+                      id="company" 
+                      placeholder="e.g. Nexus Creative" 
+                      value={clientForm.company} 
+                      onChange={(e) => setClientForm({ ...clientForm, company: e.target.value })} 
+                      className="h-12 pl-10 rounded-xl" 
+                    />
+                  </div>
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="email">Email Address</Label>
+                  <Input 
+                    id="email" 
+                    type="email" 
+                    placeholder="alex@example.com" 
+                    value={clientForm.email} 
+                    onChange={(e) => setClientForm({ ...clientForm, email: e.target.value })} 
+                    className="h-12 rounded-xl" 
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="address">Billing Address</Label>
+                  <Input 
+                    id="address" 
+                    placeholder="123 Studio Way, Unit 4" 
+                    value={clientForm.address} 
+                    onChange={(e) => setClientForm({ ...clientForm, address: e.target.value })} 
+                    className="h-12 rounded-xl" 
                   />
                 </div>
               </div>
-              <div className="grid gap-2">
-                <Label htmlFor="email">Email Address</Label>
-                <Input 
-                  id="email" 
-                  type="email" 
-                  placeholder="alex@example.com" 
-                  value={clientForm.email} 
-                  onChange={(e) => setClientForm({ ...clientForm, email: e.target.value })} 
-                  className="h-12 rounded-xl" 
-                />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="address">Billing Address</Label>
-                <Input 
-                  id="address" 
-                  placeholder="123 Studio Way, Unit 4" 
-                  value={clientForm.address} 
-                  onChange={(e) => setClientForm({ ...clientForm, address: e.target.value })} 
-                  className="h-12 rounded-xl" 
-                />
-              </div>
-            </div>
-            <DialogFooter>
-              <Button onClick={handleAddClient} disabled={isSaving} className="w-full h-12 bg-accent hover:bg-accent/90 rounded-xl font-bold">
-                {isSaving ? <Loader2 className="size-4 animate-spin mr-2" /> : null}
-                Persist Client
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+              <DialogFooter>
+                <Button onClick={handleAddClient} disabled={isSaving} className="w-full h-12 bg-accent hover:bg-accent/90 rounded-xl font-bold">
+                  {isSaving ? <Loader2 className="size-4 animate-spin mr-2" /> : null}
+                  Persist Client
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </div>
       </div>
 
       <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
@@ -316,7 +371,13 @@ export default function ClientsPage() {
           <User className="size-12 mx-auto mb-4 text-slate-200" />
           <h3 className="text-lg font-bold">Directory Empty</h3>
           <p className="text-sm text-muted-foreground mb-6">Add your first client to start architecting high-value invoices.</p>
-          <Button onClick={() => setIsAddOpen(true)} className="bg-accent hover:bg-accent/90 font-bold">Add First Client</Button>
+          <div className="flex gap-4 justify-center">
+            <Button onClick={() => setIsAddOpen(true)} className="bg-accent hover:bg-accent/90 font-bold">Add First Client</Button>
+            <Button variant="outline" onClick={handleSeedLeads} disabled={isSeeding} className="border-accent text-accent">
+               {isSeeding ? <Loader2 className="size-4 animate-spin mr-2" /> : <Sparkles className="size-4 mr-2" />}
+               Inject Museum Leads
+            </Button>
+          </div>
         </div>
       )}
     </div>
