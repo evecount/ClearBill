@@ -12,13 +12,17 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
 import { useToast } from "@/hooks/use-toast"
+import { useRouter } from "next/navigation"
 
 export default function ClientsPage() {
   const { toast } = useToast()
+  const router = useRouter()
   const [clients, setClients] = useState(INITIAL_CLIENTS)
   const [searchQuery, setSearchQuery] = useState("")
   const [isAddOpen, setIsAddOpen] = useState(false)
-  const [newClient, setNewClient] = useState({ name: "", email: "", address: "" })
+  const [isEditOpen, setIsEditOpen] = useState(false)
+  const [activeClient, setActiveClient] = useState<any>(null)
+  const [clientForm, setClientForm] = useState({ name: "", email: "", address: "" })
 
   const filteredClients = clients.filter(client => 
     client.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -26,7 +30,7 @@ export default function ClientsPage() {
   )
 
   const handleAddClient = () => {
-    if (!newClient.name || !newClient.email) {
+    if (!clientForm.name || !clientForm.email) {
       toast({ title: "Error", description: "Name and email are required.", variant: "destructive" })
       return
     }
@@ -34,13 +38,25 @@ export default function ClientsPage() {
     const client = {
       id: `client_${Date.now()}`,
       orgId: 'org_123',
-      ...newClient
+      ...clientForm
     }
 
     setClients([client, ...clients])
-    setNewClient({ name: "", email: "", address: "" })
+    setClientForm({ name: "", email: "", address: "" })
     setIsAddOpen(false)
     toast({ title: "Client Added", description: `${client.name} has been added to your directory.` })
+  }
+
+  const handleEditClick = (client: any) => {
+    setActiveClient(client)
+    setClientForm({ name: client.name, email: client.email, address: client.address })
+    setIsEditOpen(true)
+  }
+
+  const handleUpdateClient = () => {
+    setClients(clients.map(c => c.id === activeClient.id ? { ...c, ...clientForm } : c))
+    setIsEditOpen(false)
+    toast({ title: "Client Updated", description: "Changes have been saved successfully." })
   }
 
   const handleDelete = (id: string) => {
@@ -48,8 +64,9 @@ export default function ClientsPage() {
     toast({ title: "Client Deleted", description: "The client has been removed from your directory." })
   }
 
-  const handleAction = (action: string, clientName: string) => {
-    toast({ title: action, description: `Performing ${action.toLowerCase()} for ${clientName}...` })
+  const viewInvoices = (clientName: string) => {
+    toast({ title: "Redirecting", description: `Viewing invoices for ${clientName}...` })
+    router.push(`/dashboard/invoices`) // In a real app we'd pass a query param
   }
 
   return (
@@ -62,14 +79,14 @@ export default function ClientsPage() {
         
         <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
           <DialogTrigger asChild>
-            <Button className="bg-accent hover:bg-accent/90">
+            <Button className="bg-accent hover:bg-accent/90" onClick={() => setClientForm({ name: "", email: "", address: "" })}>
               <Plus className="size-4 mr-2" /> Add Client
             </Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Add New Client</DialogTitle>
-              <DialogDescription>Enter the details for your new customer. They will appear in invoice selections.</DialogDescription>
+              <DialogDescription>Enter the details for your new customer.</DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <div className="grid gap-2">
@@ -77,8 +94,8 @@ export default function ClientsPage() {
                 <Input 
                   id="name" 
                   placeholder="e.g. Jane Doe" 
-                  value={newClient.name}
-                  onChange={(e) => setNewClient({ ...newClient, name: e.target.value })}
+                  value={clientForm.name}
+                  onChange={(e) => setClientForm({ ...clientForm, name: e.target.value })}
                 />
               </div>
               <div className="grid gap-2">
@@ -87,8 +104,8 @@ export default function ClientsPage() {
                   id="email" 
                   type="email" 
                   placeholder="jane@example.com" 
-                  value={newClient.email}
-                  onChange={(e) => setNewClient({ ...newClient, email: e.target.value })}
+                  value={clientForm.email}
+                  onChange={(e) => setClientForm({ ...clientForm, email: e.target.value })}
                 />
               </div>
               <div className="grid gap-2">
@@ -96,8 +113,8 @@ export default function ClientsPage() {
                 <Input 
                   id="address" 
                   placeholder="123 Main St, City, Country" 
-                  value={newClient.address}
-                  onChange={(e) => setNewClient({ ...newClient, address: e.target.value })}
+                  value={clientForm.address}
+                  onChange={(e) => setClientForm({ ...clientForm, address: e.target.value })}
                 />
               </div>
             </div>
@@ -108,6 +125,45 @@ export default function ClientsPage() {
           </DialogContent>
         </Dialog>
       </div>
+
+      <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit Client</DialogTitle>
+            <DialogDescription>Update the billing information for {activeClient?.name}.</DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <Label htmlFor="edit-name">Full Name</Label>
+              <Input 
+                id="edit-name" 
+                value={clientForm.name}
+                onChange={(e) => setClientForm({ ...clientForm, name: e.target.value })}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="edit-email">Email Address</Label>
+              <Input 
+                id="edit-email" 
+                value={clientForm.email}
+                onChange={(e) => setClientForm({ ...clientForm, email: e.target.value })}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="edit-address">Billing Address</Label>
+              <Input 
+                id="edit-address" 
+                value={clientForm.address}
+                onChange={(e) => setClientForm({ ...clientForm, address: e.target.value })}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsEditOpen(false)}>Cancel</Button>
+            <Button onClick={handleUpdateClient} className="bg-accent hover:bg-accent/90">Update Client</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <Card>
         <CardHeader>
@@ -157,10 +213,10 @@ export default function ClientsPage() {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                          <DropdownMenuItem onClick={() => handleAction("Edit", client.name)}>
+                          <DropdownMenuItem onClick={() => handleEditClick(client)}>
                             <Edit2 className="size-4 mr-2" /> Edit Details
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleAction("View Invoices", client.name)}>
+                          <DropdownMenuItem onClick={() => viewInvoices(client.name)}>
                             <FileText className="size-4 mr-2" /> View Invoices
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />

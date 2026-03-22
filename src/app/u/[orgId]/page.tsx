@@ -6,14 +6,32 @@ import { MOCK_ORG, MOCK_INVOICES } from "@/lib/mock-data"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
-import { Mail, ShieldCheck, CreditCard, ArrowRight, ExternalLink } from "lucide-react"
-import Link from "next/link"
+import { Mail, ShieldCheck, CreditCard, ArrowRight, ExternalLink, Loader2, Search } from "lucide-react"
+import { useState } from "react"
+import { useToast } from "@/hooks/use-toast"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 
 export default function PublicOrgPage() {
   const { orgId } = useParams()
+  const { toast } = useToast()
+  const [loading, setLoading] = useState(false)
+  const [email, setEmail] = useState("")
+  const [isLookupOpen, setIsLookupOpen] = useState(false)
   
-  // In a real app, we'd fetch the org by orgId
   const org = MOCK_ORG
+
+  const handlePayBalance = () => {
+    toast({ title: "Secure Checkout", description: "Redirecting to your combined outstanding balance..." })
+  }
+
+  const handleLookup = () => {
+    if (!email) return
+    setLoading(true)
+    setTimeout(() => {
+      setLoading(false)
+      setIsLookupOpen(true)
+    }, 1500)
+  }
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
@@ -50,12 +68,15 @@ export default function PublicOrgPage() {
 
                 <div className="p-4 bg-slate-50 rounded-xl border space-y-4">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium">Looking for a specific invoice?</span>
-                    <Button variant="link" size="sm" className="text-accent">
-                      Help me find it <ArrowRight className="size-3 ml-1" />
+                    <span className="text-sm font-medium">Have an account with us?</span>
+                    <Button variant="link" size="sm" className="text-accent" onClick={() => toast({ title: "Help", description: "Please contact support@acme.com for account issues." })}>
+                      Support Center <ArrowRight className="size-3 ml-1" />
                     </Button>
                   </div>
-                  <Button className="w-full bg-accent hover:bg-accent/90 h-12 text-lg">
+                  <Button 
+                    className="w-full bg-accent hover:bg-accent/90 h-12 text-lg"
+                    onClick={handlePayBalance}
+                  >
                     Pay Outstanding Balance
                   </Button>
                 </div>
@@ -76,19 +97,46 @@ export default function PublicOrgPage() {
 
           <div className="text-center space-y-4">
             <p className="text-xs text-muted-foreground">
-              Are you a client? You can access all your invoices by entering your email.
+              Are you a client? Enter your email to see your active invoices.
             </p>
             <div className="flex max-w-sm mx-auto gap-2">
               <input 
                 type="email" 
                 placeholder="Enter your email" 
                 className="flex-1 h-10 px-3 rounded-md border bg-white text-sm outline-none focus:ring-2 focus:ring-accent/20"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
-              <Button variant="outline">View My Invoices</Button>
+              <Button variant="outline" onClick={handleLookup} disabled={loading}>
+                {loading ? <Loader2 className="size-4 animate-spin" /> : "View My Invoices"}
+              </Button>
             </div>
           </div>
         </div>
       </main>
+
+      <Dialog open={isLookupOpen} onOpenChange={setIsLookupOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Recent Invoices</DialogTitle>
+            <DialogDescription>Invoices associated with {email}</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            {MOCK_INVOICES.map(inv => (
+              <div key={inv.id} className="flex items-center justify-between p-3 border rounded-lg bg-slate-50">
+                <div>
+                  <p className="text-sm font-bold">{inv.number}</p>
+                  <p className="text-xs text-muted-foreground">Due: {inv.dueDate}</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-sm font-bold">${inv.total.toLocaleString()}</p>
+                  <Button variant="link" size="sm" className="h-auto p-0 text-accent">View & Pay</Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </DialogContent>
+      </Dialog>
 
       <footer className="py-8 text-center text-xs text-muted-foreground border-t bg-white">
         <p>© 2024 {org.name}. Powered by InvoiceSync.</p>
