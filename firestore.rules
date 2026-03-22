@@ -46,7 +46,7 @@ service cloud.firestore {
       }
 
       match /invoices/{invoiceId} {
-        allow get: if isOwner(organizationId) || (isSignedIn() && resource.data.clientId == request.auth.uid);
+        allow get: if true; // Allow public view of invoices via link
         allow list: if isOwner(organizationId);
         
         allow create: if isOwner(organizationId) && matchesOrgPath(organizationId);
@@ -54,7 +54,7 @@ service cloud.firestore {
         allow delete: if isExistingOwner(organizationId);
 
         match /lineItems/{lineItemId} {
-          allow get: if isOwner(organizationId) || (isSignedIn() && resource.data.clientId == request.auth.uid);
+          allow get: if true; // Allow public view of invoice items
           allow list: if isOwner(organizationId);
 
           allow create: if isOwner(organizationId) && matchesOrgPath(organizationId);

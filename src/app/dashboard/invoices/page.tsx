@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
-import { Plus, Search, ExternalLink, MoreVertical, Copy, Trash2, Filter, Share2, Sparkles, Loader2, Calendar, FileText, Eye } from "lucide-react"
+import { Plus, Search, ExternalLink, MoreVertical, Copy, Trash2, Filter, Share2, Sparkles, Loader2, FileText } from "lucide-react"
 import Link from "next/link"
 import { Input } from "@/components/ui/input"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
@@ -58,7 +58,7 @@ export default function InvoicesPage() {
   }) || []
 
   const copyLink = (id: string) => {
-    const url = `${origin || window.location.origin}/p/${id}`
+    const url = `${origin || window.location.origin}/p/${user?.uid}/${id}`
     navigator.clipboard.writeText(url)
     toast({ title: "Link Copied", description: "Professional payment portal URL copied to clipboard." })
   }
@@ -169,7 +169,7 @@ export default function InvoicesPage() {
                             asChild
                             title="Open Branded Portal"
                           >
-                             <Link href={`/p/${invoice.id}`} target="_blank">
+                             <Link href={`/p/${user?.uid}/${invoice.id}`} target="_blank">
                                 <ExternalLink className="size-4" />
                              </Link>
                           </Button>
@@ -195,9 +195,6 @@ export default function InvoicesPage() {
                               <DropdownMenuLabel>Actions</DropdownMenuLabel>
                               <DropdownMenuItem onClick={() => copyLink(invoice.id)}>
                                 <Copy className="size-4 mr-2" /> Copy Link
-                              </DropdownMenuItem>
-                              <DropdownMenuItem disabled>
-                                <Sparkles className="size-4 mr-2" /> Refine Invoice (Soon)
                               </DropdownMenuItem>
                               <DropdownMenuSeparator />
                               <DropdownMenuItem 
@@ -243,7 +240,7 @@ export default function InvoicesPage() {
               <p className="text-sm font-medium">Payment Link</p>
               <div className="flex items-center gap-2 p-3 bg-slate-50 rounded-xl border">
                 <code className="text-xs truncate flex-1 font-mono">
-                  {origin}/p/{shareInvoice?.id}
+                  {origin}/p/{user?.uid}/{shareInvoice?.id}
                 </code>
                 <Button size="icon" variant="ghost" className="size-8" onClick={() => copyLink(shareInvoice?.id)}>
                   <Copy className="size-3" />
@@ -272,11 +269,11 @@ export default function InvoicesPage() {
                     <Separator className="my-2" />
                     <p className="font-bold text-[10px] uppercase tracking-widest text-muted-foreground">Body</p>
                     <div className="whitespace-pre-wrap text-slate-600 leading-relaxed italic">
-                      {aiEmail.body.replace('[PAYMENT_LINK]', `${origin}/p/${shareInvoice?.id}`)}
+                      {aiEmail.body.replace('[PAYMENT_LINK]', `${origin}/p/${user?.uid}/${shareInvoice?.id}`)}
                     </div>
                   </div>
                   <Button className="w-full text-xs h-10 bg-accent hover:bg-accent/90" onClick={() => {
-                    const text = `Subject: ${aiEmail.subject}\n\n${aiEmail.body.replace('[PAYMENT_LINK]', `${origin}/p/${shareInvoice?.id}`)}`;
+                    const text = `Subject: ${aiEmail.subject}\n\n${aiEmail.body.replace('[PAYMENT_LINK]', `${origin}/p/${user?.uid}/${shareInvoice?.id}`)}`;
                     navigator.clipboard.writeText(text);
                     toast({ title: "Email Copied", description: "Subject and body copied to clipboard." });
                   }}>
