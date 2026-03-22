@@ -27,46 +27,46 @@ export default function LandingPage() {
           <div className="max-w-4xl mx-auto space-y-6 relative">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 text-accent text-sm font-bold mb-4">
               <Sparkles className="size-4" />
-              <span>Honoring the Professional Identity of Self-Employment</span>
+              <span>Professional Identity for Independent Experts</span>
             </div>
             <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-primary leading-[1.1]">
-              Your Expertise. <br />
-              <span className="text-accent underline decoration-accent/20 underline-offset-8">Clearly Valued.</span>
+              Send Professional <br />
+              <span className="text-accent underline decoration-accent/20 underline-offset-8">Invoices & Contracts.</span>
             </h1>
             <p className="text-xl md:text-2xl text-muted-foreground leading-relaxed max-w-3xl mx-auto">
-              Charge market rates for the work you do. Never undercharge for your time again and learn how to highlight the value you provided through architected identity.
+              Charge market rates, never undercharge for your time, and highlight the true value you provide to your clients.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-6">
               <Button size="lg" className="h-16 px-10 text-xl bg-accent hover:bg-accent/90 shadow-xl shadow-accent/20 group" asChild>
                 <Link href="/onboarding">
-                  Build Your Identity Ecosystem <ArrowRight className="ml-2 size-6 group-hover:translate-x-1 transition-transform" />
+                  Get Started for Free <ArrowRight className="ml-2 size-6 group-hover:translate-x-1 transition-transform" />
                 </Link>
               </Button>
               <Button size="lg" variant="outline" className="h-16 px-10 text-xl">
-                The Ethos
+                How it Works
               </Button>
             </div>
           </div>
         </section>
 
-        {/* Ethos Section */}
+        {/* Value Prop Section */}
         <section className="py-24 px-6 bg-slate-50 border-y">
           <div className="max-w-4xl mx-auto text-center space-y-12">
             <div className="space-y-4">
-              <h2 className="text-sm font-bold tracking-[0.3em] text-accent uppercase">Our Ethos</h2>
-              <h3 className="text-4xl font-bold text-primary">Honoring Every Profession</h3>
+              <h2 className="text-sm font-bold tracking-[0.3em] text-accent uppercase">The ClearBill Standard</h2>
+              <h3 className="text-4xl font-bold text-primary">Your Expertise. Clearly Valued.</h3>
             </div>
             <div className="grid md:grid-cols-2 gap-12 text-left">
               <div className="space-y-4">
-                <p className="text-lg font-medium text-slate-900">We believe self-employment is the most honest form of enterprise.</p>
+                <p className="text-lg font-medium text-slate-900">Charge what you're actually worth.</p>
                 <p className="text-muted-foreground leading-relaxed">
-                  Too often, independent experts—from personal chefs to security specialists—are forced to use generic, unbranded tools that fail to reflect their true worth. ClearBill ensures you command market rates by framing your work as a strategic win.
+                  Too often, independent experts—from personal chefs to security specialists—are forced to use generic tools that fail to reflect their true worth. ClearBill ensures you command market rates by framing your work as a strategic win.
                 </p>
               </div>
               <div className="space-y-4">
-                <p className="text-lg font-medium text-slate-900">Value clarity is the foundation of B2B trust.</p>
+                <p className="text-lg font-medium text-slate-900">Value clarity built into every invoice.</p>
                 <p className="text-muted-foreground leading-relaxed">
-                  Every invoice should be a testament to your craft. ClearBill provides the digital infrastructure that honors your expertise and reflects the true value you provide, including AI-drafted strategic agreements.
+                  Every invoice should be a testament to your craft. ClearBill provides the digital infrastructure that honors your expertise and reflects the true value you provide, including AI-drafted contracts that protect your work.
                 </p>
               </div>
             </div>
@@ -75,7 +75,7 @@ export default function LandingPage() {
 
         <section className="py-20 px-6 max-w-7xl mx-auto border-t">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-primary">Elevate Your Client Experience</h2>
+            <h2 className="text-3xl font-bold text-primary">Elevate Your Business</h2>
             <p className="text-muted-foreground mt-2">Bridge the gap between your skill and the client's perception of value.</p>
           </div>
           <div className="grid md:grid-cols-3 gap-12">
@@ -83,9 +83,9 @@ export default function LandingPage() {
               <div className="bg-accent/10 p-3 rounded-2xl w-fit group-hover:scale-110 transition-transform">
                 <Layout className="size-8 text-accent" />
               </div>
-              <h3 className="text-2xl font-bold">White-Label Identity</h3>
+              <h3 className="text-2xl font-bold">Professional Portals</h3>
               <p className="text-muted-foreground leading-relaxed">
-                Present a professional facade that reflects your commitment to quality and command the rates your expertise deserves.
+                Present a branded facade that reflects your commitment to quality and command the rates your expertise deserves.
               </p>
             </div>
             <div className="group space-y-4 p-6 rounded-3xl hover:bg-slate-50 transition-colors">
@@ -94,7 +94,7 @@ export default function LandingPage() {
               </div>
               <h3 className="text-2xl font-bold">Outcome Agreements</h3>
               <p className="text-muted-foreground leading-relaxed">
-                Stop guessing on terms. Attach professional, AI-drafted outcome agreements to every invoice to protect your work.
+                Stop guessing on terms. Attach professional, AI-drafted agreements to every invoice to protect your work and your time.
               </p>
             </div>
             <div className="group space-y-4 p-6 rounded-3xl hover:bg-slate-50 transition-colors">
@@ -114,20 +114,20 @@ export default function LandingPage() {
           <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center relative z-10">
             <div className="space-y-6">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-white text-xs font-bold uppercase tracking-widest">
-                The Identity Your Expertise Commands
+                Simple Setup. Professional Results.
               </div>
-              <h2 className="text-4xl md:text-5xl font-bold leading-tight">Clarity is the key to professional longevity.</h2>
+              <h2 className="text-4xl md:text-5xl font-bold leading-tight">Clarity is the key to business growth.</h2>
               <p className="text-slate-400 text-lg leading-relaxed">
-                Never undercharge again. ClearBill combines your payment gateway with a professional identity system that highlights the true value of your work at every touchpoint.
+                Never undercharge again. ClearBill combines your payment gateway with a professional system that highlights the true value of your work at every touchpoint.
               </p>
               <div className="grid sm:grid-cols-2 gap-4 pt-4">
                 {[
-                  "Market Rate Benchmarking",
+                  "Professional Invoices",
                   "AI Strategic Agreements",
-                  "Value-First Invoice Layouts",
-                  "Secure Identity Badges",
-                  "Outcome Certainty Logs",
-                  "Professional Tone Tuning"
+                  "Branded Client Portals",
+                  "Secure Payment Processing",
+                  "Outcome Tracking",
+                  "Growth Insights"
                 ].map((feature) => (
                   <div key={feature} className="flex items-center gap-3">
                     <div className="bg-accent p-1 rounded-full"><ShieldCheck className="size-3" /></div>
@@ -161,7 +161,7 @@ export default function LandingPage() {
                            <p className="text-[10px] text-muted-foreground">accounts@globaltech.com</p>
                          </div>
                          <div className="text-right space-y-1">
-                           <p className="text-[8px] uppercase font-bold text-muted-foreground tracking-widest">Outcome Total</p>
+                           <p className="text-[8px] uppercase font-bold text-muted-foreground tracking-widest">Total</p>
                            <span className="text-2xl font-black text-accent">$4,250.00</span>
                          </div>
                        </div>
@@ -205,7 +205,7 @@ export default function LandingPage() {
               <span className="font-headline">ClearBill</span>
             </div>
             <p className="text-sm text-muted-foreground max-w-xs">
-              Honoring self-employment through professional identity ecosystems.
+              Professional identity and invoicing for independent experts.
             </p>
           </div>
           <div className="flex gap-8 text-sm text-muted-foreground font-medium">
@@ -214,7 +214,7 @@ export default function LandingPage() {
             <Link href="#" className="hover:text-primary transition-colors">Support</Link>
           </div>
           <p className="text-xs text-muted-foreground">
-            © 2024 ClearBill. Honoring every expert.
+            © 2024 ClearBill. Honoring Every Profession.
           </p>
         </div>
       </footer>
