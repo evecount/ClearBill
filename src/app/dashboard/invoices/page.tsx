@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useState, useEffect } from "react"
@@ -5,8 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
-import { MOCK_INVOICES as INITIAL_INVOICES, MOCK_CLIENTS, MOCK_ORG } from "@/lib/mock-data"
-import { Plus, Search, ExternalLink, MoreVertical, Copy, Trash2, Filter, Download, Send, Share2, Sparkles, Loader2, Calendar, DollarSign, User, FileText } from "lucide-react"
+import { Plus, Search, ExternalLink, MoreVertical, Copy, Trash2, Filter, Share2, Sparkles, Loader2, Calendar, FileText } from "lucide-react"
 import Link from "next/link"
 import { Input } from "@/components/ui/input"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
@@ -14,10 +14,15 @@ import { useToast } from "@/hooks/use-toast"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { generateInvoiceEmail, type InvoiceEmailOutput } from "@/ai/flows/invoice-email-generator"
 import { Separator } from "@/components/ui/separator"
+import { useUser, useFirestore, useCollection } from "@/firebase"
+import { useMemoFirebase } from "@/firebase/provider"
+import { query, collection, orderBy, doc } from "firebase/firestore"
+import { deleteDocumentNonBlocking } from "@/firebase/non-blocking-updates"
 
 export default function InvoicesPage() {
   const { toast } = useToast()
-  const [invoices, setInvoices] = useState(INITIAL_INVOICES)
+  const { user } = useUser()
+  const firestore = useFirestore()
   const [search, setSearch] = useState("")
   const [shareInvoice, setShareInvoice] = useState<any>(null)
   const [aiEmail, setAiEmail] = useState<InvoiceEmailOutput | null>(null)
@@ -28,13 +33,29 @@ export default function InvoicesPage() {
     setOrigin(window.location.origin)
   }, [])
 
-  const filteredInvoices = invoices.filter(inv => {
-    const client = MOCK_CLIENTS.find(c => c.id === inv.clientId)
+  const invoicesQuery = useMemoFirebase(() => {
+    if (!user || !firestore) return null
+    return query(
+      collection(firestore, 'organizations', user.uid, 'invoices'),
+      orderBy('createdAt', 'desc')
+    )
+  }, [user, firestore])
+
+  const { data: invoices, isLoading } = useCollection(invoicesQuery)
+
+  const clientsQuery = useMemoFirebase(() => {
+    if (!user || !firestore) return null
+    return collection(firestore, 'organizations', user.uid, 'clients')
+  }, [user, firestore])
+  const { data: clients } = useCollection(clientsQuery)
+
+  const filteredInvoices = invoices?.filter(inv => {
+    const client = clients?.find(c => c.id === inv.clientId)
     return (
       inv.number.toLowerCase().includes(search.toLowerCase()) ||
       client?.name.toLowerCase().includes(search.toLowerCase())
     )
-  })
+  }) || []
 
   const copyLink = (id: string) => {
     const url = `${origin || window.location.origin}/p/${id}`
@@ -43,20 +64,25 @@ export default function InvoicesPage() {
   }
 
   const handleDelete = (id: string) => {
-    setInvoices(invoices.filter(i => i.id !== id))
+    if (!user || !firestore) return
+    const docRef = doc(firestore, 'organizations', user.uid, 'invoices', id)
+    deleteDocumentNonBlocking(docRef)
     toast({ title: "Invoice Deleted", description: "The invoice has been removed." })
   }
 
   const handleGenerateAiEmail = async () => {
-    if (!shareInvoice) return
+    if (!shareInvoice || !user) return
     setLoadingEmail(true)
-    const client = MOCK_CLIENTS.find(c => c.id === shareInvoice.clientId)
+    const client = clients?.find(c => c.id === shareInvoice.clientId)
+    
+    // Get org name for the AI
+    const orgRef = doc(firestore!, 'organizations', user.uid)
     try {
       const result = await generateInvoiceEmail({
-        businessName: MOCK_ORG.name,
+        businessName: "Your Business",
         clientName: client?.name || "Client",
         invoiceNumber: shareInvoice.number,
-        amount: `$${shareInvoice.total.toLocaleString()}`,
+        amount: `$${shareInvoice.totalAmount.toLocaleString()}`,
         brandingTone: "Professional and encouraging"
       })
       setAiEmail(result)
@@ -98,120 +124,36 @@ export default function InvoicesPage() {
         </div>
       </div>
 
-      {/* Mobile Card List */}
-      <div className="grid gap-4 md:hidden pb-12">
-        {filteredInvoices.length > 0 ? (
-          filteredInvoices.map((invoice) => {
-            const client = MOCK_CLIENTS.find(c => c.id === invoice.clientId)
-            return (
-              <Card key={invoice.id} className="overflow-hidden border-none shadow-md">
-                <CardHeader className="p-4 bg-slate-50 flex flex-row items-center justify-between space-y-0">
-                  <div className="flex items-center gap-3">
-                    <div className="bg-white p-2 rounded-lg border shadow-sm">
-                      <FileText className="size-4 text-accent" />
-                    </div>
-                    <div>
-                      <p className="font-mono text-xs font-bold">{invoice.number}</p>
-                      <Badge 
-                        variant={invoice.status === 'Paid' ? 'default' : 'secondary'} 
-                        className={invoice.status === 'Paid' ? 'bg-emerald-500/10 text-emerald-600 border-none h-5 px-1.5' : 'h-5 px-1.5'}
-                      >
-                        {invoice.status}
-                      </Badge>
-                    </div>
-                  </div>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon" className="size-8">
-                        <MoreVertical className="size-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuLabel>Invoice Actions</DropdownMenuLabel>
-                      <DropdownMenuItem onClick={() => copyLink(invoice.id)}>
-                        <Copy className="size-4 mr-2" /> Copy Link
-                      </DropdownMenuItem>
-                      <DropdownMenuItem asChild>
-                        <Link href={`/p/${invoice.id}`} target="_blank">
-                          <ExternalLink className="size-4 mr-2" /> Open Portal
-                        </Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem className="text-destructive" onClick={() => handleDelete(invoice.id)}>
-                        <Trash2 className="size-4 mr-2" /> Delete
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </CardHeader>
-                <CardContent className="p-4 space-y-4">
-                  <div className="flex justify-between items-start">
-                    <div className="space-y-1">
-                      <p className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest">Client</p>
-                      <p className="font-bold text-sm">{client?.name}</p>
-                    </div>
-                    <div className="text-right space-y-1">
-                      <p className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest">Total</p>
-                      <p className="font-black text-lg text-accent">${invoice.total.toLocaleString()}</p>
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-4 pt-2 border-t border-dashed">
-                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                      <Calendar className="size-3" /> Due {invoice.dueDate}
-                    </div>
-                    <div className="flex justify-end">
-                      <Button 
-                        variant="link" 
-                        size="sm" 
-                        className="h-auto p-0 text-accent font-bold"
-                        onClick={() => {
-                          setShareInvoice(invoice)
-                          setAiEmail(null)
-                        }}
-                      >
-                        <Share2 className="size-3 mr-1" /> Share
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            )
-          })
-        ) : (
-          <div className="py-12 text-center text-muted-foreground bg-white rounded-2xl border border-dashed">
-            No invoices found.
-          </div>
-        )}
-      </div>
-
-      {/* Desktop Table View */}
-      <Card className="hidden md:block overflow-hidden border-none shadow-lg rounded-2xl">
-        <CardContent className="p-0">
-          <Table>
-            <TableHeader className="bg-slate-50/50">
-              <TableRow>
-                <TableHead className="font-bold">Invoice</TableHead>
-                <TableHead className="font-bold">Client</TableHead>
-                <TableHead className="font-bold">Due Date</TableHead>
-                <TableHead className="font-bold">Amount</TableHead>
-                <TableHead className="font-bold">Status</TableHead>
-                <TableHead className="text-right font-bold">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredInvoices.length > 0 ? (
-                filteredInvoices.map((invoice) => {
-                  const client = MOCK_CLIENTS.find(c => c.id === invoice.clientId)
+      {isLoading ? (
+        <div className="py-24 text-center text-muted-foreground">Fetching professional ledger...</div>
+      ) : filteredInvoices.length > 0 ? (
+        <Card className="overflow-hidden border-none shadow-lg rounded-2xl">
+          <CardContent className="p-0">
+            <Table>
+              <TableHeader className="bg-slate-50/50">
+                <TableRow>
+                  <TableHead className="font-bold">Invoice</TableHead>
+                  <TableHead className="font-bold">Client</TableHead>
+                  <TableHead className="font-bold">Due Date</TableHead>
+                  <TableHead className="font-bold">Amount</TableHead>
+                  <TableHead className="font-bold">Status</TableHead>
+                  <TableHead className="text-right font-bold">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filteredInvoices.map((invoice) => {
+                  const client = clients?.find(c => c.id === invoice.clientId)
                   return (
                     <TableRow key={invoice.id}>
                       <TableCell className="font-mono text-sm font-bold">{invoice.number}</TableCell>
                       <TableCell>
                         <div className="flex flex-col">
-                          <span className="font-medium">{client?.name}</span>
+                          <span className="font-medium">{client?.name || "Unknown Client"}</span>
                           <span className="text-xs text-muted-foreground">{client?.email}</span>
                         </div>
                       </TableCell>
                       <TableCell className="text-sm">{invoice.dueDate}</TableCell>
-                      <TableCell className="font-bold text-accent">${invoice.total.toLocaleString()}</TableCell>
+                      <TableCell className="font-bold text-accent">${invoice.totalAmount.toLocaleString()}</TableCell>
                       <TableCell>
                         <Badge 
                           variant={invoice.status === 'Paid' ? 'default' : 'secondary'} 
@@ -263,29 +205,31 @@ export default function InvoicesPage() {
                       </TableCell>
                     </TableRow>
                   )
-                })
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={6} className="h-48 text-center text-muted-foreground">
-                    <div className="flex flex-col items-center gap-2">
-                      <FileText className="size-8 opacity-20" />
-                      <p>No invoices found.</p>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
+                })}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+      ) : (
+        <div className="py-24 text-center bg-white rounded-2xl border border-dashed border-slate-200">
+          <FileText className="size-12 mx-auto mb-4 text-slate-200" />
+          <h3 className="text-lg font-bold">No Invoices Yet</h3>
+          <p className="text-sm text-muted-foreground max-w-xs mx-auto mb-6">
+            Invoices are the bridge to your strategic revenue. Create one to get started.
+          </p>
+          <Button asChild className="bg-accent hover:bg-accent/90">
+            <Link href="/dashboard/invoices/new">
+              <Plus className="size-4 mr-2" /> Create First Invoice
+            </Link>
+          </Button>
+        </div>
+      )}
 
       <Dialog open={!!shareInvoice} onOpenChange={(open) => !open && setShareInvoice(null)}>
         <DialogContent className="sm:max-w-md rounded-t-3xl sm:rounded-3xl">
           <DialogHeader>
             <DialogTitle>Share Branded Portal</DialogTitle>
-            <DialogDescription>
-              Deliver your unique identity ecosystem to your client.
-            </DialogDescription>
+            <DialogDescription>Deliver your unique identity ecosystem to your client.</DialogDescription>
           </DialogHeader>
           <div className="space-y-6 py-4">
             <div className="space-y-2">
@@ -299,7 +243,6 @@ export default function InvoicesPage() {
                 </Button>
               </div>
             </div>
-
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <p className="text-sm font-medium">AI Delivery Snippet</p>
@@ -314,9 +257,8 @@ export default function InvoicesPage() {
                   {aiEmail ? "Refine" : "Generate"}
                 </Button>
               </div>
-              
               {aiEmail ? (
-                <div className="space-y-3 animate-in fade-in slide-in-from-top-1">
+                <div className="space-y-3">
                   <div className="p-4 bg-accent/5 rounded-xl border border-accent/10 text-sm space-y-2">
                     <p className="font-bold text-[10px] uppercase tracking-widest text-muted-foreground">Subject</p>
                     <p className="font-medium">{aiEmail.subject}</p>
@@ -336,20 +278,14 @@ export default function InvoicesPage() {
                 </div>
               ) : (
                 <div className="p-8 bg-slate-50/50 border border-dashed rounded-2xl text-center">
-                  <p className="text-xs text-muted-foreground italic">Click "Generate" to architect a professional message for this link.</p>
+                  <p className="text-xs text-muted-foreground italic">Click "Generate" to architect a professional message.</p>
                 </div>
               )}
             </div>
           </div>
-          <DialogFooter className="sm:justify-start">
-            <Button 
-              className="w-full h-12 bg-slate-900 hover:bg-slate-800"
-              onClick={() => {
-                copyLink(shareInvoice?.id)
-                setShareInvoice(null)
-              }}
-            >
-              <Copy className="size-4 mr-2" /> Copy Link & Close
+          <DialogFooter>
+            <Button className="w-full h-12 bg-slate-900 hover:bg-slate-800" onClick={() => { copyLink(shareInvoice?.id); setShareInvoice(null); }}>
+              Copy Link & Close
             </Button>
           </DialogFooter>
         </DialogContent>
