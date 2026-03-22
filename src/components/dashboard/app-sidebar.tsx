@@ -43,12 +43,12 @@ export function AppSidebar() {
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader className="h-16 flex items-center px-4">
-        <div className="flex items-center gap-2 font-bold text-sidebar-foreground">
+        <Link href="/" className="flex items-center gap-2 font-bold text-sidebar-foreground transition-opacity hover:opacity-80">
           <div className="bg-sidebar-primary p-1.5 rounded-lg">
             <CreditCard className="size-5" />
           </div>
           <span className="group-data-[collapsible=icon]:hidden text-xl font-headline tracking-tight">InvoiceSync</span>
-        </div>
+        </Link>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
