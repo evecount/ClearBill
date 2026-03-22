@@ -1,4 +1,3 @@
-
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar"
 import { AppSidebar } from "@/components/dashboard/app-sidebar"
 import { BottomNav } from "@/components/dashboard/bottom-nav"
@@ -23,7 +22,7 @@ export default function DashboardLayout({
               <div className="bg-primary p-1 rounded-lg text-white">
                 <CreditCard className="size-5" />
               </div>
-              <span className="text-lg font-headline tracking-tight">InvoiceSync</span>
+              <span className="text-lg font-headline tracking-tight">ClearBill</span>
             </Link>
           </div>
           <div className="hidden md:flex items-center gap-2">

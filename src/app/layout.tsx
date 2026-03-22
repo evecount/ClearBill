@@ -1,16 +1,16 @@
-
 import type {Metadata, Viewport} from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
+import { FirebaseClientProvider } from "@/firebase/client-provider"
 
 export const metadata: Metadata = {
-  title: 'InvoiceSync | Professional B2B Invoicing',
+  title: 'ClearBill | Professional B2B Invoicing',
   description: 'Eliminate manual bank transfers with white-label payment portals.',
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
-    title: 'InvoiceSync',
+    title: 'ClearBill',
   },
 };
 
@@ -35,8 +35,10 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
       </head>
       <body className="font-body antialiased selection:bg-accent/30">
-        {children}
-        <Toaster />
+        <FirebaseClientProvider>
+          {children}
+          <Toaster />
+        </FirebaseClientProvider>
       </body>
     </html>
   );

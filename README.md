@@ -1,8 +1,8 @@
-# 🚀 InvoiceSync: Transforming Self-Employment
+# 🚀 ClearBill: Transforming Self-Employment
 
-**InvoiceSync** is a professional identity ecosystem designed for independent experts who provide world-class service but lack the enterprise-grade digital infrastructure to command the respect (and fees) they deserve.
+**ClearBill** is a professional identity ecosystem designed for independent experts who provide world-class service but lack the enterprise-grade digital infrastructure to command the respect (and fees) they deserve.
 
-Instead of sending generic, unbranded payment links, **InvoiceSync** allows professionals—from personal chefs and lash artists to sound engineers and security experts—to architect a premium **Professional Identity** that wraps every client touchpoint in a secure, high-trust ecosystem.
+Instead of sending generic, unbranded payment links, **ClearBill** allows professionals—from personal chefs and lash artists to sound engineers and security experts—to architect a premium **Professional Identity** that wraps every client touchpoint in a secure, high-trust ecosystem.
 
 ## ✨ Core Ethos: Honoring the Independent Expert
 
@@ -42,7 +42,7 @@ Your clients don't just see a bill; they enter your professional world:
 - **Framework**: [Next.js 15 (App Router)](https://nextjs.org/)
 - **AI Engine**: [Firebase Genkit](https://firebase.google.com/docs/genkit) with Gemini 2.5 Flash.
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/) & [Shadcn UI](https://ui.shadcn.com/).
-- **Database/Auth**: [Firebase](https://firebase.google.com/) (Firestore and Authentication).
+- **Database/Auth**: [Firebase](https://firebase.) (Firestore and Authentication).
 - **Icons**: [Lucide React](https://lucide.dev/).
 
 ## 🚀 Getting Started
@@ -55,4 +55,4 @@ Your clients don't just see a bill; they enter your professional world:
 
 ---
 
-*© 2024 InvoiceSync. Honoring every expert. Built with passion for the independent professional.*
+*© 2024 ClearBill. Honoring every expert. Built with passion for the independent professional.*

@@ -10,7 +10,7 @@ export default function LandingPage() {
           <div className="bg-primary p-1.5 rounded-lg text-white">
             <CreditCard className="size-6" />
           </div>
-          <span className="text-2xl font-headline tracking-tight">InvoiceSync</span>
+          <span className="text-2xl font-headline tracking-tight">ClearBill</span>
         </div>
         <div className="flex items-center gap-4">
           <Button variant="ghost" asChild>
@@ -34,7 +34,7 @@ export default function LandingPage() {
               <span className="text-accent underline decoration-accent/20 underline-offset-8">Their Respect.</span>
             </h1>
             <p className="text-xl md:text-2xl text-muted-foreground leading-relaxed max-w-3xl mx-auto">
-              You provide world-class service. **InvoiceSync** provides the professional identity architecture that ensures your clients treat you with the respect your hard work commands.
+              You provide world-class service. **ClearBill** provides the professional identity architecture that ensures your clients treat you with the respect your hard work commands.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-6">
               <Button size="lg" className="h-16 px-10 text-xl bg-accent hover:bg-accent/90 shadow-xl shadow-accent/20 group" asChild>
@@ -66,7 +66,7 @@ export default function LandingPage() {
               <div className="space-y-4">
                 <p className="text-lg font-medium text-slate-900">Identity is the foundation of B2B trust.</p>
                 <p className="text-muted-foreground leading-relaxed">
-                  InvoiceSync isn't just a billing tool; it's a <strong>Professional Identity Ecosystem</strong>. We provide the digital infrastructure that honors your expertise and reflects the true value you provide to your clients.
+                  ClearBill isn't just a billing tool; it's a <strong>Professional Identity Ecosystem</strong>. We provide the digital infrastructure that honors your expertise and reflects the true value you provide to your clients.
                 </p>
               </div>
             </div>
@@ -118,7 +118,7 @@ export default function LandingPage() {
               </div>
               <h2 className="text-4xl md:text-5xl font-bold leading-tight">Professionalism is the key to longevity.</h2>
               <p className="text-slate-400 text-lg leading-relaxed">
-                Your payment gateway is just a utility. Your identity is your reputation. InvoiceSync combines them into a seamless ecosystem that reflects your quality at every touchpoint.
+                Your payment gateway is just a utility. Your identity is your reputation. ClearBill combines them into a seamless ecosystem that reflects your quality at every touchpoint.
               </p>
               <div className="grid sm:grid-cols-2 gap-4 pt-4">
                 {[
@@ -202,7 +202,7 @@ export default function LandingPage() {
           <div className="flex flex-col gap-4">
             <div className="flex items-center justify-center md:justify-start gap-2 font-bold text-primary">
               <CreditCard className="size-5" />
-              <span className="font-headline">InvoiceSync</span>
+              <span className="font-headline">ClearBill</span>
             </div>
             <p className="text-sm text-muted-foreground max-w-xs">
               Honoring self-employment through professional identity ecosystems.
@@ -214,7 +214,7 @@ export default function LandingPage() {
             <Link href="#" className="hover:text-primary transition-colors">Support</Link>
           </div>
           <p className="text-xs text-muted-foreground">
-            © 2024 InvoiceSync. Honoring every expert.
+            © 2024 ClearBill. Honoring every expert.
           </p>
         </div>
       </footer>

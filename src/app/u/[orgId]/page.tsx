@@ -1,15 +1,17 @@
-
 "use client"
 
 import { useParams } from "next/navigation"
-import { MOCK_ORG, MOCK_INVOICES } from "@/lib/mock-data"
+import { MOCK_INVOICES } from "@/lib/mock-data"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
-import { Mail, ShieldCheck, CreditCard, ArrowRight, ExternalLink, Loader2, Search } from "lucide-react"
+import { Mail, ShieldCheck, CreditCard, ArrowRight, Loader2 } from "lucide-react"
 import { useState } from "react"
 import { useToast } from "@/hooks/use-toast"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { useCollection, useUser } from "@/firebase"
+import { useMemoFirebase } from "@/firebase/provider"
+import { collection, query, where } from "firebase/firestore"
 
 export default function PublicOrgPage() {
   const { orgId } = useParams()
@@ -18,7 +20,17 @@ export default function PublicOrgPage() {
   const [email, setEmail] = useState("")
   const [isLookupOpen, setIsLookupOpen] = useState(false)
   
-  const org = MOCK_ORG
+  const { user } = useUser()
+
+  // For MVP, we're assuming orgId is the slug or uid. 
+  // In a real app, you'd fetch the org by slug first.
+  const orgsQuery = useMemoFirebase(() => {
+    if (!user) return null
+    return query(collection(user.auth.firestore, 'organizations'), where('slug', '==', orgId))
+  }, [user, orgId])
+
+  const { data: orgs } = useCollection(orgsQuery)
+  const org = orgs?.[0] || { name: "ClearBill Merchant", logoUrl: "", email: "" }
 
   const handlePayBalance = () => {
     toast({ title: "Secure Checkout", description: "Redirecting to your combined outstanding balance..." })
@@ -38,7 +50,7 @@ export default function PublicOrgPage() {
       <header className="h-16 border-b bg-white flex items-center px-6">
         <div className="max-w-7xl mx-auto w-full flex items-center gap-2 font-bold text-primary">
           <CreditCard className="size-5" />
-          <span>InvoiceSync</span>
+          <span>ClearBill</span>
         </div>
       </header>
 
@@ -69,7 +81,7 @@ export default function PublicOrgPage() {
                 <div className="p-4 bg-slate-50 rounded-xl border space-y-4">
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-medium">Have an account with us?</span>
-                    <Button variant="link" size="sm" className="text-accent" onClick={() => toast({ title: "Help", description: "Please contact support@acme.com for account issues." })}>
+                    <Button variant="link" size="sm" className="text-accent" onClick={() => toast({ title: "Help", description: "Please contact support for account issues." })}>
                       Support Center <ArrowRight className="size-3 ml-1" />
                     </Button>
                   </div>
@@ -85,7 +97,7 @@ export default function PublicOrgPage() {
               <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-4 border-t">
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Mail className="size-4" />
-                  <span>{org.email}</span>
+                  <span>{org.contactEmail || org.email}</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <ShieldCheck className="size-4" />
@@ -139,7 +151,7 @@ export default function PublicOrgPage() {
       </Dialog>
 
       <footer className="py-8 text-center text-xs text-muted-foreground border-t bg-white">
-        <p>© 2024 {org.name}. Powered by InvoiceSync.</p>
+        <p>© 2024 {org.name}. Powered by ClearBill.</p>
       </footer>
     </div>
   )

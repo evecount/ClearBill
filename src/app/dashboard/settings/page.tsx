@@ -1,4 +1,3 @@
-
 "use client"
 
 import { useState, useEffect } from "react"
@@ -8,14 +7,18 @@ import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { Textarea } from "@/components/ui/textarea"
-import { MOCK_ORG } from "@/lib/mock-data"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
-import { Save, Sparkles, ArrowRight, Copy, ExternalLink, Globe, Palette, Building2, Link as LinkIcon } from "lucide-react"
+import { Save, Sparkles, ArrowRight, Copy, ExternalLink, Globe, Building2 } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import Link from "next/link"
+import { useDoc, useUser } from "@/firebase"
+import { useMemoFirebase } from "@/firebase/provider"
+import { doc, serverTimestamp } from "firebase/firestore"
+import { updateDocumentNonBlocking } from "@/firebase/non-blocking-updates"
 
 export default function SettingsPage() {
   const { toast } = useToast()
+  const { user } = useUser()
   const [loading, setLoading] = useState(false)
   const [origin, setOrigin] = useState("")
 
@@ -23,31 +26,69 @@ export default function SettingsPage() {
     setOrigin(window.location.origin)
   }, [])
 
+  const orgRef = useMemoFirebase(() => {
+    if (!user) return null
+    return doc(user.auth.firestore, 'organizations', user.uid)
+  }, [user])
+
+  const { data: org, isLoading: isOrgLoading } = useDoc(orgRef)
+
   const [formData, setFormData] = useState({
-    name: MOCK_ORG.name,
-    email: MOCK_ORG.email,
-    slug: MOCK_ORG.slug || "",
-    address: MOCK_ORG.address || "",
-    missionStatement: MOCK_ORG.missionStatement || "",
-    industry: MOCK_ORG.industry || "",
-    brandColor: MOCK_ORG.brandColor || "256 60% 55%"
+    name: "",
+    email: "",
+    slug: "",
+    address: "",
+    missionStatement: "",
+    industry: "",
+    brandColor: "256 60% 55%"
   })
 
+  useEffect(() => {
+    if (org) {
+      setFormData({
+        name: org.name || "",
+        email: org.contactEmail || "",
+        slug: org.slug || "",
+        address: org.addressLine1 || "",
+        missionStatement: org.missionStatement || "",
+        industry: org.industry || "",
+        brandColor: org.brandColor || "256 60% 55%"
+      })
+    }
+  }, [org])
+
   const handleSave = () => {
+    if (!user || !orgRef) return
     setLoading(true)
+    
+    updateDocumentNonBlocking(orgRef, {
+      name: formData.name,
+      contactEmail: formData.email,
+      slug: formData.slug,
+      addressLine1: formData.address,
+      missionStatement: formData.missionStatement,
+      industry: formData.industry,
+      brandColor: formData.brandColor,
+      updatedAt: serverTimestamp()
+    })
+
     setTimeout(() => {
       toast({ 
         title: "Identity Updated", 
         description: "Your professional identity ecosystem has been successfully refined." 
       })
       setLoading(false)
-    }, 1500)
+    }, 800)
   }
 
   const copyPublicLink = () => {
     const url = `${origin}/u/${formData.slug}`
     navigator.clipboard.writeText(url)
     toast({ title: "Link Copied", description: "Public profile link copied to clipboard." })
+  }
+
+  if (isOrgLoading) {
+    return <div className="p-8 text-center text-muted-foreground">Loading identity profile...</div>
   }
 
   return (
@@ -137,8 +178,8 @@ export default function SettingsPage() {
             <div className="flex flex-col sm:flex-row items-center gap-6">
               <div className="relative group">
                 <Avatar className="size-24 border-2 border-white shadow-md ring-1 ring-slate-200">
-                  <AvatarImage src={MOCK_ORG.logoUrl} alt={formData.name} />
-                  <AvatarFallback className="text-2xl font-bold bg-slate-900 text-white">{formData.name[0]}</AvatarFallback>
+                  <AvatarImage src={org?.logoUrl} alt={formData.name} />
+                  <AvatarFallback className="text-2xl font-bold bg-slate-900 text-white">{formData.name[0] || '?'}</AvatarFallback>
                 </Avatar>
               </div>
               <div className="space-y-1 text-center sm:text-left">
@@ -146,7 +187,6 @@ export default function SettingsPage() {
                 <p className="text-sm text-muted-foreground">This icon anchors your professional ecosystem.</p>
                 <div className="flex gap-2 mt-3">
                    <Button variant="outline" size="sm">Change Logo</Button>
-                   <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive hover:bg-destructive/5">Remove</Button>
                 </div>
               </div>
             </div>

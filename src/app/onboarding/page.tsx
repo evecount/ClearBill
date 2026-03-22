@@ -4,15 +4,17 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
-import { Sparkles, ArrowRight, Building2, Mail, MapPin, Loader2, CheckCircle2, FileText, Globe, ShieldCheck, Palette, Camera, Scissors, Briefcase, Code, Music, Dumbbell, Star, Mic, Shield, GraduationCap, Hammer, PawPrint, Utensils } from "lucide-react"
+import { Sparkles, ArrowRight, Building2, Mail, MapPin, Loader2, ShieldCheck, Scissors, Briefcase, Music, Dumbbell, Star, Mic, Shield, GraduationCap, Hammer, PawPrint, Utensils } from "lucide-react"
 import { consultBusinessOnboarding, type OnboardingConsultantOutput } from "@/ai/flows/onboarding-consultant"
 import { useToast } from "@/hooks/use-toast"
 import Link from "next/link"
-import { Separator } from "@/components/ui/separator"
 import { cn } from "@/lib/utils"
+import { useAuth, useUser } from "@/firebase"
+import { initiateAnonymousSignIn } from "@/firebase/non-blocking-login"
+import { setDocumentNonBlocking } from "@/firebase/non-blocking-updates"
+import { doc, serverTimestamp } from "firebase/firestore"
 
 const QUICK_STARTS = [
   {
@@ -90,6 +92,8 @@ const QUICK_STARTS = [
 export default function OnboardingPage() {
   const router = useRouter()
   const { toast } = useToast()
+  const auth = useAuth()
+  const { user } = useUser()
   const [step, setStep] = useState(1)
   const [loading, setLoading] = useState(false)
   const [description, setDescription] = useState("")
@@ -103,6 +107,11 @@ export default function OnboardingPage() {
 
     setLoading(true)
     try {
+      // Ensure user is signed in anonymously if not already
+      if (!user) {
+        initiateAnonymousSignIn(auth)
+      }
+
       const result = await consultBusinessOnboarding({ userDescription: description })
       setProposal(result)
       setStep(2)
@@ -114,6 +123,33 @@ export default function OnboardingPage() {
   }
 
   const handleFinish = () => {
+    if (!proposal || !user) return
+
+    const orgId = user.uid
+    const slug = proposal.suggestedName.toLowerCase().replace(/[^a-z0-9]/g, '-')
+
+    const orgData = {
+      id: orgId,
+      name: proposal.suggestedName,
+      logoUrl: `https://picsum.photos/seed/${orgId}/200/200`,
+      contactEmail: proposal.suggestedEmail,
+      contactPhone: "",
+      addressLine1: proposal.suggestedAddress.split(',')[0] || "",
+      city: proposal.suggestedAddress.split(',')[1]?.trim() || "",
+      state: "",
+      postalCode: "",
+      country: "USA",
+      paymentGatewayType: "Stripe",
+      brandColor: proposal.brandColor,
+      missionStatement: proposal.missionStatement,
+      industry: proposal.industry,
+      slug: slug,
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp()
+    }
+
+    setDocumentNonBlocking(doc(user.auth.firestore, 'organizations', orgId), orgData, { merge: true })
+
     toast({ title: "Profile Ready", description: "Welcome to your new Professional Identity Ecosystem!" })
     router.push("/dashboard")
   }
@@ -289,18 +325,10 @@ export default function OnboardingPage() {
                       Pay Securely
                     </Button>
                     <div className="pt-4 flex justify-center items-center gap-4 opacity-30 grayscale scale-75">
-                      <Globe className="size-4" />
-                      <ShieldCheck className="size-4" />
                       <div className="text-[10px] font-bold">Stripe</div>
                     </div>
                   </div>
                 </div>
-              </div>
-              <div className="p-4 rounded-xl bg-blue-50 border border-blue-100">
-                <p className="text-xs text-blue-700 flex gap-2">
-                  <Sparkles className="size-3 shrink-0" />
-                  Notice how your unique identity flows through the entire portal. This creates instant trust for your premium clients.
-                </p>
               </div>
             </div>
           </div>

@@ -1,4 +1,3 @@
-
 "use client"
 
 import * as React from "react"
@@ -8,8 +7,6 @@ import {
   FileText,
   Settings,
   CreditCard,
-  LogOut,
-  ChevronRight,
   Plus
 } from "lucide-react"
 
@@ -26,12 +23,22 @@ import {
   SidebarGroupContent,
 } from "@/components/ui/sidebar"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { MOCK_ORG } from "@/lib/mock-data"
+import { useDoc, useUser } from "@/firebase"
+import { useMemoFirebase } from "@/firebase/provider"
+import { doc } from "firebase/firestore"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
 export function AppSidebar() {
   const pathname = usePathname()
+  const { user } = useUser()
+
+  const orgRef = useMemoFirebase(() => {
+    if (!user) return null
+    return doc(user.auth.firestore, 'organizations', user.uid)
+  }, [user])
+
+  const { data: org } = useDoc(orgRef)
 
   const navItems = [
     { title: "Dashboard", icon: LayoutDashboard, url: "/dashboard" },
@@ -47,7 +54,7 @@ export function AppSidebar() {
           <div className="bg-sidebar-primary p-1.5 rounded-lg">
             <CreditCard className="size-5" />
           </div>
-          <span className="group-data-[collapsible=icon]:hidden text-xl font-headline tracking-tight">InvoiceSync</span>
+          <span className="group-data-[collapsible=icon]:hidden text-xl font-headline tracking-tight">ClearBill</span>
         </Link>
       </SidebarHeader>
       <SidebarContent>
@@ -102,12 +109,12 @@ export function AppSidebar() {
           <SidebarMenuItem>
             <div className="flex items-center gap-3 px-2 py-3 mt-2 border-t border-sidebar-border group-data-[collapsible=icon]:px-1">
               <Avatar className="size-8">
-                <AvatarImage src={MOCK_ORG.logoUrl} alt={MOCK_ORG.name} />
-                <AvatarFallback>{MOCK_ORG.name[0]}</AvatarFallback>
+                <AvatarImage src={org?.logoUrl} alt={org?.name} />
+                <AvatarFallback>{org?.name?.[0] || '?'}</AvatarFallback>
               </Avatar>
               <div className="flex-1 min-w-0 group-data-[collapsible=icon]:hidden">
-                <p className="text-sm font-medium truncate">{MOCK_ORG.name}</p>
-                <p className="text-xs text-sidebar-foreground/60 truncate">{MOCK_ORG.email}</p>
+                <p className="text-sm font-medium truncate">{org?.name || 'Loading...'}</p>
+                <p className="text-xs text-sidebar-foreground/60 truncate">{org?.contactEmail || user?.email}</p>
               </div>
             </div>
           </SidebarMenuItem>
