@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { CreditCard, FileText, Users, TrendingUp, ArrowUpRight, Plus, Sparkles, Copy, ExternalLink, Lightbulb, ArrowRight, Zap, Target, Star } from "lucide-react"
-import { MOCK_INVOICES, MOCK_CLIENTS, MOCK_ORG } from "@/lib/mock-data"
+import { CreditCard, FileText, Users, TrendingUp, ArrowUpRight, Plus, Sparkles, Copy, ExternalLink, Lightbulb, ArrowRight, Zap, Target, Star, ShieldCheck } from "lucide-react"
+import { MOCK_INVOICES, MOCK_CLIENTS } from "@/lib/mock-data"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button"
 import { useDoc, useUser } from "@/firebase"
 import { useMemoFirebase } from "@/firebase/provider"
 import { doc } from "firebase/firestore"
+import { Separator } from "@/components/ui/separator"
 
 export default function DashboardPage() {
   const { toast } = useToast()
@@ -46,8 +47,23 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6 pb-20 md:pb-8">
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold tracking-tight">Overview</h1>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Overview</h1>
+          <p className="text-muted-foreground">Command center for your professional sovereignty.</p>
+        </div>
+        <div className="flex items-center gap-3">
+          <Button variant="outline" size="sm" asChild>
+            <Link href="/onboarding">
+              <Sparkles className="size-4 mr-2" /> Strategic Re-Pivot
+            </Link>
+          </Button>
+          <Button asChild className="bg-accent hover:bg-accent/90">
+            <Link href="/dashboard/invoices/new">
+              <Plus className="size-4 mr-2" /> New Invoice
+            </Link>
+          </Button>
+        </div>
       </div>
 
       {/* Stats Grid */}
@@ -68,37 +84,37 @@ export default function DashboardPage() {
         </Card>
         <Card className="border-none shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Pending Payments</CardTitle>
+            <CardTitle className="text-sm font-medium">Outcome Pending</CardTitle>
             <FileText className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">${pendingAmount.toLocaleString()}</div>
             <p className="text-xs text-muted-foreground">
-               Across {MOCK_INVOICES.filter(i => i.status === 'Pending').length} invoices
+               Across {MOCK_INVOICES.filter(i => i.status === 'Pending').length} strategic wins
             </p>
           </CardContent>
         </Card>
         <Card className="border-none shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Active Clients</CardTitle>
+            <CardTitle className="text-sm font-medium">Sovereign Clients</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{MOCK_CLIENTS.length}</div>
             <p className="text-xs text-muted-foreground">
-              +2 new this month
+              High-trust partnerships
             </p>
           </CardContent>
         </Card>
         <Card className="border-none shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Payment Success</CardTitle>
-            <Zap className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">Identity Strength</CardTitle>
+            <ShieldCheck className="h-4 w-4 text-emerald-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">98.2%</div>
+            <div className="text-2xl font-bold">100%</div>
             <p className="text-xs text-muted-foreground">
-              Instant digital payments
+              Verified Ecosystem Active
             </p>
           </CardContent>
         </Card>
@@ -107,40 +123,44 @@ export default function DashboardPage() {
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-7">
         {/* Main Content Area */}
         <div className="col-span-4 space-y-6">
-          {/* Strategic Growth Insights - TIER-0 AGENT SECTION */}
-          <Card className="border-accent/20 bg-accent/5 overflow-hidden border-2">
+          {/* Tier-0 Agentic Insights */}
+          <Card className="border-accent/20 bg-slate-900 text-white overflow-hidden border-2">
+            <div className="bg-accent h-1.5 w-full" />
             <CardHeader className="pb-3">
-              <div className="flex items-center gap-2">
-                <div className="bg-accent p-1.5 rounded-lg text-white">
-                  <Lightbulb className="size-4" />
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="bg-accent p-1.5 rounded-lg text-white">
+                    <Zap className="size-4" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-lg">Tier-0 Strategic Partner</CardTitle>
+                    <CardDescription className="text-slate-400">Deep Water logic derived from your Strategic DNA.</CardDescription>
+                  </div>
                 </div>
-                <div>
-                  <CardTitle className="text-lg">Strategic Growth Engine</CardTitle>
-                  <CardDescription>Tier-0 Agentic Insights to scale your expertise.</CardDescription>
-                </div>
+                <Badge variant="outline" className="text-accent border-accent text-[10px] font-black uppercase tracking-widest">Autonomous Mode</Badge>
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
               {org?.growthStrategy ? (
-                <div className="grid gap-3">
-                  <div className="flex items-start gap-4 p-4 bg-white rounded-xl border shadow-sm">
-                    <div className="bg-emerald-50 p-2 rounded-full shrink-0">
-                      <Target className="size-4 text-emerald-600" />
+                <div className="grid gap-4">
+                  <div className="flex items-start gap-4 p-4 bg-white/5 rounded-xl border border-white/10">
+                    <div className="bg-emerald-500/20 p-2 rounded-full shrink-0">
+                      <Target className="size-4 text-emerald-400" />
                     </div>
                     <div className="space-y-1">
-                      <p className="text-sm font-bold">Immediate Growth Focus</p>
-                      <p className="text-xs text-muted-foreground leading-relaxed">
+                      <p className="text-sm font-bold text-white">The Outcome Pivot</p>
+                      <p className="text-xs text-slate-300 leading-relaxed">
                         {org.growthStrategy.initialFocus}
                       </p>
                     </div>
                   </div>
-                  <div className="flex items-start gap-4 p-4 bg-white rounded-xl border shadow-sm">
-                    <div className="bg-purple-50 p-2 rounded-full shrink-0">
-                      <Star className="size-4 text-purple-600" />
+                  <div className="flex items-start gap-4 p-4 bg-white/5 rounded-xl border border-white/10">
+                    <div className="bg-purple-500/20 p-2 rounded-full shrink-0">
+                      <Star className="size-4 text-purple-400" />
                     </div>
                     <div className="space-y-1">
-                      <p className="text-sm font-bold">Premium Tier Opportunity (AMO)</p>
-                      <p className="text-xs text-muted-foreground leading-relaxed">
+                      <p className="text-sm font-bold text-white">High-Stakes Proposal (AMO Logic)</p>
+                      <p className="text-xs text-slate-300 leading-relaxed">
                         {org.growthStrategy.premiumTierSuggestion}
                       </p>
                       <Button variant="link" size="sm" className="h-auto p-0 text-accent text-[10px] font-bold uppercase tracking-widest">
@@ -148,23 +168,21 @@ export default function DashboardPage() {
                       </Button>
                     </div>
                   </div>
-                  <div className="flex items-start gap-4 p-4 bg-white rounded-xl border shadow-sm">
-                    <div className="bg-blue-50 p-2 rounded-full shrink-0">
-                      <TrendingUp className="size-4 text-blue-600" />
-                    </div>
-                    <div className="space-y-1">
-                      <p className="text-sm font-bold">Recurring Revenue Model</p>
-                      <p className="text-xs text-muted-foreground leading-relaxed">
-                        {org.growthStrategy.recurringRevenueModel}
+                  
+                  {org.growthStrategy.agenticInsight && (
+                    <div className="p-4 bg-accent/10 border border-accent/20 rounded-xl space-y-2">
+                      <p className="text-[10px] font-black uppercase tracking-widest text-accent">Strategic Co-Founder Directive</p>
+                      <p className="text-xs text-slate-200 italic leading-relaxed">
+                        "{org.growthStrategy.agenticInsight}"
                       </p>
                     </div>
-                  </div>
+                  )}
                 </div>
               ) : (
-                <div className="py-8 text-center bg-white rounded-xl border border-dashed">
-                  <p className="text-sm text-muted-foreground">Run the AI Consultant to architect your growth strategy.</p>
+                <div className="py-8 text-center bg-white/5 rounded-xl border border-dashed border-white/10">
+                  <p className="text-sm text-slate-400">Initialize the Tier-0 Orchestrator to architect your growth roadmap.</p>
                   <Button asChild variant="link" className="text-accent mt-2">
-                    <Link href="/onboarding">Activate Agent <ArrowRight className="size-3 ml-1" /></Link>
+                    <Link href="/onboarding">Activate Strategic DNA <ArrowRight className="size-3 ml-1" /></Link>
                   </Button>
                 </div>
               )}
@@ -173,17 +191,17 @@ export default function DashboardPage() {
 
           <Card className="border-none shadow-sm overflow-hidden">
             <CardHeader>
-              <CardTitle>Recent Activity</CardTitle>
-              <CardDescription>Track your most recent billing events.</CardDescription>
+              <CardTitle>Sovereign Activity</CardTitle>
+              <CardDescription>Tracking recent strategic wins and pending outcomes.</CardDescription>
             </CardHeader>
             <CardContent>
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Invoice</TableHead>
-                    <TableHead>Client</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead className="text-right">Amount</TableHead>
+                    <TableHead>Outcome ID</TableHead>
+                    <TableHead>Partner</TableHead>
+                    <TableHead>State</TableHead>
+                    <TableHead className="text-right">Value</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -191,14 +209,14 @@ export default function DashboardPage() {
                     const client = MOCK_CLIENTS.find(c => c.id === invoice.clientId)
                     return (
                       <TableRow key={invoice.id}>
-                        <TableCell className="font-medium text-xs md:text-sm">{invoice.number}</TableCell>
-                        <TableCell className="text-xs md:text-sm">{client?.name}</TableCell>
+                        <TableCell className="font-mono text-xs font-bold">{invoice.number}</TableCell>
+                        <TableCell className="text-xs">{client?.name}</TableCell>
                         <TableCell>
-                          <Badge variant={invoice.status === 'Paid' ? 'default' : 'secondary'} className={invoice.status === 'Paid' ? 'bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/20' : ''}>
+                          <Badge variant={invoice.status === 'Paid' ? 'default' : 'secondary'} className={invoice.status === 'Paid' ? 'bg-emerald-500/10 text-emerald-600' : ''}>
                             {invoice.status}
                           </Badge>
                         </TableCell>
-                        <TableCell className="text-right font-bold text-xs md:text-sm">${invoice.total.toLocaleString()}</TableCell>
+                        <TableCell className="text-right font-bold text-xs">${invoice.total.toLocaleString()}</TableCell>
                       </TableRow>
                     )
                   })}
@@ -212,8 +230,8 @@ export default function DashboardPage() {
         <div className="col-span-3 space-y-6">
           <Card className="bg-primary text-white border-none shadow-xl">
             <CardHeader className="pb-2">
-              <CardTitle className="text-lg">Your Public Link</CardTitle>
-              <CardDescription className="text-primary-foreground/70">Share this link to provide high-trust client access.</CardDescription>
+              <CardTitle className="text-lg">Your Public Identity</CardTitle>
+              <CardDescription className="text-primary-foreground/70">The URL of your Professional Identity Ecosystem.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="bg-white/10 rounded-lg p-3 flex items-center justify-between">
@@ -234,7 +252,7 @@ export default function DashboardPage() {
 
           <Card className="border-none shadow-sm">
             <CardHeader>
-              <CardTitle>Quick Actions</CardTitle>
+              <CardTitle>Strategic Actions</CardTitle>
             </CardHeader>
             <CardContent className="grid gap-3">
               <Link href="/onboarding" className="flex items-center gap-4 rounded-xl border p-4 bg-accent/5 hover:bg-accent/10 transition-all border-accent/20 group">
@@ -242,8 +260,8 @@ export default function DashboardPage() {
                   <Sparkles className="size-4 text-accent" />
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-accent">Activate Growth Agent</p>
-                  <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">New capability</p>
+                  <p className="text-sm font-bold text-accent">Strategic DNA Update</p>
+                  <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">Pivot business model</p>
                 </div>
               </Link>
               <Link href="/dashboard/invoices/new" className="flex items-center gap-4 rounded-xl border p-4 hover:bg-slate-50 transition-all group">
@@ -251,8 +269,8 @@ export default function DashboardPage() {
                   <Plus className="size-4 text-slate-600" />
                 </div>
                 <div>
-                  <p className="text-sm font-medium">Create New Invoice</p>
-                  <p className="text-xs text-muted-foreground">Bill for your services instantly.</p>
+                  <p className="text-sm font-medium">Draft Outcome Invoice</p>
+                  <p className="text-xs text-muted-foreground">Bill for a strategic win.</p>
                 </div>
               </Link>
             </CardContent>

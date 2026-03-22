@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
-import { Sparkles, ArrowRight, Building2, Mail, MapPin, Loader2, ShieldCheck, Scissors, Briefcase, Music, Dumbbell, Star, Mic, Shield, GraduationCap, Hammer, PawPrint, Utensils, TrendingUp, Zap, Target } from "lucide-react"
+import { Sparkles, ArrowRight, Building2, Mail, MapPin, Loader2, ShieldCheck, Scissors, Briefcase, Music, Dumbbell, Star, Mic, Shield, GraduationCap, Hammer, PawPrint, Utensils, TrendingUp, Zap, Target, Lightbulb } from "lucide-react"
 import { consultBusinessOnboarding, type OnboardingConsultantOutput } from "@/ai/flows/onboarding-consultant"
 import { useToast } from "@/hooks/use-toast"
 import Link from "next/link"
@@ -15,6 +15,7 @@ import { useAuth, useUser } from "@/firebase"
 import { initiateAnonymousSignIn } from "@/firebase/non-blocking-login"
 import { setDocumentNonBlocking } from "@/firebase/non-blocking-updates"
 import { doc, serverTimestamp } from "firebase/firestore"
+import { Separator } from "@/components/ui/separator"
 
 const QUICK_STARTS = [
   { label: "Personal Chef", icon: Utensils, text: "I am a private personal chef providing boutique catering for small dinner parties and customized weekly meal prep for busy families." },
@@ -86,7 +87,7 @@ export default function OnboardingPage() {
 
     setDocumentNonBlocking(doc(user.auth.firestore, 'organizations', orgId), orgData, { merge: true })
 
-    toast({ title: "Identity & Strategy Ready", description: "Your professional growth engine is now active!" })
+    toast({ title: "Strategic DNA Locked", description: "Your Professional Identity Ecosystem is now live." })
     router.push("/dashboard")
   }
 
@@ -97,20 +98,20 @@ export default function OnboardingPage() {
           <div className="inline-flex items-center justify-center p-3 bg-accent/10 rounded-2xl mb-4">
             <Sparkles className="size-8 text-accent" />
           </div>
-          <h1 className="text-4xl font-bold tracking-tight text-slate-900">Professional Identity Architect</h1>
-          <p className="text-lg text-muted-foreground">Transforming expertise into high-value professional ecosystems.</p>
+          <h1 className="text-4xl font-bold tracking-tight text-slate-900">Tier-0 Identity Architect</h1>
+          <p className="text-lg text-muted-foreground">Architecting high-value professional ecosystems with Outcome Certainty.</p>
         </div>
 
         {step === 1 ? (
           <div className="max-w-2xl mx-auto w-full">
             <Card className="shadow-2xl border-none rounded-3xl overflow-hidden">
               <CardHeader className="bg-slate-900 text-white p-8">
-                <CardTitle className="text-2xl">Describe your expertise</CardTitle>
-                <CardDescription className="text-slate-400">Our Growth Agent will architect the identity and strategy your work deserves.</CardDescription>
+                <CardTitle className="text-2xl">Unpack your expertise</CardTitle>
+                <CardDescription className="text-slate-400">Our Strategic Orchestrator will pivot your business model toward Deep Water sovereignty.</CardDescription>
               </CardHeader>
               <CardContent className="p-8 space-y-8">
                 <div className="space-y-4">
-                  <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-black">Quick Start Narratives</Label>
+                  <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-black">Professional Nucleus</Label>
                   <div className="flex flex-wrap gap-2">
                     {QUICK_STARTS.map((qs) => (
                       <button
@@ -129,10 +130,10 @@ export default function OnboardingPage() {
                 </div>
 
                 <div className="space-y-3">
-                  <Label htmlFor="desc" className="text-[10px] uppercase tracking-widest text-muted-foreground font-black">Your Narrative</Label>
+                  <Label htmlFor="desc" className="text-[10px] uppercase tracking-widest text-muted-foreground font-black">Your Expertise</Label>
                   <Textarea 
                     id="desc"
-                    placeholder="Tell us what you do and who your ideal clients are..."
+                    placeholder="Describe what you do... we will architect the rest."
                     className="min-h-[150px] text-lg p-5 rounded-2xl focus:ring-accent/20 border-slate-200 shadow-inner bg-slate-50/50"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
@@ -148,7 +149,7 @@ export default function OnboardingPage() {
                   {loading ? (
                     <>
                       <Loader2 className="mr-2 h-6 w-6 animate-spin" />
-                      Architecting Growth Strategy...
+                      Architecting Strategic Win...
                     </>
                   ) : (
                     <>
@@ -166,7 +167,7 @@ export default function OnboardingPage() {
               <CardHeader className="bg-slate-900 text-white p-8">
                 <div className="flex justify-between items-center mb-4">
                   <div className="flex items-center gap-2 px-3 py-1 bg-accent rounded-full text-[10px] font-black tracking-widest text-white uppercase">
-                    <Zap className="size-3" /> Growth Agent Proposal
+                    <Zap className="size-3" /> Tier-0 Strategic Pivot
                   </div>
                   <Sparkles className="size-5 text-accent" />
                 </div>
@@ -187,60 +188,72 @@ export default function OnboardingPage() {
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-black">Mission</Label>
+                    <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-black">Sovereign Mission</Label>
                     <p className="text-sm text-slate-600 italic leading-relaxed font-medium">"{proposal?.missionStatement}"</p>
                   </div>
                 </div>
 
                 <Separator />
 
-                {/* Strategic Growth Roadmap - NEW SECTION */}
+                {/* Strategic Growth Roadmap */}
                 <div className="space-y-6">
-                  <Label className="text-[10px] uppercase tracking-widest text-accent font-black block border-b pb-2">Strategic Growth Roadmap</Label>
+                  <Label className="text-[10px] uppercase tracking-widest text-accent font-black block border-b pb-2">Deep Water Strategy Roadmap</Label>
                   <div className="grid gap-4">
-                    <div className="flex gap-4 items-start">
-                      <div className="bg-emerald-50 p-2 rounded-xl border border-emerald-100 shrink-0">
+                    <div className="flex gap-4 items-start p-4 bg-emerald-50/50 rounded-2xl border border-emerald-100">
+                      <div className="bg-emerald-100 p-2 rounded-xl shrink-0">
                         <Target className="size-4 text-emerald-600" />
                       </div>
                       <div className="space-y-1">
-                        <p className="text-sm font-bold text-slate-900">Initial Focus</p>
+                        <p className="text-sm font-bold text-slate-900">Outcome Pivot</p>
                         <p className="text-xs text-muted-foreground leading-relaxed">{proposal?.growthStrategy.initialFocus}</p>
                       </div>
                     </div>
-                    <div className="flex gap-4 items-start">
-                      <div className="bg-purple-50 p-2 rounded-xl border border-purple-100 shrink-0">
+                    <div className="flex gap-4 items-start p-4 bg-purple-50/50 rounded-2xl border border-purple-100">
+                      <div className="bg-purple-100 p-2 rounded-xl shrink-0">
                         <Star className="size-4 text-purple-600" />
                       </div>
                       <div className="space-y-1">
-                        <p className="text-sm font-bold text-slate-900">Premium Tier Proposal</p>
+                        <p className="text-sm font-bold text-slate-900">Premium Outcome Package</p>
                         <p className="text-xs text-muted-foreground leading-relaxed">{proposal?.growthStrategy.premiumTierSuggestion}</p>
                       </div>
                     </div>
-                    <div className="flex gap-4 items-start">
-                      <div className="bg-blue-50 p-2 rounded-xl border border-blue-100 shrink-0">
+                    <div className="flex gap-4 items-start p-4 bg-blue-50/50 rounded-2xl border border-blue-100">
+                      <div className="bg-blue-100 p-2 rounded-xl shrink-0">
                         <TrendingUp className="size-4 text-blue-600" />
                       </div>
                       <div className="space-y-1">
-                        <p className="text-sm font-bold text-slate-900">Recurring Revenue Model</p>
+                        <p className="text-sm font-bold text-slate-900">Sovereign Subscription</p>
                         <p className="text-xs text-muted-foreground leading-relaxed">{proposal?.growthStrategy.recurringRevenueModel}</p>
                       </div>
                     </div>
                   </div>
+                  
+                  {proposal?.growthStrategy.agenticInsight && (
+                    <div className="p-4 bg-slate-900 text-white rounded-2xl space-y-2">
+                      <div className="flex items-center gap-2">
+                        <Lightbulb className="size-4 text-accent" />
+                        <span className="text-[10px] font-black uppercase tracking-widest">Autonomous Orchestrator Insight</span>
+                      </div>
+                      <p className="text-xs leading-relaxed text-slate-300 italic">
+                        "{proposal.growthStrategy.agenticInsight}"
+                      </p>
+                    </div>
+                  )}
                 </div>
               </CardContent>
               <CardFooter className="p-8 bg-slate-50 border-t flex flex-col gap-3">
                 <Button className="w-full h-14 bg-accent hover:bg-accent/90 rounded-2xl text-lg font-bold shadow-xl shadow-accent/20" onClick={handleFinish}>
-                  Accept Strategy & Launch Ecosystem <ArrowRight className="ml-2 size-5" />
+                  Lock Strategic DNA & Launch <ArrowRight className="ml-2 size-5" />
                 </Button>
                 <Button variant="ghost" className="w-full text-slate-500 hover:text-slate-900" onClick={() => setStep(1)}>
-                  Refine Narrative
+                  Refine Strategic Nucleus
                 </Button>
               </CardFooter>
             </Card>
 
-            {/* Portal Preview Area */}
+            {/* Portal Preview */}
             <div className="lg:col-span-2 space-y-6 sticky top-24">
-              <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-black ml-1">Identity Ecosystem Preview</Label>
+              <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-black ml-1">Ecosystem Preview</Label>
               <div className="relative group">
                 <div 
                   className="absolute -inset-1 rounded-[2.5rem] blur opacity-25 group-hover:opacity-40 transition duration-1000"
@@ -263,8 +276,8 @@ export default function OnboardingPage() {
                         <div className="h-3 w-32 bg-slate-100 rounded animate-pulse"></div>
                       </div>
                       <div className="text-right space-y-1">
-                        <p className="text-[8px] uppercase font-bold text-muted-foreground">Premium Fee</p>
-                        <p className="text-2xl font-black" style={{ color: `hsl(${proposal?.brandColor || '256 60% 55%'})` }}>$2,500.00</p>
+                        <p className="text-[8px] uppercase font-bold text-muted-foreground">Outcome Fee</p>
+                        <p className="text-2xl font-black" style={{ color: `hsl(${proposal?.brandColor || '256 60% 55%'})` }}>$5,000.00</p>
                       </div>
                     </div>
                     <div className="space-y-3">
@@ -279,34 +292,16 @@ export default function OnboardingPage() {
                         boxShadow: `0 10px 15px -3px hsla(${proposal?.brandColor}, 0.3)`
                       }}
                     >
-                      Pay Securely
+                      Verify Strategic Win
                     </Button>
-                    <p className="text-[8px] text-center text-muted-foreground font-medium uppercase tracking-[0.2em]">Verified Professional Ecosystem</p>
+                    <p className="text-[8px] text-center text-muted-foreground font-medium uppercase tracking-[0.2em]">Verified Professional Identity Ecosystem</p>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         )}
-
-        <div className="text-center pt-8">
-          <Link href="/dashboard" className="text-sm font-medium text-slate-400 hover:text-accent transition-colors flex items-center justify-center gap-2">
-            Enter manually without AI consulting <ArrowRight className="size-3" />
-          </Link>
-        </div>
       </div>
     </div>
   )
-}
-
-function Badge({ children, className }: { children: React.ReactNode, className?: string }) {
-  return (
-    <span className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ${className}`}>
-      {children}
-    </span>
-  )
-}
-
-function Separator() {
-  return <div className="h-[1px] w-full bg-slate-100" />
 }
