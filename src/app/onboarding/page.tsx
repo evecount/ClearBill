@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useState } from "react"
@@ -6,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
-import { Sparkles, ArrowRight, Building2, Mail, MapPin, Loader2, ShieldCheck, Scissors, Briefcase, Music, Dumbbell, Star, Mic, Shield, GraduationCap, Hammer, PawPrint, Utensils, TrendingUp, Zap, Target, Lightbulb, HeartPulse, Code } from "lucide-react"
+import { ArrowRight, Building2, Mail, MapPin, Loader2, ShieldCheck, Scissors, Briefcase, Music, Dumbbell, Star, Mic, Shield, GraduationCap, Hammer, PawPrint, Utensils, TrendingUp, Zap, Target, Lightbulb, HeartPulse, Code, Sparkles } from "lucide-react"
 import { consultBusinessOnboarding, type OnboardingConsultantOutput } from "@/ai/flows/onboarding-consultant"
 import { useToast } from "@/hooks/use-toast"
 import Link from "next/link"
@@ -96,10 +97,7 @@ export default function OnboardingPage() {
     <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4 py-12">
       <div className="max-w-5xl w-full space-y-8">
         <div className="text-center space-y-2">
-          <div className="inline-flex items-center justify-center p-3 bg-accent/10 rounded-2xl mb-4">
-            <Sparkles className="size-8 text-accent" />
-          </div>
-          <h1 className="text-4xl font-bold tracking-tight text-slate-900">Identity Architect</h1>
+          <h1 className="text-4xl font-bold tracking-tight text-slate-900">Professional Identity Architect</h1>
           <p className="text-lg text-muted-foreground">Highlight your value and charge what your expertise is worth.</p>
         </div>
 
