@@ -28,23 +28,23 @@ export default function LandingPage() {
           <div className="max-w-4xl mx-auto space-y-6 relative">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 text-accent text-sm font-bold mb-4">
               <Sparkles className="size-4" />
-              <span>Professional Identity for Independent Experts</span>
+              <span>The Professional Identity Layer for Stripe</span>
             </div>
             <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-primary leading-[1.1]">
-              Send Professional <br />
-              <span className="text-accent underline decoration-accent/20 underline-offset-8">Invoices & Contracts.</span>
+              Detailed Invoices for <br />
+              <span className="text-accent underline decoration-accent/20 underline-offset-8">Elite Professionals.</span>
             </h1>
             <p className="text-xl md:text-2xl text-muted-foreground leading-relaxed max-w-3xl mx-auto">
-              Charge market rates. Never undercharge again. Highlight your true value.
+              Stripe handles the payment. ClearBill handles the <strong>identity</strong>. Send detailed, outcome-based invoices that justify your elite market rates.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-6">
               <Button size="lg" className="h-16 px-10 text-xl bg-accent hover:bg-accent/90 shadow-xl shadow-accent/20 group" asChild>
                 <Link href="/onboarding">
-                  Get Started for Free <ArrowRight className="ml-2 size-6 group-hover:translate-x-1 transition-transform" />
+                  Start Your First Invoice <ArrowRight className="ml-2 size-6 group-hover:translate-x-1 transition-transform" />
                 </Link>
               </Button>
               <Button size="lg" variant="outline" className="h-16 px-10 text-xl" asChild>
-                 <Link href="#how-it-works">How it Works</Link>
+                 <Link href="#how-it-works">Why ClearBill?</Link>
               </Button>
             </div>
           </div>
@@ -55,13 +55,13 @@ export default function LandingPage() {
           <div className="max-w-7xl mx-auto grid lg:grid-cols-2 items-center gap-16">
             <div className="space-y-8">
               <div className="space-y-4">
-                <h2 className="text-sm font-bold tracking-[0.3em] text-accent uppercase">Charge with Confidence</h2>
+                <h2 className="text-sm font-bold tracking-[0.3em] text-accent uppercase">The Detailed Difference</h2>
                 <h3 className="text-4xl md:text-5xl font-black text-primary leading-tight">
                   Stop billing for labor. <br />
                   <span className="text-accent">Start billing for value.</span>
                 </h3>
                 <p className="text-lg text-slate-600 leading-relaxed max-w-lg">
-                  Many independent professionals undercharge by <strong>40-75%</strong>. ClearBill uses AI to audit your regional market rates, ensuring every invoice honors your true worth.
+                  Stripe PayLinks are great for checkout, but they lack the professional narrative elite experts need. ClearBill bridges the gap with detailed outcome descriptions and AI-drafted agreements.
                 </p>
               </div>
               
@@ -81,7 +81,7 @@ export default function LandingPage() {
                    </div>
                    <h4 className="font-bold text-primary">Outcome Agreements</h4>
                    <p className="text-sm text-muted-foreground leading-relaxed">
-                     AI-drafted contracts that protect your work and reinforce your professional standard.
+                     Detailed contracts that protect your work and reinforce your professional standard.
                    </p>
                  </div>
               </div>
@@ -94,20 +94,20 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* Profession-Specific Solutions (SEO Boost) */}
+        {/* Profession-Specific Solutions */}
         <section id="how-it-works" className="py-24 px-6 bg-white">
           <div className="max-w-7xl mx-auto space-y-16">
             <div className="text-center space-y-4">
               <h2 className="text-sm font-bold tracking-[0.3em] text-accent uppercase">Built for the Modern Expert</h2>
               <h3 className="text-4xl font-bold text-primary">Tailored for your specific craft.</h3>
               <p className="text-muted-foreground max-w-2xl mx-auto">
-                Whether you're closing deals or fixing leaks, ClearBill provides the professional architecture you need to command the rates you deserve.
+                ClearBill provides the professional architecture you need to command the rates you deserve, while keeping your payments secure via Stripe.
               </p>
             </div>
 
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {[
-                { title: "Real Estate Agents", icon: Home, desc: "Professional commission invoices and high-trust agent portals." },
+                { title: "Real Estate Agents", icon: Home, desc: "Detailed commission invoices and high-trust agent portals." },
                 { title: "Marketing Freelancers", icon: PenTool, desc: "Outcome-based contracts that highlight strategic campaign value." },
                 { title: "Sales Consultants", icon: TrendingUp, desc: "Success-fee tracking and professional performance summaries." },
                 { title: "Expert Trades", icon: Hammer, desc: "Service quotes that translate labor into 'Property Asset Protection'." },
@@ -130,85 +130,25 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* Case Study Led Section */}
-        <section className="py-20 px-6 max-w-7xl mx-auto border-t">
-          <div className="text-center mb-16 space-y-4">
-            <h2 className="text-3xl font-bold text-primary">Honoring Every Profession</h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">See how independent experts use ClearBill to transform how they are perceived—and how they are paid.</p>
-          </div>
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="group space-y-6 p-8 rounded-3xl bg-white border border-slate-100 shadow-sm hover:shadow-xl hover:border-accent/10 transition-all">
-              <div className="bg-orange-500/10 p-3 rounded-2xl w-fit">
-                <Utensils className="size-8 text-orange-600" />
-              </div>
-              <div className="space-y-2">
-                <h3 className="text-xl font-bold">The Culinary Consultant</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  "I used to just be 'the cook.' With ClearBill, I send professional portals that highlight my nutritional expertise. I've increased my dinner party rates by 40% because I now use the Market Rate tool to justify my value."
-                </p>
-              </div>
-              <div className="pt-4 border-t border-dashed">
-                <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-accent">
-                  <Layout className="size-3" /> Branded Portals
-                </div>
-              </div>
-            </div>
-
-            <div className="group space-y-6 p-8 rounded-3xl bg-white border border-slate-100 shadow-sm hover:shadow-xl hover:border-accent/10 transition-all">
-              <div className="bg-blue-500/10 p-3 rounded-2xl w-fit">
-                <Shield className="size-8 text-blue-600" />
-              </div>
-              <div className="space-y-2">
-                <h3 className="text-xl font-bold">The Risk Mitigation Expert</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  "Security specialists often struggle to draft legal terms. ClearBill's AI drafts my Outcome Agreements in seconds. It ensures my corporate clients understand the scope and the 'win' they are paying for."
-                </p>
-              </div>
-              <div className="pt-4 border-t border-dashed">
-                <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-blue-600">
-                  <Scale className="size-3" /> AI Outcome Agreements
-                </div>
-              </div>
-            </div>
-
-            <div className="group space-y-6 p-8 rounded-3xl bg-white border border-slate-100 shadow-sm hover:shadow-xl hover:border-accent/10 transition-all">
-              <div className="bg-emerald-500/10 p-3 rounded-2xl w-fit">
-                <Hammer className="size-8 text-emerald-600" />
-              </div>
-              <div className="space-y-2">
-                <h3 className="text-xl font-bold">The Property Care Steward</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  "Handymen are often undervalued. I use ClearBill to translate 'fixing a leak' into 'Property Asset Protection.' Highlighting the outcome rather than the task has changed how my clients respect my time."
-                </p>
-              </div>
-              <div className="pt-4 border-t border-dashed">
-                <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-emerald-600">
-                  <Zap className="size-3" /> Value Highlighting
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
         <section className="py-24 px-6 bg-slate-900 text-white relative overflow-hidden">
           <div className="absolute top-0 right-0 p-32 bg-accent/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
           <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center relative z-10">
             <div className="space-y-6">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-white text-xs font-bold uppercase tracking-widest">
-                Simple Setup. Professional Results.
+                Double Gateway Security
               </div>
-              <h2 className="text-4xl md:text-5xl font-bold leading-tight">Clarity is the key to business growth.</h2>
+              <h2 className="text-4xl md:text-5xl font-bold leading-tight">Your Identity. <br/> Their Security.</h2>
               <p className="text-slate-400 text-lg leading-relaxed">
-                Never undercharge again. ClearBill combines your payment gateway with a professional system that highlights the true value of your work at every touchpoint.
+                ClearBill handles the professional narrative, then passes the client to Stripe for the secure checkout. It's the high-trust way to bill for elite outcomes.
               </p>
               <div className="grid sm:grid-cols-2 gap-4 pt-4">
                 {[
-                  "Professional Invoices",
-                  "AI Strategic Agreements",
-                  "Market Rate Benchmarking",
-                  "Secure Payment Processing",
-                  "Outcome Tracking",
-                  "Growth Insights"
+                  "Professional Facade",
+                  "AI Outcome Agreements",
+                  "Market Rate Auditing",
+                  "Secure Stripe Checkout",
+                  "Branded Client Portals",
+                  "Detailed Line Items"
                 ].map((feature) => (
                   <div key={feature} className="flex items-center gap-3">
                     <div className="bg-accent p-1 rounded-full"><CheckCircle className="size-3" /></div>
@@ -261,7 +201,7 @@ export default function LandingPage() {
                        <Separator />
                        
                        <Button disabled className="w-full bg-slate-900 text-white h-12 rounded-xl text-sm font-bold shadow-lg shadow-slate-200">
-                         Pay Securely with Card
+                         Review Outcomes & Pay Securely
                        </Button>
                     </div>
 
@@ -269,7 +209,7 @@ export default function LandingPage() {
                       <CreditCard className="size-4" />
                       <Lock className="size-4" />
                       <Globe className="size-4" />
-                      <span className="text-[10px] font-bold">Stripe</span>
+                      <span className="text-[10px] font-bold">Stripe Secured</span>
                     </div>
                   </div>
                </div>
@@ -286,7 +226,7 @@ export default function LandingPage() {
               <span className="font-headline">ClearBill</span>
             </div>
             <p className="text-sm text-muted-foreground max-w-xs">
-              Professional identity and invoicing for independent experts.
+              Professional identity layer for elite independent experts.
             </p>
           </div>
           <div className="flex gap-8 text-sm text-muted-foreground font-medium">

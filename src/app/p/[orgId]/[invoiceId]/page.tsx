@@ -50,7 +50,7 @@ export default function ClientPortalPage() {
 
   const handlePay = () => {
     if (org?.paymentLink) {
-      toast({ title: "Secure Checkout", description: "Redirecting to your professional payment gateway..." })
+      toast({ title: "Secure Double Gateway", description: "Redirecting to your professional payment gateway via Stripe..." })
       window.location.href = org.paymentLink
       return
     }
@@ -60,7 +60,7 @@ export default function ClientPortalPage() {
       setLoadingPay(false)
       toast({ 
         title: "Simulation Mode", 
-        description: "The merchant hasn't linked a payment gateway yet. In a live environment, you'd be redirected now.",
+        description: "The merchant hasn't linked a Stripe PayLink yet. In a live environment, you'd be redirected now.",
         variant: "destructive"
       })
     }, 1500)
@@ -103,12 +103,10 @@ export default function ClientPortalPage() {
           <div className="flex items-center gap-4">
             <div className="bg-white p-2 rounded-2xl shadow-sm border">
               {org?.logoUrl ? (
-                <Image 
+                <img 
                   src={org.logoUrl} 
                   alt={org.name} 
-                  width={56} 
-                  height={56} 
-                  className="rounded-xl object-contain"
+                  className="size-14 rounded-xl object-contain"
                 />
               ) : (
                 <div className="size-14 bg-slate-900 rounded-xl flex items-center justify-center text-white font-bold">
@@ -120,7 +118,7 @@ export default function ClientPortalPage() {
               <h1 className="text-2xl font-bold text-slate-900">{org?.name || 'Professional Partner'}</h1>
               <div className="flex items-center gap-2 text-xs text-muted-foreground">
                 <ShieldCheck className="size-3 text-emerald-500" />
-                <span>Verified Professional Identity</span>
+                <span>Verified Professional Identity Layer</span>
               </div>
             </div>
           </div>
@@ -232,21 +230,26 @@ export default function ClientPortalPage() {
 
               <CardFooter className="p-8 md:p-12 border-t mt-8 bg-slate-50/50">
                 {invoice.status !== 'Paid' && (
-                  <Button 
-                    onClick={handlePay} 
-                    disabled={loadingPay}
-                    className="w-full h-16 text-xl text-white rounded-2xl shadow-xl transition-all hover:scale-[1.02] flex items-center justify-center gap-3"
-                    style={{ 
-                      backgroundColor: `hsl(${brandColor})`,
-                      boxShadow: `0 20px 25px -5px hsla(${brandColor}, 0.2)`
-                    }}
-                  >
-                    {loadingPay ? "Processing Securely..." : (
-                      <>
-                        Pay Outcome Fee Securely <ExternalLink className="size-5" />
-                      </>
-                    )}
-                  </Button>
+                  <div className="w-full space-y-4">
+                    <Button 
+                      onClick={handlePay} 
+                      disabled={loadingPay}
+                      className="w-full h-16 text-xl text-white rounded-2xl shadow-xl transition-all hover:scale-[1.02] flex items-center justify-center gap-3"
+                      style={{ 
+                        backgroundColor: `hsl(${brandColor})`,
+                        boxShadow: `0 20px 25px -5px hsla(${brandColor}, 0.2)`
+                      }}
+                    >
+                      {loadingPay ? "Preparing Secure Checkout..." : (
+                        <>
+                          Pay Outcome Fee Securely <ExternalLink className="size-5" />
+                        </>
+                      )}
+                    </Button>
+                    <p className="text-[10px] text-center text-muted-foreground font-bold uppercase tracking-widest flex items-center justify-center gap-2">
+                      <Lock className="size-2.5" /> Secure Double Gateway Processing
+                    </p>
+                  </div>
                 )}
                 {invoice.status === 'Paid' && (
                   <div className="flex flex-col items-center gap-4 text-center w-full">
@@ -277,15 +280,15 @@ export default function ClientPortalPage() {
             </Card>
 
             <div className="p-6 bg-white rounded-3xl shadow-lg border-2 border-slate-50 space-y-4">
-               <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground text-center">Verified Ecosystem</p>
+               <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground text-center">Identity & Security</p>
                <div className="grid grid-cols-2 gap-4">
                   <div className="flex flex-col items-center gap-2 p-3 bg-slate-50 rounded-xl">
                     <ShieldCheck className="size-4 text-emerald-500" />
                     <span className="text-[8px] font-bold text-center uppercase tracking-tight">Identity Verified</span>
                   </div>
                   <div className="flex flex-col items-center gap-2 p-3 bg-slate-50 rounded-xl">
-                    <Lock className="size-4 text-slate-400" />
-                    <span className="text-[8px] font-bold text-center uppercase tracking-tight">Secure Vault</span>
+                    <CreditCard className="size-4 text-slate-400" />
+                    <span className="text-[8px] font-bold text-center uppercase tracking-tight">Stripe Secured</span>
                   </div>
                </div>
             </div>

@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { Textarea } from "@/components/ui/textarea"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
-import { Save, Sparkles, Copy, Globe, Building2, Landmark, Flag, Camera, Upload, CreditCard, Link as LinkIcon, ExternalLink } from "lucide-react"
+import { Save, Sparkles, Copy, Globe, Building2, Landmark, Flag, Camera, Upload, CreditCard, Link as LinkIcon, ExternalLink, ShieldCheck } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import Link from "next/link"
 import { useDoc, useUser, useFirestore } from "@/firebase"
@@ -137,7 +137,7 @@ export default function SettingsPage() {
       <div className="flex justify-between items-start">
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-slate-900">Settings</h1>
-          <p className="text-muted-foreground">Manage your brand presence and payouts.</p>
+          <p className="text-muted-foreground">Manage your professional brand and payout architecture.</p>
         </div>
         <Button asChild variant="outline" className="border-accent text-accent hover:bg-accent/5 hidden sm:flex">
           <Link href="/onboarding">
@@ -251,7 +251,7 @@ export default function SettingsPage() {
           <div className="h-3 w-full bg-accent/20" />
           <CardHeader className="p-8 pb-4">
             <CardTitle>Payments & Payouts</CardTitle>
-            <CardDescription>Link your professional payment gateway for secure client checkout.</CardDescription>
+            <CardDescription>Link your Stripe PayLink to enable the high-trust Double Gateway experience.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6 p-8 pt-4">
             <div className="space-y-3">
@@ -265,11 +265,16 @@ export default function SettingsPage() {
                   placeholder="https://buy.stripe.com/..."
                 />
               </div>
-              <div className="p-4 bg-accent/5 rounded-xl border border-accent/10 flex items-start gap-3">
-                <CreditCard className="size-4 text-accent mt-0.5" />
-                <p className="text-[10px] text-slate-600 font-medium leading-relaxed italic">
-                  This link is the high-trust destination for every invoice. Your clients will see their detailed branded portal first, ensuring they understand the "Strategic Win" before clicking through to your secure Stripe checkout.
-                </p>
+              <div className="p-6 bg-accent/5 rounded-2xl border border-accent/10 flex items-start gap-4">
+                <div className="bg-white p-2 rounded-lg shadow-sm border">
+                  <ShieldCheck className="size-5 text-accent" />
+                </div>
+                <div className="space-y-1">
+                  <p className="text-xs font-bold text-slate-900">Why use a direct link?</p>
+                  <p className="text-[10px] text-slate-600 leading-relaxed italic">
+                    Stripe handles the move of money, but ClearBill handles the <strong>professional identity</strong>. Your clients will see their detailed outcome agreement and line items first, justifying your fee before they click through to your secure Stripe checkout.
+                  </p>
+                </div>
               </div>
             </div>
           </CardContent>
