@@ -9,6 +9,7 @@ export type Organization = {
   missionStatement?: string;
   industry?: string;
   address?: string;
+  slug?: string;
 };
 
 export type Client = {
@@ -41,6 +42,7 @@ export type Invoice = {
 
 export const MOCK_ORG: Organization = {
   id: 'org_123',
+  slug: 'acme-solutions',
   name: 'Acme Solutions Inc.',
   logoUrl: 'https://picsum.photos/seed/org1/200/200',
   email: 'billing@acme.com',

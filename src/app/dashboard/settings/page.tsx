@@ -1,7 +1,7 @@
 
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -10,16 +10,23 @@ import { Separator } from "@/components/ui/separator"
 import { Textarea } from "@/components/ui/textarea"
 import { MOCK_ORG } from "@/lib/mock-data"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
-import { Save, Sparkles, ArrowRight, Copy, ExternalLink, Globe, Palette, Building2 } from "lucide-react"
+import { Save, Sparkles, ArrowRight, Copy, ExternalLink, Globe, Palette, Building2, Link as LinkIcon } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import Link from "next/link"
 
 export default function SettingsPage() {
   const { toast } = useToast()
   const [loading, setLoading] = useState(false)
+  const [origin, setOrigin] = useState("")
+
+  useEffect(() => {
+    setOrigin(window.location.origin)
+  }, [])
+
   const [formData, setFormData] = useState({
     name: MOCK_ORG.name,
     email: MOCK_ORG.email,
+    slug: MOCK_ORG.slug || "",
     address: MOCK_ORG.address || "",
     missionStatement: MOCK_ORG.missionStatement || "",
     industry: MOCK_ORG.industry || "",
@@ -29,7 +36,6 @@ export default function SettingsPage() {
   const handleSave = () => {
     setLoading(true)
     setTimeout(() => {
-      setLoading(true)
       toast({ 
         title: "Identity Updated", 
         description: "Your professional identity ecosystem has been successfully refined." 
@@ -39,7 +45,7 @@ export default function SettingsPage() {
   }
 
   const copyPublicLink = () => {
-    const url = `${window.location.origin}/u/${MOCK_ORG.id}`
+    const url = `${origin}/u/${formData.slug}`
     navigator.clipboard.writeText(url)
     toast({ title: "Link Copied", description: "Public profile link copied to clipboard." })
   }
@@ -80,15 +86,32 @@ export default function SettingsPage() {
         <Card>
           <CardHeader>
             <CardTitle>Public Client Portal</CardTitle>
-            <CardDescription>This is the public URL where clients can view their historical invoices and pay outstanding balances.</CardDescription>
+            <CardDescription>This is the unique URL where clients can view their historical invoices and pay outstanding balances.</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-6">
+            <div className="space-y-2">
+              <Label htmlFor="org-slug" className="text-xs uppercase tracking-widest text-muted-foreground font-bold">Public URL Slug</Label>
+              <div className="flex items-center gap-2">
+                <div className="flex items-center h-11 px-3 bg-slate-100 border rounded-l-xl text-muted-foreground text-sm font-mono shrink-0">
+                  {origin}/u/
+                </div>
+                <Input 
+                  id="org-slug" 
+                  value={formData.slug} 
+                  onChange={(e) => setFormData({...formData, slug: e.target.value.toLowerCase().replace(/[^a-z0-z-]/g, '-')})}
+                  className="h-11 rounded-l-none rounded-r-xl font-mono"
+                  placeholder="your-handle"
+                />
+              </div>
+              <p className="text-[10px] text-muted-foreground">Choose a handle that reflects your brand (e.g., 'chef-julian').</p>
+            </div>
+
             <div className="flex items-center gap-4 p-4 border rounded-xl bg-slate-50">
               <div className="bg-white p-2 rounded-lg border shadow-sm shrink-0">
                 <Globe className="size-6 text-primary" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-bold truncate">{window.location.origin}/u/{MOCK_ORG.id}</p>
+                <p className="text-sm font-bold truncate">{origin}/u/{formData.slug || '...'}</p>
                 <p className="text-xs text-muted-foreground">Share this link to provide high-trust client access.</p>
               </div>
               <div className="flex gap-2">
@@ -96,7 +119,7 @@ export default function SettingsPage() {
                   <Copy className="size-3 mr-2" /> Copy
                 </Button>
                 <Button size="sm" variant="outline" asChild>
-                  <Link href={`/u/${MOCK_ORG.id}`} target="_blank">
+                  <Link href={`/u/${formData.slug}`} target="_blank">
                     <ExternalLink className="size-3 mr-2" /> Visit
                   </Link>
                 </Button>

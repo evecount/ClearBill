@@ -1,6 +1,7 @@
 
 "use client"
 
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { CreditCard, FileText, Users, TrendingUp, ArrowUpRight, Plus, Settings, Sparkles, Copy, ExternalLink, Link as LinkIcon } from "lucide-react"
 import { MOCK_INVOICES, MOCK_CLIENTS, MOCK_ORG } from "@/lib/mock-data"
@@ -12,6 +13,12 @@ import { Button } from "@/components/ui/button"
 
 export default function DashboardPage() {
   const { toast } = useToast()
+  const [origin, setOrigin] = useState("")
+
+  useEffect(() => {
+    setOrigin(window.location.origin)
+  }, [])
+
   const pendingAmount = MOCK_INVOICES
     .filter(inv => inv.status === 'Pending')
     .reduce((sum, inv) => sum + inv.total, 0)
@@ -21,7 +28,7 @@ export default function DashboardPage() {
     .reduce((sum, inv) => sum + inv.total, 0)
 
   const copyPublicLink = () => {
-    const url = `${window.location.origin}/u/${MOCK_ORG.id}`
+    const url = `${origin}/u/${MOCK_ORG.slug || MOCK_ORG.id}`
     navigator.clipboard.writeText(url)
     toast({ title: "Link Copied", description: "Your public profile link is ready to share." })
   }
@@ -129,13 +136,13 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="bg-white/10 rounded-lg p-3 flex items-center justify-between">
-                <span className="text-xs truncate font-mono opacity-80">invoicesync.com/u/{MOCK_ORG.id}</span>
+                <span className="text-xs truncate font-mono opacity-80">invoicesync.com/u/{MOCK_ORG.slug || MOCK_ORG.id}</span>
                 <div className="flex gap-2">
                   <Button size="icon" variant="ghost" className="size-8 hover:bg-white/20" onClick={copyPublicLink}>
                     <Copy className="size-3" />
                   </Button>
                   <Button size="icon" variant="ghost" className="size-8 hover:bg-white/20" asChild>
-                    <Link href={`/u/${MOCK_ORG.id}`} target="_blank">
+                    <Link href={`/u/${MOCK_ORG.slug || MOCK_ORG.id}`} target="_blank">
                       <ExternalLink className="size-3" />
                     </Link>
                   </Button>
