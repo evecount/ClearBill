@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { CreditCard, ShieldCheck, Zap, ArrowRight, TrendingUp, Sparkles, Layout, Globe, Lock, FileText, Scale, Utensils, Shield, Hammer } from "lucide-react"
+import { CreditCard, ShieldCheck, Zap, ArrowRight, TrendingUp, Sparkles, Layout, Globe, Lock, FileText, Scale, Utensils, Shield, Hammer, BarChart3 } from "lucide-react"
 
 export default function LandingPage() {
   return (
@@ -34,7 +34,7 @@ export default function LandingPage() {
               <span className="text-accent underline decoration-accent/20 underline-offset-8">Invoices & Contracts.</span>
             </h1>
             <p className="text-xl md:text-2xl text-muted-foreground leading-relaxed max-w-3xl mx-auto">
-              Charge market rates, never undercharge for your time again, and highlight the true value you provide to your clients.
+              Charge market rates for the work you do, never undercharge for your time again, and learn how to highlight the value you provide.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-6">
               <Button size="lg" className="h-16 px-10 text-xl bg-accent hover:bg-accent/90 shadow-xl shadow-accent/20 group" asChild>
@@ -49,8 +49,33 @@ export default function LandingPage() {
           </div>
         </section>
 
+        {/* Market Rate Assurance Section */}
+        <section className="py-16 px-6 bg-accent/5 border-y border-accent/10">
+          <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center gap-8">
+            <div className="bg-white p-6 rounded-3xl shadow-xl border border-accent/10 md:w-1/2">
+              <div className="flex items-center gap-3 mb-4">
+                <BarChart3 className="size-6 text-accent" />
+                <h3 className="font-bold text-lg">Market Rate Benchmarking</h3>
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Did you know many independent professionals undercharge by <strong>40-75%</strong>? ClearBill uses AI to analyze your service and regional data, ensuring every invoice you send reflects the true elite market rate for your expertise.
+              </p>
+              <div className="mt-4 p-3 bg-accent/5 rounded-xl border border-dashed border-accent/20">
+                <p className="text-[10px] font-black uppercase tracking-widest text-accent">Strategic Insight</p>
+                <p className="text-xs italic text-slate-600 mt-1">"Stop billing for labor. Start billing for the outcome."</p>
+              </div>
+            </div>
+            <div className="md:w-1/2 space-y-4">
+              <h2 className="text-3xl font-bold text-primary">Charge with Confidence.</h2>
+              <p className="text-slate-600">
+                Never second-guess your pricing again. Our built-in benchmarking tool provides real-time regional averages for your job role, helping you command the fees your hard work actually deserves.
+              </p>
+            </div>
+          </div>
+        </section>
+
         {/* Value Prop Section */}
-        <section className="py-24 px-6 bg-slate-50 border-y">
+        <section className="py-24 px-6 bg-slate-50 border-b">
           <div className="max-w-4xl mx-auto text-center space-y-12">
             <div className="space-y-4">
               <h2 className="text-sm font-bold tracking-[0.3em] text-accent uppercase">The ClearBill Standard</h2>
@@ -60,7 +85,7 @@ export default function LandingPage() {
               <div className="space-y-4">
                 <p className="text-lg font-medium text-slate-900">Charge what you're actually worth.</p>
                 <p className="text-muted-foreground leading-relaxed">
-                  Independent experts—from personal chefs to plumbers—often use generic tools that fail to reflect their true worth. ClearBill ensures you command market rates by framing your work as a strategic win, not just a list of chores.
+                  Independent experts—from personal chefs to plumbers—often use generic tools that fail to reflect their true worth. ClearBill ensures you command market rates by framing your work as a strategic win, not just a list of tasks.
                 </p>
               </div>
               <div className="space-y-4">
@@ -87,7 +112,7 @@ export default function LandingPage() {
               <div className="space-y-2">
                 <h3 className="text-xl font-bold">The Culinary Consultant</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  "I used to just be 'the cook.' With ClearBill, I send professional portals that highlight my nutritional expertise. I've increased my dinner party rates by 40% because clients now see the strategic value of my service."
+                  "I used to just be 'the cook.' With ClearBill, I send professional portals that highlight my nutritional expertise. I've increased my dinner party rates by 40% because I now use the Market Rate tool to justify my value."
                 </p>
               </div>
               <div className="pt-4 border-t border-dashed">
@@ -121,7 +146,7 @@ export default function LandingPage() {
               <div className="space-y-2">
                 <h3 className="text-xl font-bold">The Property Care Steward</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  "Handymen are often undervalued. I use ClearBill to translate 'fixing a leak' into 'Long-term Property Asset Protection.' Highlighting the outcome rather than the task has changed how my clients respect my time."
+                  "Handymen are often undervalued. I use ClearBill to translate 'fixing a leak' into 'Property Asset Protection.' Highlighting the outcome rather than the task has changed how my clients respect my time."
                 </p>
               </div>
               <div className="pt-4 border-t border-dashed">
@@ -148,7 +173,7 @@ export default function LandingPage() {
                 {[
                   "Professional Invoices",
                   "AI Strategic Agreements",
-                  "Branded Client Portals",
+                  "Market Rate Benchmarking",
                   "Secure Payment Processing",
                   "Outcome Tracking",
                   "Growth Insights"

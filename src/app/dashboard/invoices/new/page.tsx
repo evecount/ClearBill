@@ -7,25 +7,29 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { MOCK_CLIENTS, MOCK_ORG } from "@/lib/mock-data"
-import { Plus, Trash2, Wand2, ArrowLeft, Send, Scale, Loader2, FileText } from "lucide-react"
+import { Plus, Trash2, Wand2, ArrowLeft, Send, Scale, Loader2, FileText, BarChart3, Info } from "lucide-react"
 import Link from "next/link"
 import { suggestInvoiceLineItemDescriptions } from "@/ai/flows/invoice-line-item-description-suggester"
 import { draftStrategicAgreement } from "@/ai/flows/contract-drafter"
+import { benchmarkMarketRate, type MarketRateBenchmarkerOutput } from "@/ai/flows/market-rate-benchmarker"
 import { useToast } from "@/hooks/use-toast"
 import { useRouter } from "next/navigation"
 import { Separator } from "@/components/ui/separator"
 import { Textarea } from "@/components/ui/textarea"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
 export default function NewInvoicePage() {
   const router = useRouter()
   const { toast } = useToast()
   const [loading, setLoading] = useState(false)
   const [loadingContract, setLoadingContract] = useState(false)
+  const [loadingBenchmark, setLoadingBenchmark] = useState<string | null>(null)
   const [items, setItems] = useState([{ id: '1', description: '', quantity: 1, price: 0 }])
   const [selectedClient, setSelectedClient] = useState('')
   const [taxRate, setTaxRate] = useState(0)
   const [dueDate, setDueDate] = useState('')
   const [contractContent, setContractContent] = useState('')
+  const [benchmarks, setBenchmarks] = useState<Record<string, MarketRateBenchmarkerOutput>>({})
 
   const addItem = () => {
     setItems([...items, { id: Math.random().toString(), description: '', quantity: 1, price: 0 }])
@@ -56,6 +60,31 @@ export default function NewInvoicePage() {
       toast({ title: "AI Error", description: "Could not fetch suggestions." })
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleBenchmarkPrice = async (itemId: string, description: string) => {
+    if (!description) {
+      toast({ title: "Error", description: "Describe the service to benchmark market rates." })
+      return
+    }
+
+    setLoadingBenchmark(itemId)
+    try {
+      const result = await benchmarkMarketRate({ serviceDescription: description })
+      setBenchmarks(prev => ({ ...prev, [itemId]: result }))
+      // Update the price to the middle of the range as a suggestion
+      const recommendedPrice = Math.round((result.suggestedRateRange.min + result.suggestedRateRange.max) / 2)
+      updateItem(itemId, 'price', recommendedPrice)
+      
+      toast({ 
+        title: "Market Rate Audit Complete", 
+        description: `Suggested elite rate: $${result.suggestedRateRange.min} - $${result.suggestedRateRange.max} ${result.suggestedRateRange.unit}` 
+      })
+    } catch (error) {
+      toast({ title: "Benchmark Error", description: "Could not audit market rates at this time." })
+    } finally {
+      setLoadingBenchmark(null)
     }
   }
 
@@ -175,13 +204,36 @@ export default function NewInvoicePage() {
                       />
                     </div>
                     <div className="sm:col-span-3 space-y-1.5">
-                      <Label className="text-[10px] uppercase font-bold text-muted-foreground">Price</Label>
+                      <div className="flex items-center justify-between">
+                         <Label className="text-[10px] uppercase font-bold text-muted-foreground">Price</Label>
+                         <TooltipProvider>
+                           <Tooltip>
+                             <TooltipTrigger asChild>
+                               <button 
+                                 className="text-accent hover:text-accent/80 disabled:opacity-50"
+                                 onClick={() => handleBenchmarkPrice(item.id, item.description)}
+                                 disabled={!!loadingBenchmark}
+                               >
+                                 {loadingBenchmark === item.id ? <Loader2 className="size-3 animate-spin" /> : <BarChart3 className="size-3" />}
+                               </button>
+                             </TooltipTrigger>
+                             <TooltipContent>
+                               <p className="text-xs">Audit Market Rate</p>
+                             </TooltipContent>
+                           </Tooltip>
+                         </TooltipProvider>
+                      </div>
                       <Input 
                         type="number" 
                         className="h-11 rounded-xl font-bold"
                         value={item.price}
                         onChange={e => updateItem(item.id, 'price', parseFloat(e.target.value))}
                       />
+                      {benchmarks[item.id] && (
+                        <p className="text-[10px] text-emerald-600 font-bold mt-1">
+                          Elite Range: ${benchmarks[item.id].suggestedRateRange.min}-${benchmarks[item.id].suggestedRateRange.max}
+                        </p>
+                      )}
                     </div>
                     <div className="sm:col-span-1">
                       <Button 
@@ -194,6 +246,16 @@ export default function NewInvoicePage() {
                         <Trash2 className="size-4" />
                       </Button>
                     </div>
+                    {benchmarks[item.id] && (
+                      <div className="sm:col-span-12 mt-2 p-3 bg-accent/5 rounded-xl border border-accent/10 flex gap-3 items-start">
+                        <Info className="size-4 text-accent mt-0.5 shrink-0" />
+                        <div className="space-y-1">
+                          <p className="text-[10px] font-black uppercase tracking-widest text-accent">Strategic Value Justification</p>
+                          <p className="text-xs text-slate-600 italic leading-relaxed">{benchmarks[item.id].valueJustification}</p>
+                          <p className="text-[10px] text-destructive font-bold mt-2">Undercharging Risk: {benchmarks[item.id].underchargingRiskInsight}</p>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 ))}
                 <Button variant="outline" size="sm" onClick={addItem} className="w-full border-dashed rounded-xl h-11">
@@ -276,7 +338,7 @@ export default function NewInvoicePage() {
                <span className="text-[10px] font-black uppercase tracking-widest">Market Value Safeguard</span>
              </div>
              <p className="text-[10px] text-slate-400 leading-relaxed italic">
-               "By attaching a Strategic Agreement, you are framing this invoice not as a request for payment, but as the fulfillment of a professional outcome."
+               "Never bill for labor. Bill for the outcome. Our AI auditing ensures you are never undercutting your professional worth."
              </p>
           </div>
         </div>

@@ -1,8 +1,8 @@
-# 🚀 ClearBill: Professional Invoicing & Contracts
+# 🚀 ClearBill: Professional Invoicing & Strategic Contracts
 
-**ClearBill** is a professional identity ecosystem designed for independent experts who provide world-class service. We help you charge market rates for the work you do, ensure you never undercharge for your time again, and highlight the true value you provide to your clients.
+**ClearBill** is a professional identity ecosystem designed for independent experts who provide world-class service. We help you charge elite market rates for the work you do, ensure you never undercharge for your time again, and highlight the true value you provide to your clients.
 
-Instead of just charging for time, **ClearBill** empowers professionals—from personal chefs to security specialists—to command elite fees by guaranteeing a "Strategic Win" through professional outcome agreements and branded portals.
+Instead of just charging for time, **ClearBill** empowers professionals—from personal chefs to security specialists—to command market-leading fees by guaranteeing a "Strategic Win" through professional outcome agreements and branded portals.
 
 ## ✨ Core Ethos: Honoring Every Profession
 
@@ -11,14 +11,15 @@ We believe self-employment is the most honest form of enterprise. **ClearBill** 
 - **Identity First**: We architect a professional facade that honors the expert's skill.
 - **Value Highlighting**: We use AI to translate tasks into outcomes, ensuring your worth is clearly understood.
 - **Outcome Certainty**: Protect your work and your time with AI-drafted agreements.
+- **Fair Valuation**: We fight the global undercharging gap by providing real-time market rate benchmarking.
 
 ## 🛠 Features
 
-### 🧠 Professional Identity Architect
+### 🧠 Strategic DNA Architect
 Powered by **Genkit (Gemini 2.5 Flash)**:
 - **Strategic DNA Extraction**: Transforms raw expertise into a professional identity and growth roadmap.
+- **Market Rate Benchmarking**: Real-time AI auditing that justifies elite fees and prevents undercharging (which affects 40-75% of independent experts).
 - **The Strategic Pivot**: Suggests high-value service packages that shift the focus from time-billing to outcome-billing.
-- **Market Rate Benchmarking**: AI insights that help you charge what you're actually worth.
 
 ### 📜 Strategic Outcome Contracts
 - **AI Agreement Drafting**: Automatically generates professional outcome-based contracts that protect your work.
