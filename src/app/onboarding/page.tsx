@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
-import { Sparkles, ArrowRight, Building2, Mail, MapPin, Loader2, CheckCircle2, FileText, Globe, ShieldCheck, Palette, Camera, Scissors, Briefcase, Code } from "lucide-react"
+import { Sparkles, ArrowRight, Building2, Mail, MapPin, Loader2, CheckCircle2, FileText, Globe, ShieldCheck, Palette, Camera, Scissors, Briefcase, Code, Music, Dumbbell, Home } from "lucide-react"
 import { consultBusinessOnboarding, type OnboardingConsultantOutput } from "@/ai/flows/onboarding-consultant"
 import { useToast } from "@/hooks/use-toast"
 import Link from "next/link"
@@ -21,7 +21,7 @@ const QUICK_STARTS = [
     text: "I am a freelance graphic designer specializing in minimalist brand identities and high-end typography for tech startups."
   },
   {
-    label: "Eyelash Technician",
+    label: "Eyelash Tech",
     icon: Scissors,
     text: "I run a luxury eyelash studio focused on providing high-quality, long-lasting extensions and lash lifts for busy professionals."
   },
@@ -31,9 +31,19 @@ const QUICK_STARTS = [
     text: "I am a professional architectural photographer capturing minimalist interior spaces for real estate firms and design magazines."
   },
   {
+    label: "Sound Engineer",
+    icon: Music,
+    text: "I am a freelance sound engineer specializing in podcast post-production, audio restoration, and custom sound design for indie filmmakers."
+  },
+  {
     label: "Virtual Assistant",
     icon: Briefcase,
     text: "I provide executive-level virtual assistance for creative agency founders, managing complex schedules and client communications."
+  },
+  {
+    label: "Personal Trainer",
+    icon: Dumbbell,
+    text: "I am a private personal trainer focusing on functional strength and mobility for busy corporate executives."
   },
   {
     label: "Dev Consultant",
