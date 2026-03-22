@@ -34,7 +34,7 @@ export default function LandingPage() {
               <span className="text-accent underline decoration-accent/20 underline-offset-8">Invoices & Contracts.</span>
             </h1>
             <p className="text-xl md:text-2xl text-muted-foreground leading-relaxed max-w-3xl mx-auto">
-              Charge market rates for the work you do, never undercharge for your time again, and learn how to highlight the value you provide.
+              Charge market rates. Never undercharge again. Highlight your true value.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-6">
               <Button size="lg" className="h-16 px-10 text-xl bg-accent hover:bg-accent/90 shadow-xl shadow-accent/20 group" asChild>
