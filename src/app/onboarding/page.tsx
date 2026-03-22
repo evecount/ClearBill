@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
-import { Sparkles, ArrowRight, Building2, Mail, MapPin, Loader2, CheckCircle2, FileText, Globe, ShieldCheck, Palette, Camera, Scissors, Briefcase, Code, Music, Dumbbell, Star, Mic } from "lucide-react"
+import { Sparkles, ArrowRight, Building2, Mail, MapPin, Loader2, CheckCircle2, FileText, Globe, ShieldCheck, Palette, Camera, Scissors, Briefcase, Code, Music, Dumbbell, Star, Mic, Shield } from "lucide-react"
 import { consultBusinessOnboarding, type OnboardingConsultantOutput } from "@/ai/flows/onboarding-consultant"
 import { useToast } from "@/hooks/use-toast"
 import Link from "next/link"
@@ -64,6 +64,16 @@ const QUICK_STARTS = [
     label: "Event Emcee",
     icon: Mic,
     text: "I am a professional master of ceremonies and event host, specializing in charity auctions, corporate conferences, and high-profile festivals."
+  },
+  {
+    label: "Security Expert",
+    icon: Shield,
+    text: "I provide private security and executive protection for high-profile events and corporate offices. My work is high-stakes, and my billing portal needs to reflect that professional trust."
+  },
+  {
+    label: "Facility Specialist",
+    icon: Building2,
+    text: "I provide specialized commercial cleaning and facility maintenance for boutique medical offices. Professionalism in my billing is key to maintaining my long-term corporate contracts."
   },
   {
     label: "Dev Consultant",
@@ -174,7 +184,6 @@ export default function OnboardingPage() {
           </div>
         ) : (
           <div className="grid lg:grid-cols-2 gap-8 items-start animate-in fade-in slide-in-from-bottom-4 duration-700">
-            {/* Brand Details Card */}
             <Card className="shadow-xl border-none overflow-hidden h-full">
               <CardHeader className="bg-slate-900 text-white p-8">
                 <div className="flex justify-between items-center mb-4">
@@ -226,7 +235,6 @@ export default function OnboardingPage() {
               </CardFooter>
             </Card>
 
-            {/* Live Shell Preview */}
             <div className="space-y-4">
               <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold ml-1">Live Shell Preview</Label>
               <div className="relative group">
