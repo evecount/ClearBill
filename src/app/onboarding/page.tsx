@@ -7,11 +7,40 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
-import { Sparkles, ArrowRight, Building2, Mail, MapPin, Loader2, CheckCircle2, FileText, Globe, ShieldCheck } from "lucide-react"
+import { Sparkles, ArrowRight, Building2, Mail, MapPin, Loader2, CheckCircle2, FileText, Globe, ShieldCheck, Palette, Camera, Scissors, Briefcase, Code } from "lucide-react"
 import { consultBusinessOnboarding, type OnboardingConsultantOutput } from "@/ai/flows/onboarding-consultant"
 import { useToast } from "@/hooks/use-toast"
 import Link from "next/link"
 import { Separator } from "@/components/ui/separator"
+import { cn } from "@/lib/utils"
+
+const QUICK_STARTS = [
+  {
+    label: "Graphic Designer",
+    icon: Palette,
+    text: "I am a freelance graphic designer specializing in minimalist brand identities and high-end typography for tech startups."
+  },
+  {
+    label: "Eyelash Technician",
+    icon: Scissors,
+    text: "I run a luxury eyelash studio focused on providing high-quality, long-lasting extensions and lash lifts for busy professionals."
+  },
+  {
+    label: "Photographer",
+    icon: Camera,
+    text: "I am a professional architectural photographer capturing minimalist interior spaces for real estate firms and design magazines."
+  },
+  {
+    label: "Virtual Assistant",
+    icon: Briefcase,
+    text: "I provide executive-level virtual assistance for creative agency founders, managing complex schedules and client communications."
+  },
+  {
+    label: "Dev Consultant",
+    icon: Code,
+    text: "I am a senior software consultant specializing in building high-performance Next.js applications and cloud infrastructure for SMEs."
+  }
+]
 
 export default function OnboardingPage() {
   const router = useRouter()
@@ -62,7 +91,26 @@ export default function OnboardingPage() {
                 <CardTitle>Describe your venture</CardTitle>
                 <CardDescription>What do you do? Who are your clients? Our AI will build the professional "shell" your business deserves.</CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-6">
+                <div className="space-y-3">
+                  <Label className="text-xs uppercase tracking-widest text-muted-foreground font-bold">Quick Start Templates</Label>
+                  <div className="flex flex-wrap gap-2">
+                    {QUICK_STARTS.map((qs) => (
+                      <button
+                        key={qs.label}
+                        onClick={() => setDescription(qs.text)}
+                        className={cn(
+                          "flex items-center gap-2 px-3 py-1.5 rounded-full text-sm border transition-all hover:bg-slate-50 active:scale-95",
+                          description === qs.text ? "bg-accent/10 border-accent text-accent ring-1 ring-accent" : "bg-white border-slate-200 text-slate-600"
+                        )}
+                      >
+                        <qs.icon className="size-3" />
+                        {qs.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
                 <div className="space-y-2">
                   <Label htmlFor="desc">Your Business Narrative</Label>
                   <Textarea 
