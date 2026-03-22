@@ -5,7 +5,7 @@
  *
  * - consultBusinessOnboarding - A function that generates professional business details and growth strategies.
  * - OnboardingConsultantInput - The user's raw business description + provided facts.
- * - OnboardingConsultantOutput - Structured professional identity ecosystem + growth strategy.
+ * - OnboardingConsultantOutput - Structured professional identity ecosystem + growth strategy + first invoice draft.
  */
 
 import {ai} from '@/ai/genkit';
@@ -19,6 +19,10 @@ const OnboardingConsultantOutputSchema = z.object({
   industry: z.string().describe('The identified industry.'),
   brandingTone: z.string().describe('Recommended professional tone.'),
   brandColor: z.string().describe('A suggested primary brand color in HSL format.'),
+  suggestedLineItems: z.array(z.object({
+    description: z.string().describe('A professional, outcome-based invoice line item description.'),
+    price: z.number().describe('A recommended elite market rate price for this item.'),
+  })).describe('Standard invoice line items for this type of project/expertise.'),
   growthStrategy: z.object({
     initialFocus: z.string().describe('Grounded, professional language on where to start.'),
     premiumTierSuggestion: z.string().describe('A suggestion for a high-end service package.'),
@@ -56,9 +60,10 @@ CRITICAL: Use these facts as the absolute source of truth. DO NOT INVENT OR ALTE
 Context: "{{{userDescription}}}"
 
 Your task:
-1. IDENTITY: If the user provided a brief description like "I am an artist", expand this into a full professional mission that highlights "Outcome Certainty". For an artist, don't just talk about "painting"; talk about "cultural storytelling" and "legacy preservation".
-2. GROWTH: Provide grounded advice on how to command elite fees by focusing on the "win" they provide for their clients.
-3. OUTPUT: Ensure the suggestedName and suggestedAddress in the output strictly match the provided facts.
+1. IDENTITY: If the user provided a brief description like "I am an artist", expand this into a full professional mission that highlights "Outcome Certainty".
+2. INVOICING: Generate 3-4 professional, outcome-based invoice line items that an expert in this field would typically bill for. For an artist, include things like "Conceptual Development & Site Research", "Production & Material Procurement", etc. Assign elite, professional prices.
+3. GROWTH: Provide grounded advice on how to command elite fees by focusing on the "win" they provide for their clients.
+4. OUTPUT: Ensure the suggestedName and suggestedAddress in the output strictly match the provided facts.
 
 Sound like a supportive, high-level business partner. Avoid jargon.`,
 });

@@ -1,4 +1,3 @@
-
 "use client"
 
 import { useState } from "react"
@@ -8,14 +7,15 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
-import { ArrowRight, Loader2, ShieldCheck, Scissors, Music, HeartPulse, Code, Utensils, Hammer, Shield, Sparkles, Zap, Target, Star, Palette, PenTool, Home, TrendingUp, Briefcase } from "lucide-react"
+import { Separator } from "@/components/ui/separator"
+import { ArrowRight, Loader2, ShieldCheck, Scissors, Music, HeartPulse, Code, Utensils, Hammer, Shield, Sparkles, Zap, Target, Star, Palette, PenTool, Home, TrendingUp, Briefcase, Landmark, CreditCard, Send } from "lucide-react"
 import { consultBusinessOnboarding, type OnboardingConsultantOutput } from "@/ai/flows/onboarding-consultant"
 import { useToast } from "@/hooks/use-toast"
 import { cn } from "@/lib/utils"
 import { useAuth, useUser, useFirestore } from "@/firebase"
 import { initiateAnonymousSignIn } from "@/firebase/non-blocking-login"
-import { setDocumentNonBlocking } from "@/firebase/non-blocking-updates"
-import { doc, serverTimestamp } from "firebase/firestore"
+import { setDocumentNonBlocking, addDocumentNonBlocking } from "@/firebase/non-blocking-updates"
+import { doc, collection, serverTimestamp } from "firebase/firestore"
 
 const QUICK_STARTS = [
   { label: "Artist", icon: Palette, text: "I am an artist creating a proposal for a museum to showcase a series of Mekong Delta inspired storytelling installations." },
@@ -92,6 +92,7 @@ export default function OnboardingPage() {
     const orgId = user.uid
     const slug = proposal.suggestedName.toLowerCase().replace(/[^a-z0-9]/g, '-')
 
+    // Save Organization
     const orgData = {
       id: orgId,
       name: proposal.suggestedName,
@@ -101,7 +102,7 @@ export default function OnboardingPage() {
       city: "",
       state: "",
       postalCode: "",
-      country: "USA",
+      country: proposal.suggestedAddress.split(',').pop()?.trim() || "USA",
       taxId: "",
       currency: "USD",
       brandColor: proposal.brandColor,
@@ -116,9 +117,38 @@ export default function OnboardingPage() {
 
     setDocumentNonBlocking(doc(firestore, 'organizations', orgId), orgData, { merge: true })
 
+    // Save Draft Invoice
+    const invoiceData = {
+      organizationId: orgId,
+      clientId: "first_client",
+      number: `INV-${new Date().getFullYear()}-001`,
+      issueDate: new Date().toISOString().split('T')[0],
+      dueDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+      status: 'Draft',
+      totalAmount: proposal.suggestedLineItems.reduce((sum, item) => sum + item.price, 0),
+      taxRate: 0,
+      contractContent: `Strategic Outcome Agreement: ${proposal.missionStatement}`,
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp()
+    }
+
+    addDocumentNonBlocking(collection(firestore, 'organizations', orgId, 'invoices'), invoiceData)
+      .then(docRef => {
+        proposal.suggestedLineItems.forEach(item => {
+           addDocumentNonBlocking(collection(firestore, 'organizations', orgId, 'invoices', docRef?.id as string, 'lineItems'), {
+             description: item.description,
+             quantity: 1,
+             unitPrice: item.price,
+             amount: item.price,
+             organizationId: orgId,
+             invoiceId: docRef?.id
+           })
+        })
+      })
+
     toast({ 
-      title: "Identity Profile Saved", 
-      description: "Your professional profile is now live. You can edit these details any time in Settings." 
+      title: "Identity & Invoice Saved", 
+      description: "Your professional ecosystem is live. You can edit everything in Settings." 
     })
     router.push("/dashboard")
   }
@@ -129,46 +159,46 @@ export default function OnboardingPage() {
         
         {step === 1 && (
           <div className="max-w-xl mx-auto w-full">
-             <Card className="shadow-2xl border-none rounded-3xl overflow-hidden">
-                <CardHeader className="bg-slate-900 text-white p-8">
-                  <CardTitle className="text-2xl">The Professional Foundation</CardTitle>
+             <Card className="shadow-2xl border-none rounded-[2.5rem] overflow-hidden">
+                <CardHeader className="bg-slate-900 text-white p-10">
+                  <CardTitle className="text-3xl font-black">The Foundation</CardTitle>
                   <CardDescription className="text-slate-400">Let's start with the non-negotiable facts of your craft.</CardDescription>
                 </CardHeader>
-                <CardContent className="p-8 space-y-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="biz-name">Business Name</Label>
+                <CardContent className="p-10 space-y-8">
+                  <div className="space-y-3">
+                    <Label htmlFor="biz-name" className="text-xs uppercase font-black tracking-widest text-muted-foreground">Business Name</Label>
                     <Input 
                       id="biz-name" 
                       placeholder="e.g. Silver Oak Restoration" 
-                      className="h-12 rounded-xl"
+                      className="h-14 rounded-2xl text-lg border-slate-200"
                       value={basicFacts.businessName}
                       onChange={(e) => setBasicFacts({...basicFacts, businessName: e.target.value})}
                     />
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="location">Primary Location</Label>
+                  <div className="space-y-3">
+                    <Label htmlFor="location" className="text-xs uppercase font-black tracking-widest text-muted-foreground">Primary Location</Label>
                     <Input 
                       id="location" 
                       placeholder="e.g. Berlin, Germany" 
-                      className="h-12 rounded-xl"
+                      className="h-14 rounded-2xl text-lg border-slate-200"
                       value={basicFacts.location}
                       onChange={(e) => setBasicFacts({...basicFacts, location: e.target.value})}
                     />
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="industry">Industry (Optional)</Label>
+                  <div className="space-y-3">
+                    <Label htmlFor="industry" className="text-xs uppercase font-black tracking-widest text-muted-foreground">Industry (Optional)</Label>
                     <Input 
                       id="industry" 
                       placeholder="e.g. Muralist & Fine Art" 
-                      className="h-12 rounded-xl"
+                      className="h-14 rounded-2xl text-lg border-slate-200"
                       value={basicFacts.industry}
                       onChange={(e) => setBasicFacts({...basicFacts, industry: e.target.value})}
                     />
                   </div>
                 </CardContent>
-                <CardFooter className="p-8 pt-0">
-                  <Button className="w-full h-14 bg-accent hover:bg-accent/90 rounded-xl text-lg font-bold" onClick={handleNextToDescription}>
-                    Next: Strategic Context <ArrowRight className="ml-2 size-5" />
+                <CardFooter className="p-10 pt-0">
+                  <Button className="w-full h-16 bg-accent hover:bg-accent/90 rounded-2xl text-xl font-bold shadow-xl shadow-accent/20" onClick={handleNextToDescription}>
+                    Next: Strategic Context <ArrowRight className="ml-2 size-6" />
                   </Button>
                 </CardFooter>
              </Card>
@@ -177,32 +207,31 @@ export default function OnboardingPage() {
 
         {step === 2 && (
           <div className="max-w-4xl mx-auto w-full">
-            <Card className="shadow-2xl border-none rounded-3xl overflow-hidden">
-              <CardHeader className="bg-slate-900 text-white p-8 text-center">
-                <CardTitle className="text-2xl">The Strategic Core</CardTitle>
+            <Card className="shadow-2xl border-none rounded-[2.5rem] overflow-hidden">
+              <CardHeader className="bg-slate-900 text-white p-10 text-center">
+                <CardTitle className="text-3xl font-black">Strategic Intent</CardTitle>
                 <CardDescription className="text-slate-400">Describe your project or expertise, {basicFacts.businessName}.</CardDescription>
               </CardHeader>
-              <CardContent className="p-8 space-y-10">
-                <div className="space-y-4">
+              <CardContent className="p-10 space-y-12">
+                <div className="space-y-6">
                   <div className="flex items-center justify-between">
-                    <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-black">Choose Your Professional Path</Label>
-                    <span className="text-[10px] text-muted-foreground italic">Click a role to start with a proven template</span>
+                    <Label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-black">Choose Your Professional Path</Label>
                   </div>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
                     {QUICK_STARTS.map((qs) => (
                       <button
                         key={qs.label}
                         onClick={() => setDescription(qs.text)}
                         className={cn(
-                          "flex flex-col items-center gap-2 p-4 rounded-2xl text-xs border transition-all hover:bg-slate-50 text-center group",
-                          description === qs.text ? "bg-accent border-accent text-white shadow-lg" : "bg-white border-slate-200 text-slate-600"
+                          "flex flex-col items-center gap-3 p-5 rounded-3xl text-xs border-2 transition-all hover:scale-[1.02] text-center group",
+                          description === qs.text ? "bg-accent border-accent text-white shadow-xl" : "bg-white border-slate-100 text-slate-600"
                         )}
                       >
                         <div className={cn(
-                          "p-2 rounded-xl mb-1 transition-transform group-hover:scale-110",
+                          "p-3 rounded-2xl transition-transform group-hover:rotate-6",
                           description === qs.text ? "bg-white/20" : "bg-slate-50"
                         )}>
-                          <qs.icon className="size-5 shrink-0" />
+                          <qs.icon className="size-6 shrink-0" />
                         </div>
                         <span className="font-bold leading-tight">{qs.label}</span>
                       </button>
@@ -210,36 +239,35 @@ export default function OnboardingPage() {
                   </div>
                 </div>
 
-                <div className="space-y-3">
+                <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <Label htmlFor="desc" className="text-[10px] uppercase tracking-widest text-muted-foreground font-black">Or Describe Your Own Craft</Label>
+                    <Label htmlFor="desc" className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-black">Or Describe Your Own Craft</Label>
                     {description && <Button variant="link" size="sm" className="h-auto p-0 text-xs text-muted-foreground" onClick={() => setDescription("")}>Clear</Button>}
                   </div>
                   <Textarea 
                     id="desc"
                     placeholder="e.g. I am a landscape architect focused on sustainable urban ecosystems..."
-                    className="min-h-[150px] text-lg p-5 rounded-2xl focus:ring-accent/20 border-slate-200 shadow-inner bg-slate-50/50"
+                    className="min-h-[180px] text-xl p-6 rounded-3xl focus:ring-accent/20 border-slate-200 shadow-inner bg-slate-50/50 leading-relaxed"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                   />
-                  <p className="text-[10px] text-muted-foreground italic text-center">The more specific you are, the more cinematic your identity roadmap will be.</p>
                 </div>
               </CardContent>
-              <CardFooter className="p-8 pt-0 gap-3">
-                <Button variant="ghost" className="h-14 px-6" onClick={() => setStep(1)}>Back</Button>
+              <CardFooter className="p-10 pt-0 gap-4">
+                <Button variant="ghost" className="h-16 px-8 rounded-2xl font-bold" onClick={() => setStep(1)}>Back</Button>
                 <Button 
-                  className="flex-1 h-14 text-lg bg-accent hover:bg-accent/90 shadow-xl rounded-xl group" 
+                  className="flex-1 h-16 text-xl bg-accent hover:bg-accent/90 shadow-2xl rounded-2xl group font-black" 
                   onClick={handleConsult}
                   disabled={loading}
                 >
                   {loading ? (
                     <>
-                      <Loader2 className="mr-2 h-6 w-6 animate-spin" />
-                      Architecting Identity...
+                      <Loader2 className="mr-3 h-6 w-6 animate-spin" />
+                      Architecting...
                     </>
                   ) : (
                     <>
-                      Design My Identity <ArrowRight className="ml-2 size-5 group-hover:translate-x-1 transition-transform" />
+                      Architect My First Invoice <ArrowRight className="ml-2 size-6 group-hover:translate-x-1 transition-transform" />
                     </>
                   )}
                 </Button>
@@ -248,102 +276,114 @@ export default function OnboardingPage() {
           </div>
         )}
 
-        {step === 3 && (
-          <div className="grid lg:grid-cols-5 gap-8 items-start animate-in fade-in slide-in-from-bottom-4 duration-700">
-            <Card className="lg:col-span-3 shadow-2xl border-none overflow-hidden h-full rounded-3xl">
-              <CardHeader className="bg-slate-900 text-white p-8">
-                <div className="flex justify-between items-center mb-4">
-                  <div className="flex items-center gap-2 px-3 py-1 bg-accent rounded-full text-[10px] font-black tracking-widest text-white uppercase">
-                    <Zap className="size-3" /> Strategic DNA
-                  </div>
-                  <Sparkles className="size-5 text-accent" />
-                </div>
-                <CardTitle className="text-4xl font-black tracking-tight">{proposal?.suggestedName}</CardTitle>
-                <p className="text-slate-400 font-bold uppercase tracking-widest text-xs mt-2">{proposal?.industry}</p>
-              </CardHeader>
-              <CardContent className="p-8 space-y-10">
-                <div className="grid sm:grid-cols-2 gap-8">
-                  <div className="space-y-2">
-                    <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-black">Identity Tone</Label>
-                    <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-2xl border">
-                      <div 
-                        className="size-5 rounded-full border shadow-sm shrink-0" 
-                        style={{ backgroundColor: `hsl(${proposal?.brandColor || '256 60% 55%'})` }} 
-                      />
-                      <p className="font-bold text-slate-800">{proposal?.brandingTone}</p>
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-black">Professional Mission</Label>
-                    <p className="text-sm text-slate-600 italic leading-relaxed font-medium">"{proposal?.missionStatement}"</p>
-                  </div>
-                </div>
+        {step === 3 && proposal && (
+          <div className="max-w-4xl mx-auto animate-in fade-in slide-in-from-bottom-8 duration-700">
+             <div className="mb-12 text-center space-y-4">
+               <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-emerald-500/10 text-emerald-600 rounded-full text-xs font-black uppercase tracking-widest">
+                 <ShieldCheck className="size-4" /> Identity & Invoice Architected
+               </div>
+               <h1 className="text-4xl font-black text-slate-900 tracking-tight">The Visual First-Look</h1>
+               <p className="text-slate-500 text-lg max-w-2xl mx-auto">
+                 Based on your expertise, we've drafted your first high-value invoice. This is how the client sees your worth.
+               </p>
+             </div>
 
-                <div className="space-y-6">
-                  <Label className="text-[10px] uppercase tracking-widest text-accent font-black block border-b pb-2">Growth Roadmap</Label>
-                  <div className="grid gap-4">
-                    <div className="flex gap-4 items-start p-4 bg-emerald-50/50 rounded-2xl border border-emerald-100">
-                      <div className="bg-emerald-100 p-2 rounded-xl shrink-0">
-                        <Target className="size-4 text-emerald-600" />
+             <div className="grid gap-8 lg:grid-cols-5 items-start">
+               <Card className="lg:col-span-3 border-none shadow-2xl rounded-[3rem] overflow-hidden bg-white">
+                 <div className="h-4 w-full" style={{ backgroundColor: `hsl(${proposal.brandColor})` }} />
+                 <CardContent className="p-10 md:p-14 space-y-10">
+                   {/* Invoice Header Preview */}
+                   <div className="flex justify-between items-start gap-8">
+                      <div className="space-y-4 flex-1">
+                        <div className="space-y-1">
+                           <p className="text-[10px] uppercase font-black tracking-widest text-muted-foreground">From</p>
+                           <h2 className="text-2xl font-black text-slate-900">{proposal.suggestedName}</h2>
+                           <p className="text-sm text-muted-foreground leading-relaxed">{proposal.suggestedAddress}</p>
+                        </div>
                       </div>
-                      <div className="space-y-1">
-                        <p className="text-sm font-bold text-slate-900">Immediate Focus</p>
-                        <p className="text-xs text-muted-foreground leading-relaxed">{proposal?.growthStrategy.initialFocus}</p>
+                      <div className="text-right space-y-1">
+                        <p className="text-[10px] uppercase font-black tracking-widest text-muted-foreground">Amount Due</p>
+                        <p className="text-4xl font-black tracking-tighter" style={{ color: `hsl(${proposal.brandColor})` }}>
+                          ${proposal.suggestedLineItems.reduce((sum, i) => sum + i.price, 0).toLocaleString()}
+                        </p>
                       </div>
-                    </div>
-                    <div className="flex gap-4 items-start p-4 bg-purple-50/50 rounded-2xl border border-purple-100">
-                      <div className="bg-purple-100 p-2 rounded-xl shrink-0">
-                        <Star className="size-4 text-purple-600" />
-                      </div>
-                      <div className="space-y-1">
-                        <p className="text-sm font-bold text-slate-900">Premium Outcome</p>
-                        <p className="text-xs text-muted-foreground leading-relaxed">{proposal?.growthStrategy.premiumTierSuggestion}</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-              <CardFooter className="p-8 bg-slate-50 border-t flex flex-col gap-3">
-                <Button className="w-full h-14 bg-accent hover:bg-accent/90 rounded-2xl text-lg font-bold shadow-xl" onClick={handleFinish}>
-                  Launch My Profile <ArrowRight className="ml-2 size-5" />
-                </Button>
-                <p className="text-[10px] text-muted-foreground text-center">You can refine your mission, logo, and website later in Settings.</p>
-              </CardFooter>
-            </Card>
+                   </div>
 
-            <div className="lg:col-span-2 space-y-6 sticky top-24">
-              <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-black ml-1">Live Portal Preview</Label>
-              <div className="relative bg-white rounded-3xl shadow-2xl border border-slate-100 overflow-hidden">
-                <div className="p-6 bg-slate-50 border-b flex justify-between items-center">
-                  <div className="flex items-center gap-3">
-                    <div className="size-8 bg-slate-900 rounded-lg flex items-center justify-center text-white text-[10px] font-bold">
-                      {proposal?.suggestedName?.[0]}
+                   <Separator className="bg-slate-100" />
+
+                   {/* Line Items Preview */}
+                   <div className="space-y-6">
+                      <div className="grid grid-cols-12 gap-4">
+                        <div className="col-span-9"><p className="text-[10px] uppercase font-black tracking-widest text-muted-foreground">Professional Outcome</p></div>
+                        <div className="col-span-3 text-right"><p className="text-[10px] uppercase font-black tracking-widest text-muted-foreground">Value</p></div>
+                      </div>
+                      <div className="space-y-4">
+                        {proposal.suggestedLineItems.map((item, i) => (
+                          <div key={i} className="grid grid-cols-12 gap-4 items-center">
+                            <div className="col-span-9">
+                              <p className="text-sm font-bold text-slate-800 leading-relaxed">{item.description}</p>
+                            </div>
+                            <div className="col-span-3 text-right font-black text-slate-900">
+                              ${item.price.toLocaleString()}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                   </div>
+
+                   <Separator className="bg-slate-100" />
+
+                   {/* Agreement Preview */}
+                   <div className="p-6 bg-slate-50/50 rounded-2xl border border-dashed space-y-3">
+                      <p className="text-[10px] uppercase font-black tracking-widest text-muted-foreground">Strategic Win Agreement</p>
+                      <p className="text-xs text-slate-600 italic leading-relaxed">
+                        "{proposal.missionStatement}"
+                      </p>
+                   </div>
+
+                   <Button className="w-full h-16 text-xl font-black rounded-2xl shadow-xl transition-all hover:scale-[1.02]" 
+                     style={{ backgroundColor: `hsl(${proposal.brandColor})` }}
+                     onClick={handleFinish}
+                   >
+                     Launch Profile & Invoice <ArrowRight className="ml-2 size-6" />
+                   </Button>
+                 </CardContent>
+               </Card>
+
+               {/* DNA Sidebar */}
+               <div className="lg:col-span-2 space-y-6">
+                  <Card className="bg-slate-900 text-white rounded-3xl border-none p-8 space-y-6">
+                    <div className="flex items-center gap-3">
+                      <Zap className="size-5 text-accent" />
+                      <h3 className="text-sm font-black uppercase tracking-widest">Growth Recommendation</h3>
                     </div>
-                    <span className="text-[10px] font-bold text-slate-900">{proposal?.suggestedName}</span>
+                    <div className="space-y-4">
+                      <div className="p-4 bg-white/5 rounded-2xl border border-white/10 space-y-1">
+                        <p className="text-[10px] uppercase font-black tracking-widest text-accent">Immediate Strategic Move</p>
+                        <p className="text-xs text-slate-300 leading-relaxed">{proposal.growthStrategy.initialFocus}</p>
+                      </div>
+                      <div className="p-4 bg-white/5 rounded-2xl border border-white/10 space-y-1">
+                        <p className="text-[10px] uppercase font-black tracking-widest text-emerald-400">Premium Yield Idea</p>
+                        <p className="text-xs text-slate-300 leading-relaxed">{proposal.growthStrategy.premiumTierSuggestion}</p>
+                      </div>
+                    </div>
+                    <Separator className="bg-white/10" />
+                    <div className="text-center">
+                       <p className="text-[10px] text-slate-500 italic">"We don't bill for hours. We bill for the certainty of your success."</p>
+                    </div>
+                  </Card>
+
+                  <div className="p-8 bg-white rounded-3xl border-2 border-slate-100 flex flex-col items-center gap-4 text-center">
+                    <div className="size-12 bg-emerald-500/10 rounded-full flex items-center justify-center">
+                      <ShieldCheck className="size-6 text-emerald-500" />
+                    </div>
+                    <h4 className="font-bold text-sm">Verified Identity Architecture</h4>
+                    <p className="text-xs text-muted-foreground leading-relaxed">
+                      Your identity ecosystem is now synchronized across all portals.
+                    </p>
                   </div>
-                  <ShieldCheck className="size-4 text-emerald-500" />
-                </div>
-                <div className="p-8 space-y-6">
-                  <div className="flex justify-between items-start">
-                    <div className="space-y-1">
-                      <p className="text-[8px] uppercase font-bold text-muted-foreground">Billed To</p>
-                      <div className="h-2.5 w-24 bg-slate-100 rounded"></div>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-[8px] uppercase font-bold text-muted-foreground">Strategic Fee</p>
-                      <p className="text-xl font-black" style={{ color: `hsl(${proposal?.brandColor || '256 60% 55%'})` }}>$1,250.00</p>
-                    </div>
-                  </div>
-                  <Button 
-                    disabled 
-                    className="w-full text-white h-10 rounded-xl"
-                    style={{ backgroundColor: `hsl(${proposal?.brandColor || '256 60% 55%'})` }}
-                  >
-                    Pay Securely
-                  </Button>
-                </div>
-              </div>
-            </div>
+               </div>
+             </div>
           </div>
         )}
       </div>
