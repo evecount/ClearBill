@@ -1,15 +1,16 @@
+
 "use client"
 
 import { useState, useRef, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { Card, CardContent } from "@/components/ui/card"
 import { ArrowRight, Loader2, ShieldCheck, Sparkles, Zap, Target, Star, Bot, User, Camera, Upload, Globe, MapPin, Send, Palette, PenTool, Utensils, Home, Hammer, Code, TrendingUp, Shield, HeartPulse, Briefcase, Music, Scissors, Landmark } from "lucide-react"
 import { consultBusinessOnboarding, type OnboardingConsultantOutput } from "@/ai/flows/onboarding-consultant"
 import { useToast } from "@/hooks/use-toast"
@@ -94,7 +95,7 @@ export default function OnboardingPage() {
         setMessages(prev => [
           ...prev,
           { role: 'user', content: "Logo uploaded." },
-          { role: 'assistant', content: "Branding set. Now, tell me about the work you do. What services are we billing for today? You can use an inspiration below or describe it in your own words.", component: 'description' }
+          { role: 'assistant', content: "Branding set. Now, tell me about the work you do. What services are we billing for today?", component: 'description' }
         ])
       }
       reader.readAsDataURL(file)
@@ -174,7 +175,7 @@ export default function OnboardingPage() {
       status: 'Draft',
       totalAmount: proposal.suggestedLineItems.reduce((sum, item) => sum + item.price, 0),
       taxRate: 0,
-      contractContent: `Strategic Outcome Agreement: ${proposal.missionStatement}`,
+      contractContent: `Outcome Agreement: ${proposal.missionStatement}`,
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp()
     }
@@ -198,166 +199,163 @@ export default function OnboardingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4 py-8 font-body selection:bg-accent/30">
-      <div className="max-w-4xl w-full flex flex-col h-[calc(100vh-80px)] space-y-4">
-        
-        <Card className="flex-1 border-none shadow-2xl rounded-[2.5rem] overflow-hidden bg-white flex flex-col">
-          <ScrollArea className="flex-1 p-6 md:p-10">
-            <div className="space-y-8">
-              {messages.map((m, i) => (
-                <div key={i} className={cn(
-                  "flex gap-4",
-                  m.role === 'user' ? "flex-row-reverse" : "flex-row"
+    <div className="min-h-screen bg-white flex flex-col items-center p-4 font-body selection:bg-accent/30">
+      <div className="max-w-4xl w-full flex flex-col h-[calc(100vh-40px)]">
+        <ScrollArea className="flex-1 pr-4">
+          <div className="space-y-12 py-12">
+            {messages.map((m, i) => (
+              <div key={i} className={cn(
+                "flex gap-6 animate-in fade-in slide-in-from-bottom-2 duration-500",
+                m.role === 'user' ? "flex-row-reverse" : "flex-row"
+              )}>
+                <div className={cn(
+                  "size-12 rounded-2xl flex items-center justify-center shrink-0 shadow-sm",
+                  m.role === 'user' ? "bg-slate-900 text-white" : "bg-accent text-white"
+                )}>
+                  {m.role === 'user' ? <User className="size-6" /> : <Bot className="size-6" />}
+                </div>
+                <div className={cn(
+                  "space-y-6 w-full max-w-[85%]",
+                  m.role === 'user' ? "items-end text-right" : "items-start"
                 )}>
                   <div className={cn(
-                    "size-10 rounded-2xl flex items-center justify-center shrink-0 shadow-sm",
-                    m.role === 'user' ? "bg-slate-900 text-white" : "bg-accent text-white"
+                    "p-8 rounded-[2.5rem] text-lg md:text-xl leading-relaxed shadow-sm",
+                    m.role === 'user' ? "bg-slate-50 text-slate-800" : "bg-white border-2 border-slate-100 text-slate-800"
                   )}>
-                    {m.role === 'user' ? <User className="size-5" /> : <Bot className="size-5" />}
+                    {m.content}
                   </div>
-                  <div className={cn(
-                    "space-y-6 w-full max-w-[85%]",
-                    m.role === 'user' ? "items-end text-right" : "items-start"
-                  )}>
-                    <div className={cn(
-                      "p-6 rounded-[2rem] text-sm md:text-base leading-relaxed",
-                      m.role === 'user' ? "bg-slate-100 text-slate-800" : "bg-white border-2 border-slate-100 text-slate-800 shadow-sm"
-                    )}>
-                      {m.content}
-                    </div>
 
-                    {m.role === 'assistant' && m.component === 'foundation' && (
-                      <Card className="border-accent/10 bg-slate-50/50 rounded-3xl p-6 space-y-6 w-full animate-in fade-in slide-in-from-bottom-2 duration-500">
-                        <div className="grid gap-4 sm:grid-cols-2">
-                          <div className="space-y-2">
-                            <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Business Name</Label>
-                            <Input 
-                              placeholder="e.g. Nexus Creative" 
-                              className="h-12 rounded-xl bg-white"
-                              value={basicFacts.businessName}
-                              onChange={(e) => setBasicFacts({...basicFacts, businessName: e.target.value})}
-                            />
-                          </div>
-                          <div className="space-y-2">
-                            <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Location</Label>
-                            <Input 
-                              placeholder="e.g. Singapore" 
-                              className="h-12 rounded-xl bg-white"
-                              value={basicFacts.location}
-                              onChange={(e) => setBasicFacts({...basicFacts, location: e.target.value})}
-                            />
-                          </div>
-                        </div>
-                        <Button className="w-full bg-accent hover:bg-accent/90 h-12 rounded-xl font-black" onClick={handleSaveFoundation}>
-                          Continue <ArrowRight className="size-4 ml-2" />
-                        </Button>
-                      </Card>
-                    )}
-
-                    {m.role === 'assistant' && m.component === 'logo' && (
-                      <div className="flex flex-col items-center gap-4 w-full animate-in zoom-in-95 duration-500">
-                        <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleLogoUpload} />
-                        <div className="relative group cursor-pointer" onClick={() => fileInputRef.current?.click()}>
-                          <Avatar className="size-32 border-4 border-accent/10 shadow-lg rounded-3xl overflow-hidden ring-4 ring-white transition-transform hover:scale-105">
-                            <AvatarImage src={basicFacts.logoUrl} className="object-contain p-2" />
-                            <AvatarFallback className="bg-slate-50"><Camera className="size-10 text-slate-300" /></AvatarFallback>
-                          </Avatar>
-                          <div className="absolute inset-0 bg-black/40 rounded-3xl flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                            <Upload className="size-8 text-white" />
-                          </div>
-                        </div>
-                        <Button variant="outline" className="border-accent text-accent hover:bg-accent/5 rounded-xl px-8" onClick={() => fileInputRef.current?.click()}>
-                          Click to Upload Logo
-                        </Button>
-                      </div>
-                    )}
-
-                    {m.role === 'assistant' && m.component === 'description' && (
-                      <div className="space-y-6 w-full animate-in fade-in slide-in-from-bottom-2 duration-500">
-                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                          {QUICK_STARTS.map((qs) => (
-                            <button
-                              key={qs.label}
-                              onClick={() => setDescription(qs.text)}
-                              className={cn(
-                                "flex items-center gap-2 p-3 rounded-xl text-[10px] border transition-all text-left group",
-                                description === qs.text ? "bg-accent border-accent text-white shadow-md" : "bg-white border-slate-100 text-slate-600 hover:bg-slate-50"
-                              )}
-                            >
-                              <qs.icon className="size-4 shrink-0" />
-                              <span className="font-bold truncate">{qs.label}</span>
-                            </button>
-                          ))}
-                        </div>
-                        <div className="relative">
-                          <Textarea 
-                            placeholder="e.g. I provided 20 hours of logo design and brand strategy..." 
-                            className="min-h-[140px] rounded-2xl p-5 text-base border-slate-200 bg-slate-50 shadow-inner"
-                            value={description}
-                            onChange={(e) => setDescription(e.target.value)}
+                  {m.role === 'assistant' && m.component === 'foundation' && (
+                    <div className="bg-slate-50 rounded-[2.5rem] p-8 space-y-8 w-full border border-slate-100 animate-in zoom-in-95 duration-500">
+                      <div className="grid gap-6 sm:grid-cols-2">
+                        <div className="space-y-2">
+                          <Label className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground ml-2">Business Name</Label>
+                          <Input 
+                            placeholder="e.g. Nexus Creative" 
+                            className="h-14 rounded-2xl bg-white text-lg px-6"
+                            value={basicFacts.businessName}
+                            onChange={(e) => setBasicFacts({...basicFacts, businessName: e.target.value})}
                           />
-                          <Button 
-                            className="absolute bottom-3 right-3 bg-accent hover:bg-accent/90 rounded-xl"
-                            onClick={handleConsult}
-                            disabled={loading}
-                          >
-                            {loading ? <Loader2 className="size-4 animate-spin" /> : <Send className="size-4" />}
-                          </Button>
+                        </div>
+                        <div className="space-y-2">
+                          <Label className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground ml-2">Location</Label>
+                          <Input 
+                            placeholder="e.g. Singapore" 
+                            className="h-14 rounded-2xl bg-white text-lg px-6"
+                            value={basicFacts.location}
+                            onChange={(e) => setBasicFacts({...basicFacts, location: e.target.value})}
+                          />
                         </div>
                       </div>
-                    )}
+                      <Button className="w-full bg-accent hover:bg-accent/90 h-14 rounded-2xl font-black text-lg" onClick={handleSaveFoundation}>
+                        Continue <ArrowRight className="size-5 ml-2" />
+                      </Button>
+                    </div>
+                  )}
 
-                    {m.role === 'assistant' && m.component === 'final' && proposal && (
-                      <div className="w-full space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-                         <Card className="w-full border-none shadow-2xl rounded-[2.5rem] overflow-hidden bg-white">
-                           <div className="h-4 w-full" style={{ backgroundColor: `hsl(${proposal.brandColor})` }} />
-                           <CardContent className="p-8 md:p-12 space-y-8">
-                             <div className="flex justify-between items-start gap-4">
-                                <div className="space-y-4">
-                                   <div className="size-16 bg-slate-50 rounded-2xl border flex items-center justify-center overflow-hidden">
-                                     {basicFacts.logoUrl ? <img src={basicFacts.logoUrl} className="object-contain p-1" /> : <Landmark className="size-6 text-slate-300" />}
+                  {m.role === 'assistant' && m.component === 'logo' && (
+                    <div className="flex flex-col items-center gap-6 w-full animate-in zoom-in-95 duration-500">
+                      <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleLogoUpload} />
+                      <div className="relative group cursor-pointer" onClick={() => fileInputRef.current?.click()}>
+                        <Avatar className="size-40 border-8 border-accent/5 shadow-2xl rounded-[3rem] overflow-hidden ring-4 ring-white transition-all hover:scale-105">
+                          <AvatarImage src={basicFacts.logoUrl} className="object-contain p-4" />
+                          <AvatarFallback className="bg-slate-50"><Camera className="size-12 text-slate-300" /></AvatarFallback>
+                        </Avatar>
+                        <div className="absolute inset-0 bg-black/40 rounded-[3rem] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                          <Upload className="size-10 text-white" />
+                        </div>
+                      </div>
+                      <Button variant="outline" className="border-accent text-accent hover:bg-accent/5 rounded-2xl px-12 h-14 font-bold text-lg" onClick={() => fileInputRef.current?.click()}>
+                        Upload Brand Logo
+                      </Button>
+                    </div>
+                  )}
+
+                  {m.role === 'assistant' && m.component === 'description' && (
+                    <div className="space-y-8 w-full animate-in fade-in slide-in-from-bottom-4 duration-500">
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                        {QUICK_STARTS.map((qs) => (
+                          <button
+                            key={qs.label}
+                            onClick={() => setDescription(qs.text)}
+                            className={cn(
+                              "flex flex-col items-center gap-3 p-6 rounded-[2rem] text-sm border transition-all text-center group",
+                              description === qs.text ? "bg-accent border-accent text-white shadow-xl scale-105" : "bg-white border-slate-100 text-slate-600 hover:bg-slate-50"
+                            )}
+                          >
+                            <qs.icon className={cn("size-8 shrink-0 mb-1", description === qs.text ? "text-white" : "text-accent")} />
+                            <span className="font-black uppercase tracking-tighter leading-none">{qs.label}</span>
+                          </button>
+                        ))}
+                      </div>
+                      <div className="relative">
+                        <Textarea 
+                          placeholder="Tell me about the work you've done..." 
+                          className="min-h-[180px] rounded-[2.5rem] p-8 text-xl border-slate-200 bg-slate-50 shadow-inner leading-relaxed"
+                          value={description}
+                          onChange={(e) => setDescription(e.target.value)}
+                        />
+                        <Button 
+                          className="absolute bottom-6 right-6 bg-accent hover:bg-accent/90 rounded-2xl size-14 shadow-xl"
+                          onClick={handleConsult}
+                          disabled={loading}
+                        >
+                          {loading ? <Loader2 className="size-6 animate-spin" /> : <Send className="size-6" />}
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+
+                  {m.role === 'assistant' && m.component === 'final' && proposal && (
+                    <div className="w-full space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-700 pb-20">
+                       <Card className="w-full border-none shadow-[0_32px_64px_-12px_rgba(0,0,0,0.14)] rounded-[3.5rem] overflow-hidden bg-white">
+                         <div className="h-6 w-full" style={{ backgroundColor: `hsl(${proposal.brandColor})` }} />
+                         <CardContent className="p-12 md:p-20 space-y-12">
+                           <div className="flex justify-between items-start gap-8">
+                                <div className="space-y-6">
+                                   <div className="size-24 bg-slate-50 rounded-[2rem] border-2 flex items-center justify-center overflow-hidden shadow-sm">
+                                     {basicFacts.logoUrl ? <img src={basicFacts.logoUrl} className="object-contain p-2" /> : <Landmark className="size-10 text-slate-200" />}
                                    </div>
-                                   <div className="space-y-1">
-                                     <h2 className="text-xl font-black">{proposal.suggestedName}</h2>
-                                     <p className="text-xs text-muted-foreground">{proposal.suggestedAddress}</p>
+                                   <div className="space-y-2">
+                                     <h2 className="text-3xl font-black tracking-tight">{proposal.suggestedName}</h2>
+                                     <p className="text-sm text-muted-foreground font-medium uppercase tracking-widest">{proposal.suggestedAddress}</p>
                                    </div>
                                 </div>
                                 <div className="text-right">
-                                  <p className="text-[10px] font-black uppercase text-muted-foreground">Sample Total</p>
-                                  <p className="text-3xl font-black" style={{ color: `hsl(${proposal.brandColor})` }}>
+                                  <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground mb-1">Elite Outcome Fee</p>
+                                  <p className="text-6xl font-black tracking-tighter" style={{ color: `hsl(${proposal.brandColor})` }}>
                                     ${proposal.suggestedLineItems.reduce((sum, i) => sum + i.price, 0).toLocaleString()}
                                   </p>
                                 </div>
-                             </div>
-                             <div className="space-y-4">
-                               {proposal.suggestedLineItems.map((item, i) => (
-                                 <div key={i} className="flex justify-between items-center text-xs py-2 border-b border-dashed">
-                                   <span className="font-bold text-slate-800">{item.description}</span>
-                                   <span className="font-black text-slate-900">${item.price.toLocaleString()}</span>
-                                 </div>
-                               ))}
-                             </div>
-                             <div className="p-4 bg-slate-50 rounded-xl border border-dashed">
-                                <p className="text-[10px] font-black uppercase text-muted-foreground mb-1">Outcome Agreement</p>
-                                <p className="text-[10px] text-slate-600 italic">"{proposal.missionStatement}"</p>
-                             </div>
-                             <Button className="w-full h-14 font-black rounded-xl shadow-lg" 
-                               style={{ backgroundColor: `hsl(${proposal.brandColor})` }}
-                               onClick={handleFinish}
-                             >
-                               Confirm & Create My Invoice <ArrowRight className="ml-2 size-5" />
-                             </Button>
-                           </CardContent>
-                         </Card>
-                      </div>
-                    )}
-                  </div>
+                           </div>
+                           <div className="space-y-6">
+                             {proposal.suggestedLineItems.map((item, i) => (
+                               <div key={i} className="flex justify-between items-center text-lg py-4 border-b-2 border-slate-50 border-dashed">
+                                 <span className="font-bold text-slate-800">{item.description}</span>
+                                 <span className="font-black text-slate-900">${item.price.toLocaleString()}</span>
+                               </div>
+                             ))}
+                           </div>
+                           <div className="p-8 bg-slate-50 rounded-[2.5rem] border-2 border-dashed border-slate-200">
+                                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground mb-4">Strategic Outcome Agreement</p>
+                                <p className="text-lg text-slate-600 italic leading-relaxed">"{proposal.missionStatement}"</p>
+                           </div>
+                           <Button className="w-full h-20 text-2xl font-black rounded-[2rem] shadow-2xl transition-transform hover:scale-[1.01] active:scale-95" 
+                             style={{ backgroundColor: `hsl(${proposal.brandColor})` }}
+                             onClick={handleFinish}
+                           >
+                             Confirm & Launch First Invoice <ArrowRight className="ml-3 size-7" />
+                           </Button>
+                         </CardContent>
+                       </Card>
+                    </div>
+                  )}
                 </div>
-              ))}
-              <div ref={scrollRef} />
-            </div>
-          </ScrollArea>
-        </Card>
+              </div>
+            ))}
+            <div ref={scrollRef} />
+          </div>
+        </ScrollArea>
       </div>
     </div>
   )
