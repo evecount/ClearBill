@@ -1,12 +1,12 @@
 
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
-import { Plus, Search, MoreVertical, Trash2, Edit2, FileSignature, ArrowRight, Sparkles } from "lucide-react"
+import { Plus, Search, MoreVertical, Trash2, Edit2, FileSignature, Copy, ExternalLink, Share2, Sparkles } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { useToast } from "@/hooks/use-toast"
@@ -14,11 +14,17 @@ import Link from "next/link"
 import { useUser, useCollection } from "@/firebase"
 import { useMemoFirebase } from "@/firebase/provider"
 import { collection, query, orderBy } from "firebase/firestore"
+import { deleteDocumentNonBlocking } from "@/firebase/non-blocking-updates"
 
 export default function ProposalsPage() {
   const { toast } = useToast()
   const { user } = useUser()
   const [search, setSearch] = useState("")
+  const [origin, setOrigin] = useState("")
+
+  useEffect(() => {
+    setOrigin(window.location.origin)
+  }, [])
 
   const proposalsQuery = useMemoFirebase(() => {
     if (!user) return null
@@ -35,7 +41,16 @@ export default function ProposalsPage() {
   ) || []
 
   const handleDelete = (id: string) => {
-    toast({ title: "Proposal Deleted", description: "The proposal has been removed." })
+    if (!user) return
+    const docRef = doc(user.auth.firestore, 'organizations', user.uid, 'proposals', id)
+    deleteDocumentNonBlocking(docRef)
+    toast({ title: "Proposal Deleted", description: "The strategic document has been removed." })
+  }
+
+  const copyLink = (id: string) => {
+    const url = `${origin}/proposal/${user?.uid}/${id}`
+    navigator.clipboard.writeText(url)
+    toast({ title: "Link Copied", description: "Strategic dashboard URL copied to clipboard." })
   }
 
   return (
@@ -102,24 +117,39 @@ export default function ProposalsPage() {
                       {proposal.createdAt?.toDate ? proposal.createdAt.toDate().toLocaleDateString() : 'Just now'}
                     </TableCell>
                     <TableCell className="text-right">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon">
-                            <MoreVertical className="size-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem asChild>
-                            <Link href={`/dashboard/proposals/${proposal.id}`}>
-                              <Edit2 className="size-4 mr-2" /> Edit
-                            </Link>
-                          </DropdownMenuItem>
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem className="text-destructive" onClick={() => handleDelete(proposal.id)}>
-                            <Trash2 className="size-4 mr-2" /> Delete
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                      <div className="flex items-center justify-end gap-2">
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="text-accent hover:text-accent hover:bg-accent/10"
+                          onClick={() => copyLink(proposal.id)}
+                          title="Share Dashboard"
+                        >
+                          <Share2 className="size-4" />
+                        </Button>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon">
+                              <MoreVertical className="size-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                            <DropdownMenuItem onClick={() => copyLink(proposal.id)}>
+                              <Copy className="size-4 mr-2" /> Copy Dashboard Link
+                            </DropdownMenuItem>
+                            <DropdownMenuItem asChild>
+                              <Link href={`/proposal/${user?.uid}/${proposal.id}`} target="_blank">
+                                <ExternalLink className="size-4 mr-2" /> Open Client View
+                              </Link>
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem className="text-destructive" onClick={() => handleDelete(proposal.id)}>
+                              <Trash2 className="size-4 mr-2" /> Delete
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -143,4 +173,8 @@ export default function ProposalsPage() {
       )}
     </div>
   )
+}
+
+function doc(firestore: any, arg1: string, uid: string, arg3: string, id: string): any {
+  throw new Error("Function not implemented.")
 }

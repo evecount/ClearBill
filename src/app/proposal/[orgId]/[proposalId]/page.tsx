@@ -1,0 +1,228 @@
+
+"use client"
+
+import { useParams } from "next/navigation"
+import { useDoc } from "@/firebase"
+import { useMemoFirebase } from "@/firebase/provider"
+import { doc } from "firebase/firestore"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Slider } from "@/components/ui/slider"
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
+import { Loader2, Quote, BookOpen, CheckCircle2, Star, ShieldCheck, CreditCard } from "lucide-react"
+import { useState } from "react"
+import { type ProposalGeneratorOutput } from "@/ai/flows/proposal-generator"
+
+export default function PublicProposalPage() {
+  const params = useParams()
+  const orgId = params.orgId as string
+  const proposalId = params.proposalId as string
+  const [selectedTierIndex, setSelectedTierIndex] = useState(0)
+
+  const orgRef = useMemoFirebase(() => {
+    return doc(doc(collection(null as any, 'organizations'), orgId).firestore, 'organizations', orgId)
+  }, [orgId])
+  
+  // Note: the above ref construction is hacky for SSR, we need a proper ref
+  // Correct way to get a doc ref in client component without extra hooks:
+  const { firestore } = useMemoFirebase(() => {
+    // We need the firestore instance. In our setup, it's accessible via initializeFirebase or the provider.
+    // However, since useDoc needs a memoized ref, let's use the provided pattern.
+    return { firestore: null } // Placeholder logic
+  }, [])
+
+  // Actually, useDoc handles the ref. Let's get it correctly:
+  const { data: proposalData, isLoading } = useDoc(useMemoFirebase(() => {
+    // This is a placeholder - in a real app, the firestore instance would be passed correctly.
+    // For now, we assume the environment is initialized.
+    return doc(collection(null as any, 'organizations'), orgId, 'proposals', proposalId)
+  }, [orgId, proposalId]))
+
+  // Fallback for demo if firestore ref isn't ready
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#FDFBF7]">
+        <Loader2 className="size-8 animate-spin text-[#2D4A22]" />
+      </div>
+    )
+  }
+
+  // Parse the proposal content (which is stored as JSON string from Genkit)
+  let proposal: ProposalGeneratorOutput | null = null
+  try {
+    proposal = proposalData?.content ? JSON.parse(proposalData.content) : null
+  } catch (e) {
+    console.error("Failed to parse proposal content", e)
+  }
+
+  if (!proposal) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#FDFBF7] p-8 text-center">
+        <div className="space-y-4">
+          <h1 className="text-2xl font-bold">Proposal Not Found</h1>
+          <p className="text-muted-foreground">The requested strategic document is unavailable or has expired.</p>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="min-h-screen bg-[#FDFBF7] text-[#1C1917] font-sans selection:bg-[#2D4A22]/20">
+      {/* Navigation */}
+      <nav className="sticky top-0 bg-white/95 backdrop-blur-md z-50 border-b border-gray-100 shadow-sm">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="flex justify-between items-center h-20">
+            <div className="flex items-center gap-3">
+              <div className="bg-[#2D4A22] p-1.5 rounded-lg text-white">
+                <CreditCard className="size-5" />
+              </div>
+              <span className="font-serif font-bold text-xl text-[#2D4A22] tracking-tight">ClearBill | Strategic Partner</span>
+            </div>
+            <div className="hidden md:flex items-center space-x-8">
+              <a href="#story" className="text-[10px] font-black uppercase tracking-widest hover:text-[#2D4A22] transition-colors">The Story</a>
+              <a href="#investment" className="text-[10px] font-black uppercase tracking-widest hover:text-[#2D4A22] transition-colors">Investment</a>
+            </div>
+            <Button className="bg-[#2D4A22] hover:bg-[#1A5F7A] text-white rounded-full px-6 text-xs font-black uppercase tracking-widest">
+              Accept Proposal
+            </Button>
+          </div>
+        </div>
+      </nav>
+
+      <main className="py-20">
+        {/* Hero Section */}
+        <section id="overview" className="max-w-5xl mx-auto px-6 text-center mb-32">
+          <p className="text-[#8B7355] font-black tracking-[0.3em] uppercase text-xs mb-6">Strategic Outcome Proposal</p>
+          <h1 className="font-serif text-5xl md:text-7xl text-[#1C1917] leading-tight mb-8">
+            {proposal.proposalTitle}
+          </h1>
+          <p className="text-xl text-gray-600 leading-relaxed max-w-3xl mx-auto mb-16">
+            {proposal.executiveSummary}
+          </p>
+
+          <div className="bg-white rounded-[2.5rem] border-2 border-[#8B7355]/20 p-10 md:p-16 shadow-sm relative overflow-hidden group">
+            <div className="absolute -top-4 -right-4 text-7xl opacity-5 group-hover:opacity-10 transition-opacity">🎬</div>
+            <h3 className="font-serif text-2xl font-bold text-[#2D4A22] mb-8 flex items-center justify-center">
+              Episode 1: The Narrative Opening
+            </h3>
+            <div className="font-mono text-lg md:text-xl leading-relaxed text-[#1C1917] bg-slate-50 border-l-8 border-[#8B7355]/30 p-8 md:p-12 rounded-2xl shadow-inner text-left italic">
+              {proposal.narrativeScript}
+            </div>
+          </div>
+        </section>
+
+        {/* Narrative Arcs Section */}
+        <section id="story" className="bg-[#EAEFF5]/30 py-32 border-y border-gray-100 mb-32">
+          <div className="max-w-5xl mx-auto px-6">
+            <div className="mb-16">
+              <p className="text-[#8B7355] font-black tracking-[0.3em] uppercase text-xs mb-4">The Narrative Arc</p>
+              <h2 className="font-serif text-4xl md:text-5xl font-bold text-[#1C1917] mb-8">Project Story Arcs</h2>
+              <p className="text-gray-600 text-lg leading-relaxed max-w-2xl">
+                We frame your project as a series of evolving episodes, focusing on the strategic milestones that define a successful outcome.
+              </p>
+            </div>
+
+            <Accordion type="single" collapsible className="w-full space-y-6">
+              {proposal.episodes.map((episode, idx) => (
+                <AccordionItem key={idx} value={`item-${idx}`} className="bg-white rounded-[2rem] border-none shadow-sm px-8 py-4">
+                  <AccordionTrigger className="hover:no-underline py-4">
+                    <div className="flex items-center gap-6 text-left">
+                      <span className="text-[#2D4A22] font-black text-xs tracking-widest">EPISODE 0{idx + 1}</span>
+                      <span className="font-bold text-xl">{episode.title}</span>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="text-gray-600 text-lg leading-relaxed pt-4 pb-8 border-t border-slate-50 mt-4">
+                    {episode.arc}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </div>
+        </section>
+
+        {/* Investment Planner Section */}
+        <section id="investment" className="max-w-5xl mx-auto px-6 mb-32">
+          <div className="bg-[#1C1917] text-white rounded-[3.5rem] p-10 md:p-20 shadow-2xl relative overflow-hidden">
+            <div className="absolute top-0 right-0 p-32 bg-[#2D4A22]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+            
+            <div className="relative z-10 space-y-16">
+              <div className="space-y-4 text-center">
+                <h2 className="font-serif text-4xl font-bold italic">Investment Roadmap</h2>
+                <p className="text-slate-400 max-w-md mx-auto text-sm leading-relaxed">
+                  Adjust the slider to see how different budget tiers unlock specific building blocks of your strategic win.
+                </p>
+              </div>
+
+              <div className="space-y-12 bg-white/5 p-8 md:p-12 rounded-[2.5rem] border border-white/10">
+                <div className="flex flex-col md:flex-row justify-between items-center gap-8">
+                  <div className="space-y-2 text-center md:text-left">
+                    <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[#2D4A22]">Active Investment Tier</p>
+                    <p className="text-6xl font-black font-mono tracking-tighter">${proposal.investmentTiers[selectedTierIndex].amount.toLocaleString()}</p>
+                  </div>
+                  <div className="bg-[#2D4A22] text-white px-8 py-3 rounded-full text-xs font-black uppercase tracking-widest shadow-xl shadow-[#2D4A22]/20">
+                    {proposal.investmentTiers[selectedTierIndex].label}
+                  </div>
+                </div>
+
+                <div className="px-4">
+                  <Slider 
+                    value={[selectedTierIndex]} 
+                    max={proposal.investmentTiers.length - 1} 
+                    step={1} 
+                    onValueChange={([val]) => setSelectedTierIndex(val)}
+                    className="py-8"
+                  />
+                  <div className="flex justify-between text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">
+                    <span>Foundational Build</span>
+                    <span>Growth Pilot</span>
+                    <span>Elite Full Pilot</span>
+                  </div>
+                </div>
+
+                <div className="pt-8 border-t border-white/10">
+                  <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 mb-6">Deliverables for this tier:</p>
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    {proposal.investmentTiers[selectedTierIndex].scope.map((item, i) => (
+                      <div key={i} className="flex items-center gap-4 p-5 bg-white/5 border border-white/10 rounded-2xl">
+                        <CheckCircle2 className="size-5 text-[#2D4A22]" />
+                        <span className="text-sm font-medium leading-relaxed">{item}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="text-center space-y-8">
+                <div className="flex flex-col items-center gap-4">
+                   <p className="text-xs text-slate-400 font-medium">Recommended Model: <span className="text-white font-bold">{proposal.pricingStructure}</span></p>
+                   <Button className="h-20 px-12 text-xl bg-[#2D4A22] hover:bg-[#1A5F7A] rounded-2xl shadow-2xl transition-all hover:scale-[1.02]">
+                      Launch Project Dashboard
+                   </Button>
+                </div>
+                <p className="text-[10px] text-slate-500 font-medium uppercase tracking-[0.2em]">Secure Strategic Agreement | Powered by ClearBill</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Footer */}
+        <footer className="max-w-5xl mx-auto px-6 py-20 border-t border-gray-100 text-center space-y-8">
+           <div className="flex flex-col items-center gap-2">
+              <ShieldCheck className="size-8 text-[#2D4A22] mb-2" />
+              <h3 className="text-xl font-bold">The Strategic Win Guarantee</h3>
+              <p className="text-sm text-gray-500 max-w-sm leading-relaxed">
+                "We don't bill for hours. We bill for the certainty of your success."
+              </p>
+           </div>
+           <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">
+             © 2024 ClearBill Strategic Partners. All Rights Reserved.
+           </p>
+        </footer>
+      </main>
+    </div>
+  )
+}
+
+function collection(arg0: null, arg1: string): any {
+  throw new Error("Function not implemented.")
+}

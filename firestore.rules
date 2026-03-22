@@ -24,7 +24,8 @@ service cloud.firestore {
     }
 
     match /organizations/{organizationId} {
-      allow get, list: if isOwner(organizationId);
+      allow get: if true; // Allow public get for org profiles
+      allow list: if isOwner(organizationId);
       allow create: if isOwner(organizationId) && request.resource.data.id == organizationId;
       allow update: if isExistingOwner(organizationId) && request.resource.data.id == resource.data.id;
       allow delete: if isExistingOwner(organizationId);
@@ -37,7 +38,8 @@ service cloud.firestore {
       }
 
       match /proposals/{proposalId} {
-        allow get, list: if isOwner(organizationId);
+        allow get: if true; // Allow public view of proposals
+        allow list: if isOwner(organizationId);
         allow create: if isOwner(organizationId) && matchesOrgPath(organizationId);
         allow update: if isExistingOwner(organizationId) && isRelationalDataImmutable();
         allow delete: if isExistingOwner(organizationId);
