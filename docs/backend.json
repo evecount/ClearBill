@@ -1,0 +1,369 @@
+{
+  "entities": {
+    "Organization": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Organization",
+      "type": "object",
+      "description": "Represents a tenant organization within the InvoiceSync application. This entity stores core profile information, branding elements, and payment configuration details for the invoicing entity.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Organization entity."
+        },
+        "name": {
+          "type": "string",
+          "description": "The official name of the organization."
+        },
+        "logoUrl": {
+          "type": "string",
+          "description": "URL to the organization's uploaded logo, used for branding invoices and the client portal.",
+          "format": "uri"
+        },
+        "contactEmail": {
+          "type": "string",
+          "description": "Primary contact email address for the organization.",
+          "format": "email"
+        },
+        "contactPhone": {
+          "type": "string",
+          "description": "Primary contact phone number for the organization."
+        },
+        "addressLine1": {
+          "type": "string",
+          "description": "First line of the organization's primary address."
+        },
+        "addressLine2": {
+          "type": "string",
+          "description": "Second line of the organization's primary address (optional)."
+        },
+        "city": {
+          "type": "string",
+          "description": "City of the organization's primary address."
+        },
+        "state": {
+          "type": "string",
+          "description": "State or province of the organization's primary address."
+        },
+        "postalCode": {
+          "type": "string",
+          "description": "Postal code or ZIP code of the organization's primary address."
+        },
+        "country": {
+          "type": "string",
+          "description": "Country of the organization's primary address."
+        },
+        "paymentGatewayType": {
+          "type": "string",
+          "description": "Specifies the type of payment gateway configured (e.g., 'Stripe', 'PayPal', 'BankTransfer')."
+        },
+        "paymentGatewayAccountId": {
+          "type": "string",
+          "description": "A non-sensitive identifier for the organization's account with the configured payment gateway (e.g., Stripe Connect Account ID). Sensitive API keys are not stored here."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the organization profile was created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp indicating the last time the organization profile was updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "contactEmail",
+        "addressLine1",
+        "city",
+        "state",
+        "postalCode",
+        "country",
+        "paymentGatewayType",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "Client": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Client",
+      "type": "object",
+      "description": "Represents a client who receives invoices from an organization. This entity stores contact and billing details for each client.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Client entity."
+        },
+        "organizationId": {
+          "type": "string",
+          "description": "Reference to the Organization that owns this client. (Relationship: Organization 1:N Client)"
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the client (company or individual)."
+        },
+        "contactEmail": {
+          "type": "string",
+          "description": "Primary contact email address for the client.",
+          "format": "email"
+        },
+        "contactPhone": {
+          "type": "string",
+          "description": "Primary contact phone number for the client."
+        },
+        "addressLine1": {
+          "type": "string",
+          "description": "First line of the client's billing address."
+        },
+        "addressLine2": {
+          "type": "string",
+          "description": "Second line of the client's billing address (optional)."
+        },
+        "city": {
+          "type": "string",
+          "description": "City of the client's billing address."
+        },
+        "state": {
+          "type": "string",
+          "description": "State or province of the client's billing address."
+        },
+        "postalCode": {
+          "type": "string",
+          "description": "Postal code or ZIP code of the client's billing address."
+        },
+        "country": {
+          "type": "string",
+          "description": "Country of the client's billing address."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the client profile was created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp indicating the last time the client profile was updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "organizationId",
+        "name",
+        "contactEmail",
+        "addressLine1",
+        "city",
+        "state",
+        "postalCode",
+        "country",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "Invoice": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Invoice",
+      "type": "object",
+      "description": "Represents an invoice generated by an organization for a client. This entity tracks all core invoice details, status, and payment information.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Invoice entity."
+        },
+        "organizationId": {
+          "type": "string",
+          "description": "Reference to the Organization that issued this invoice. (Relationship: Organization 1:N Invoice)"
+        },
+        "clientId": {
+          "type": "string",
+          "description": "Reference to the Client to whom this invoice is addressed. (Relationship: Client 1:N Invoice)"
+        },
+        "invoiceNumber": {
+          "type": "string",
+          "description": "A human-readable, unique invoice number."
+        },
+        "issueDate": {
+          "type": "string",
+          "description": "The date when the invoice was issued.",
+          "format": "date"
+        },
+        "dueDate": {
+          "type": "string",
+          "description": "The date by which the invoice payment is due.",
+          "format": "date"
+        },
+        "status": {
+          "type": "string",
+          "description": "The current payment status of the invoice (e.g., 'Draft', 'Pending', 'Paid', 'Overdue', 'Cancelled')."
+        },
+        "totalAmount": {
+          "type": "number",
+          "description": "The total monetary amount of the invoice, including all line items and taxes."
+        },
+        "currency": {
+          "type": "string",
+          "description": "The currency code for the invoice total (e.g., 'USD', 'EUR')."
+        },
+        "taxRatePercentage": {
+          "type": "number",
+          "description": "The overall tax rate percentage applied to the invoice, if applicable."
+        },
+        "invoiceUrl": {
+          "type": "string",
+          "description": "The unique, secure URL for the client to view and pay this invoice.",
+          "format": "uri"
+        },
+        "paymentDate": {
+          "type": "string",
+          "description": "The date when the invoice was paid, if applicable.",
+          "format": "date-time"
+        },
+        "notes": {
+          "type": "string",
+          "description": "Any additional notes or terms for the invoice."
+        },
+        "lineItemIds": {
+          "type": "array",
+          "description": "References to the InvoiceLineItem entities associated with this invoice. (Relationship: Invoice 1:N InvoiceLineItem)",
+          "items": {
+            "type": "string"
+          }
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the invoice was created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp indicating the last time the invoice was updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "organizationId",
+        "clientId",
+        "invoiceNumber",
+        "issueDate",
+        "dueDate",
+        "status",
+        "totalAmount",
+        "currency",
+        "invoiceUrl",
+        "lineItemIds",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "InvoiceLineItem": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "InvoiceLineItem",
+      "type": "object",
+      "description": "Represents an individual line item within an invoice, detailing specific goods or services, quantity, and price.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the InvoiceLineItem entity."
+        },
+        "invoiceId": {
+          "type": "string",
+          "description": "Reference to the Invoice this line item belongs to. (Relationship: Invoice 1:N InvoiceLineItem)"
+        },
+        "description": {
+          "type": "string",
+          "description": "A detailed description of the item or service, potentially AI-assisted for clarity."
+        },
+        "quantity": {
+          "type": "number",
+          "description": "The quantity of the item or service."
+        },
+        "unitPrice": {
+          "type": "number",
+          "description": "The price per unit of the item or service."
+        },
+        "amount": {
+          "type": "number",
+          "description": "The total calculated amount for this line item (quantity * unitPrice)."
+        },
+        "taxable": {
+          "type": "boolean",
+          "description": "Indicates whether this specific line item is subject to tax."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the line item was created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp indicating the last time the line item was updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "invoiceId",
+        "description",
+        "quantity",
+        "unitPrice",
+        "amount",
+        "taxable",
+        "createdAt",
+        "updatedAt"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/organizations/{organizationId}",
+        "definition": {
+          "entityName": "Organization",
+          "schema": {
+            "$ref": "#/backend/entities/Organization"
+          },
+          "description": "Root collection for each tenant organization. Stores profile, branding, and payment gateway configuration. Access is restricted to authenticated users associated with this specific organizationId (e.g., owners, administrators)."
+        }
+      },
+      {
+        "path": "/organizations/{organizationId}/clients/{clientId}",
+        "definition": {
+          "entityName": "Client",
+          "schema": {
+            "$ref": "#/backend/entities/Client"
+          },
+          "description": "Subcollection storing client profiles for a specific organization. Each document includes denormalized 'organizationId' for authorization independence. Access is restricted to the owning organization."
+        }
+      },
+      {
+        "path": "/organizations/{organizationId}/invoices/{invoiceId}",
+        "definition": {
+          "entityName": "Invoice",
+          "schema": {
+            "$ref": "#/backend/entities/Invoice"
+          },
+          "description": "Subcollection storing invoices issued by a specific organization. Each document includes denormalized 'organizationId' and 'clientId' for authorization independence. Access is granted to the owning organization and the specific client referenced by 'clientId'."
+        }
+      },
+      {
+        "path": "/organizations/{organizationId}/invoices/{invoiceId}/lineItems/{lineItemId}",
+        "definition": {
+          "entityName": "InvoiceLineItem",
+          "schema": {
+            "$ref": "#/backend/entities/InvoiceLineItem"
+          },
+          "description": "Subcollection storing individual line items for a specific invoice. Each document *must* include denormalized 'organizationId' and 'clientId' (copied from the parent Invoice) for authorization independence. Access is granted to the owning organization and the specific client referenced by 'clientId'."
+        }
+      }
+    ],
+    "reasoning": "The recommended Firestore structure for InvoiceSync adopts a multi-tenant, hierarchical design rooted in the `organizations` collection, prioritizing security, scalability, and debuggability. All user-facing data (clients, invoices, and line items) are nested under their respective `organizationId` to ensure strict data segregation per tenant. This structure directly implements the principle of **Structural Segregation**, ensuring all documents within a given subcollection share the same security posture related to their parent organization. For instance, all clients under `/organizations/{organizationId}/clients` belong to that specific organization.\n\n**Authorization Independence** is achieved through strategic denormalization. Each `Client` document inherently includes `organizationId`. More critically, `Invoice` documents include both `organizationId` and `clientId`. To extend this to `InvoiceLineItem`, each `lineItem` document will *also* denormalize `organizationId` and `clientId` from its parent `Invoice`. This means that any security rule applied to a `Client`, `Invoice`, or `InvoiceLineItem` document can verify access permissions solely by checking fields directly on that document (e.g., `resource.data.organizationId == request.auth.uid` or `resource.data.clientId == request.auth.uid`) without needing to perform expensive and dependency-creating `get()` operations to parent documents. This atomic authorization check is fundamental for robust and debuggable security rules, especially for batched writes and transactions.\n\n**QAPs (Query Access Patterns)** are well-supported by this design. For Organization Administrators, querying their specific clients or invoices is straightforward via direct collection access (e.g., `organizations/{organizationId}/clients`). For clients, listing their associated invoices across potentially multiple organizations is efficiently handled using Collection Group queries (e.g., `db.collectionGroup('invoices').where('clientId', '==', request.auth.uid)`), where the denormalized `clientId` field serves as a direct filter. Similarly, a client can securely list line items for their invoices using Collection Group queries filtered by both `clientId` and `invoiceId`. The secure 'Pay Now' link for anonymous clients will be managed by the Flask backend, which will fetch and render the invoice details, thus not requiring direct anonymous Firestore read access for the `invoice` or `lineItem` documents themselves through complex security rules. This offloads public view handling to a trusted backend service, simplifying Firestore rules to focus on authenticated access.\n\n**Access Modeling** follows consistent patterns: `organizations/{organizationId}` provides private data access for the organization, while `/organizations/{organizationId}/clients/{clientId}` and `/organizations/{organizationId}/invoices/{invoiceId}` utilize hierarchical paths for user-owned (organization-owned) data. The denormalized `clientId` within `Invoice` and `InvoiceLineItem` facilitates granular access for individual clients. Global roles (e.g., system administrators) would typically be managed via a separate top-level collection like `/roles_admin/{uid}` for existence checks, though not explicitly required by the current entities."
+  }
+}
