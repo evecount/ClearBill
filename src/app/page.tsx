@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { CreditCard, ShieldCheck, Zap, ArrowRight, TrendingUp, Sparkles, Layout, Globe, Lock } from "lucide-react"
+import { CreditCard, ShieldCheck, Zap, ArrowRight, TrendingUp, Sparkles, Layout, Globe, Lock, FileText, Scale } from "lucide-react"
 
 export default function LandingPage() {
   return (
@@ -34,7 +34,7 @@ export default function LandingPage() {
               <span className="text-accent underline decoration-accent/20 underline-offset-8">Clearly Valued.</span>
             </h1>
             <p className="text-xl md:text-2xl text-muted-foreground leading-relaxed max-w-3xl mx-auto">
-              You provide world-class service. **ClearBill** provides the professional identity architecture that ensures your outcomes are recognized, quantified, and clearly valued.
+              Charge market rates for the work you do. Never undercharge for your time again and learn how to highlight the value you provided through architected identity.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-6">
               <Button size="lg" className="h-16 px-10 text-xl bg-accent hover:bg-accent/90 shadow-xl shadow-accent/20 group" asChild>
@@ -60,13 +60,13 @@ export default function LandingPage() {
               <div className="space-y-4">
                 <p className="text-lg font-medium text-slate-900">We believe self-employment is the most honest form of enterprise.</p>
                 <p className="text-muted-foreground leading-relaxed">
-                  Too often, independent experts—from personal chefs to security specialists—are forced to use generic, unbranded tools that fail to reflect their true worth. We're here to change that.
+                  Too often, independent experts—from personal chefs to security specialists—are forced to use generic, unbranded tools that fail to reflect their true worth. ClearBill ensures you command market rates by framing your work as a strategic win.
                 </p>
               </div>
               <div className="space-y-4">
                 <p className="text-lg font-medium text-slate-900">Value clarity is the foundation of B2B trust.</p>
                 <p className="text-muted-foreground leading-relaxed">
-                  ClearBill isn't just a billing tool; it's a <strong>Professional Identity Ecosystem</strong>. We provide the digital infrastructure that honors your expertise and reflects the true value you provide to your clients.
+                  Every invoice should be a testament to your craft. ClearBill provides the digital infrastructure that honors your expertise and reflects the true value you provide, including AI-drafted strategic agreements.
                 </p>
               </div>
             </div>
@@ -85,25 +85,25 @@ export default function LandingPage() {
               </div>
               <h3 className="text-2xl font-bold">White-Label Identity</h3>
               <p className="text-muted-foreground leading-relaxed">
-                Generic links are for casual favors. We help you present a professional facade that reflects your commitment to quality.
+                Present a professional facade that reflects your commitment to quality and command the rates your expertise deserves.
               </p>
             </div>
             <div className="group space-y-4 p-6 rounded-3xl hover:bg-slate-50 transition-colors">
               <div className="bg-blue-500/10 p-3 rounded-2xl w-fit group-hover:scale-110 transition-transform">
-                <ShieldCheck className="size-8 text-blue-500" />
+                <Scale className="size-8 text-blue-500" />
               </div>
-              <h3 className="text-2xl font-bold">Outcome-First Architecture</h3>
+              <h3 className="text-2xl font-bold">Outcome Agreements</h3>
               <p className="text-muted-foreground leading-relaxed">
-                High-end clients pay for certainty. Our secure portals provide the enterprise-grade feeling that reduces payment friction.
+                Stop guessing on terms. Attach professional, AI-drafted outcome agreements to every invoice to protect your work.
               </p>
             </div>
             <div className="group space-y-4 p-6 rounded-3xl hover:bg-slate-50 transition-colors">
               <div className="bg-emerald-500/10 p-3 rounded-2xl w-fit group-hover:scale-110 transition-transform">
                 <Zap className="size-8 text-emerald-500" />
               </div>
-              <h3 className="text-2xl font-bold">Instant Integration</h3>
+              <h3 className="text-2xl font-bold">Value Highlighting</h3>
               <p className="text-muted-foreground leading-relaxed">
-                Simply connect your gateway once. Every link you generate thereafter is wrapped in your high-end professional ecosystem.
+                Use AI to translate technical tasks into business outcomes, ensuring your clients see exactly why your time is valuable.
               </p>
             </div>
           </div>
@@ -118,16 +118,16 @@ export default function LandingPage() {
               </div>
               <h2 className="text-4xl md:text-5xl font-bold leading-tight">Clarity is the key to professional longevity.</h2>
               <p className="text-slate-400 text-lg leading-relaxed">
-                Your payment gateway is just a utility. Your identity is your reputation. ClearBill combines them into a seamless ecosystem that reflects your quality at every touchpoint.
+                Never undercharge again. ClearBill combines your payment gateway with a professional identity system that highlights the true value of your work at every touchpoint.
               </p>
               <div className="grid sm:grid-cols-2 gap-4 pt-4">
                 {[
-                  "Branded Checkout Pages",
-                  "AI Brand Identity Architect",
-                  "Client Billing History Portals",
-                  "Secure SSL Trust Badges",
-                  "Custom Mission Displays",
-                  "Professional Tone Control"
+                  "Market Rate Benchmarking",
+                  "AI Strategic Agreements",
+                  "Value-First Invoice Layouts",
+                  "Secure Identity Badges",
+                  "Outcome Certainty Logs",
+                  "Professional Tone Tuning"
                 ].map((feature) => (
                   <div key={feature} className="flex items-center gap-3">
                     <div className="bg-accent p-1 rounded-full"><ShieldCheck className="size-3" /></div>
@@ -161,7 +161,7 @@ export default function LandingPage() {
                            <p className="text-[10px] text-muted-foreground">accounts@globaltech.com</p>
                          </div>
                          <div className="text-right space-y-1">
-                           <p className="text-[8px] uppercase font-bold text-muted-foreground tracking-widest">Total Amount</p>
+                           <p className="text-[8px] uppercase font-bold text-muted-foreground tracking-widest">Outcome Total</p>
                            <span className="text-2xl font-black text-accent">$4,250.00</span>
                          </div>
                        </div>

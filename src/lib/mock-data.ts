@@ -1,4 +1,3 @@
-
 export type Organization = {
   id: string;
   name: string;
@@ -10,6 +9,7 @@ export type Organization = {
   industry?: string;
   address?: string;
   slug?: string;
+  growthStrategy?: any;
 };
 
 export type Client = {
@@ -38,6 +38,7 @@ export type Invoice = {
   taxRate: number;
   status: 'Pending' | 'Paid' | 'Overdue';
   total: number;
+  contractContent?: string;
 };
 
 export const MOCK_ORG: Organization = {
@@ -84,7 +85,8 @@ export const MOCK_INVOICES: Invoice[] = [
     ],
     taxRate: 8,
     status: 'Paid',
-    total: 2106
+    total: 2106,
+    contractContent: "This agreement confirms the delivery of monthly cloud architecture services for the period of May 2024. Acme Solutions guarantees 99.9% uptime and ongoing value optimization."
   },
   {
     id: 'inv_2',
@@ -98,6 +100,7 @@ export const MOCK_INVOICES: Invoice[] = [
     ],
     taxRate: 5,
     status: 'Pending',
-    total: 2100
+    total: 2100,
+    contractContent: "This Outcome Agreement outlines the technical discovery and strategic roadmap produced for Initech LLC. The win is defined as the successful identification of system bottlenecks."
   }
 ];

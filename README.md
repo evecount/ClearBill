@@ -1,16 +1,16 @@
 # 🚀 ClearBill: Orchestrating the New Economy
 
-**ClearBill** is a professional identity ecosystem designed for independent experts who provide world-class service. It moves beyond utilitarian billing tools to architect a high-trust facade that honors the expert's craft and pivots their business model toward **Outcome Sovereignty**.
+**ClearBill** is a professional identity ecosystem designed for independent experts who provide world-class service. We help you charge market rates for the work you do, ensure you never undercharge for your time again, and highlight the true value you provide to your clients.
 
-Instead of charging for time, **ClearBill** empowers professionals—from personal chefs to security specialists—to command elite fees by guaranteeing a "Strategic Win" through an autonomous agentic partnership.
+Instead of charging for time, **ClearBill** empowers professionals—from personal chefs to security specialists—to command elite fees by guaranteeing a "Strategic Win" through an autonomous agentic partnership and professional outcome agreements.
 
 ## ✨ Core Ethos: Honoring the Independent Expert
 
 Self-employment is the most honest form of enterprise. We believe independent expertise shouldn't be diminished by generic tools.
 
 - **Identity First**: We don't just wrap payment links; we architect a professional facade that honors the expert's skill.
-- **Deep Water Method**: We use AI to help professionals move past the "Strategic Anxiety" of sales and into the high-value world of Outcome Certainty.
-- **Sovereign Architecture**: Built for experts on the move who need a Command Center for their professional longevity.
+- **Value Highlighting**: We use AI to translate raw tasks into business outcomes, ensuring your worth is clearly understood.
+- **Outcome Sovereignty**: Move past the "Strategic Anxiety" of sales and into the high-value world of Outcome Certainty with AI-drafted agreements.
 
 ## 🛠 Features
 
@@ -18,13 +18,12 @@ Self-employment is the most honest form of enterprise. We believe independent ex
 Powered by **Genkit (Gemini 2.5 Flash)**, the app operates as a Strategic Co-Founder:
 - **Strategic DNA Extraction**: Transforms raw expertise into a sovereign identity and growth roadmap.
 - **The Strategic Pivot**: Proactively suggests high-value service packages that shift the focus from time-billing to outcome-billing.
-- **Visual Ecosystem**: Automatically generates branding that skins the entire client portal based on the architected identity.
+- **Market Rate Benchmarking**: AI insights that help you charge what you're actually worth.
 
-### 📱 Mobile-Native Command Center
-Designed for experts on the move:
-- **Bottom Navigation**: Native-feeling mobile tab bar for quick thumb-navigation.
-- **Touch-Friendly UI**: Card-based lists optimized for small screens.
-- **PWA Ready**: Optimized for a full-screen, installable app experience.
+### 📜 Strategic Outcome Contracts
+- **AI Agreement Drafting**: Automatically generates professional outcome-based contracts that protect your work.
+- **Contextual Value Protection**: Ensures clients understand the scope and the specific "Win" they are paying for.
+- **Integrated Legal Facade**: Provides the professional infrastructure usually reserved for large agencies.
 
 ### 💼 Branded Identity Ecosystems
 - **Outcome-Aware Portals**: Portals that reinforce the mission statement and professional tone.
