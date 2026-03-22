@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useState } from "react"
@@ -7,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
-import { Sparkles, ArrowRight, Building2, Mail, MapPin, Loader2, CheckCircle2, FileText, Globe, ShieldCheck, Palette, Camera, Scissors, Briefcase, Code, Music, Dumbbell, Star, Mic, Shield, GraduationCap, Hammer, PawPrint } from "lucide-react"
+import { Sparkles, ArrowRight, Building2, Mail, MapPin, Loader2, CheckCircle2, FileText, Globe, ShieldCheck, Palette, Camera, Scissors, Briefcase, Code, Music, Dumbbell, Star, Mic, Shield, GraduationCap, Hammer, PawPrint, Utensils } from "lucide-react"
 import { consultBusinessOnboarding, type OnboardingConsultantOutput } from "@/ai/flows/onboarding-consultant"
 import { useToast } from "@/hooks/use-toast"
 import Link from "next/link"
@@ -15,6 +16,11 @@ import { Separator } from "@/components/ui/separator"
 import { cn } from "@/lib/utils"
 
 const QUICK_STARTS = [
+  {
+    label: "Personal Chef",
+    icon: Utensils,
+    text: "I am a private personal chef providing boutique catering for small dinner parties and customized weekly meal prep for busy families. I need my billing to reflect the premium, artisanal nature of my culinary services."
+  },
   {
     label: "Private Tutor",
     icon: GraduationCap,
@@ -121,7 +127,7 @@ export default function OnboardingPage() {
             <Sparkles className="size-8 text-accent" />
           </div>
           <h1 className="text-4xl font-bold tracking-tight text-slate-900">AI Brand Architect</h1>
-          <p className="text-lg text-muted-foreground">Transforming your ideas into a professional payment ecosystem.</p>
+          <p className="text-lg text-muted-foreground">Transforming your expertise into a premium client ecosystem.</p>
         </div>
 
         {step === 1 ? (
@@ -129,7 +135,7 @@ export default function OnboardingPage() {
             <Card className="shadow-2xl border-none">
               <CardHeader>
                 <CardTitle>Describe your venture</CardTitle>
-                <CardDescription>What do you do? Who are your clients? Our AI will build the professional "shell" your business deserves.</CardDescription>
+                <CardDescription>What do you do? Who are your clients? Our AI will build the professional identity your business deserves.</CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="space-y-3">
@@ -171,7 +177,7 @@ export default function OnboardingPage() {
                   {loading ? (
                     <>
                       <Loader2 className="mr-2 h-6 w-6 animate-spin" />
-                      Architecting your brand...
+                      Designing your ecosystem...
                     </>
                   ) : (
                     <>
@@ -211,13 +217,13 @@ export default function OnboardingPage() {
                   </div>
                   <div className="grid sm:grid-cols-2 gap-6 pt-4 border-t">
                     <div className="space-y-1">
-                      <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">Support Link</Label>
+                      <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">Client Support</Label>
                       <div className="flex items-center gap-2 text-sm font-medium text-slate-700">
                         <Mail className="size-3 text-accent" /> {proposal?.suggestedEmail}
                       </div>
                     </div>
                     <div className="space-y-1">
-                      <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">Office Shell</Label>
+                      <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">Business Location</Label>
                       <div className="flex items-center gap-2 text-sm font-medium text-slate-700">
                         <MapPin className="size-3 text-accent" /> {proposal?.suggestedAddress?.split(',')[0]}
                       </div>
@@ -236,7 +242,7 @@ export default function OnboardingPage() {
             </Card>
 
             <div className="space-y-4">
-              <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold ml-1">Live Shell Preview</Label>
+              <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold ml-1">Live Portal Preview</Label>
               <div className="relative group">
                 <div 
                   className="absolute -inset-1 rounded-3xl blur opacity-25 group-hover:opacity-40 transition duration-1000"
@@ -294,7 +300,7 @@ export default function OnboardingPage() {
               <div className="p-4 rounded-xl bg-blue-50 border border-blue-100">
                 <p className="text-xs text-blue-700 flex gap-2">
                   <Sparkles className="size-3 shrink-0" />
-                  Notice how the "shell" color adapts to your brand identity. This creates instant trust for your high-ticket clients.
+                  Notice how your brand identity flows through the entire portal. This creates instant trust for your premium clients.
                 </p>
               </div>
             </div>

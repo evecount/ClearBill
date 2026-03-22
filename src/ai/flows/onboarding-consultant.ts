@@ -1,7 +1,8 @@
+
 'use server';
 /**
  * @fileOverview This file defines a Genkit flow for an AI Onboarding Consultant.
- * It helps small business owners refine their business identity and professional details.
+ * It helps small business owners refine their professional identity.
  *
  * - consultBusinessOnboarding - A function that generates professional business details.
  * - OnboardingConsultantInput - The user's raw business description.
@@ -49,9 +50,9 @@ Your goal is to help them professionalize their brand for invoicing.
 2. Draft a concise mission statement for their client portal.
 3. Suggest a professional industry category.
 4. Provide a realistic professional email and address structure.
-5. Define their branding tone and a matching HSL color for their "shell".
+5. Define their branding tone and a matching HSL color for their professional portal.
 
-Be encouraging and professional.`,
+Be encouraging and professional. Focus on validating their expertise and creating a premium identity.`,
 });
 
 const onboardingConsultantFlow = ai.defineFlow(

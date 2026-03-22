@@ -1,3 +1,4 @@
+
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { CreditCard, ShieldCheck, Zap, ArrowRight, TrendingUp, Sparkles, Layout, Globe, Lock, CheckCircle2 } from "lucide-react"
@@ -27,14 +28,14 @@ export default function LandingPage() {
           <div className="max-w-4xl mx-auto space-y-6 relative">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 text-accent text-sm font-bold mb-4">
               <Sparkles className="size-4" />
-              <span>The Branding Layer for B2B Payments</span>
+              <span>The Professional Identity for Indie Experts</span>
             </div>
             <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-primary leading-[1.1]">
               Your Brand. Their Payments. <br />
               <span className="text-accent underline decoration-accent/20 underline-offset-8">Zero Friction.</span>
             </h1>
             <p className="text-xl md:text-2xl text-muted-foreground leading-relaxed max-w-3xl mx-auto">
-              Generic payment links are for casual transfers. **InvoiceSync** provides the professional white-label "shell" that high-ticket clients trust.
+              Generic payment links are for casual transfers. **InvoiceSync** provides the professional identity that high-ticket clients trust.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-6">
               <Button size="lg" className="h-16 px-10 text-xl bg-accent hover:bg-accent/90 shadow-xl shadow-accent/20 group" asChild>
@@ -51,7 +52,7 @@ export default function LandingPage() {
 
         <section className="py-20 px-6 max-w-7xl mx-auto border-t">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-primary">Why Use a Branding Shell?</h2>
+            <h2 className="text-3xl font-bold text-primary">Elevate Your Client Experience</h2>
             <p className="text-muted-foreground mt-2">Bridge the gap between your hard work and the client's bank account.</p>
           </div>
           <div className="grid md:grid-cols-3 gap-12">
@@ -59,7 +60,7 @@ export default function LandingPage() {
               <div className="bg-accent/10 p-3 rounded-2xl w-fit group-hover:scale-110 transition-transform">
                 <Layout className="size-8 text-accent" />
               </div>
-              <h3 className="text-2xl font-bold">White-Label UI</h3>
+              <h3 className="text-2xl font-bold">White-Label Identity</h3>
               <p className="text-muted-foreground leading-relaxed">
                 Most gateways look like raw banks. We look like <strong>you</strong>. Custom logos, mission statements, and your unique business tone on every invoice.
               </p>
@@ -77,9 +78,9 @@ export default function LandingPage() {
               <div className="bg-emerald-500/10 p-3 rounded-2xl w-fit group-hover:scale-110 transition-transform">
                 <Zap className="size-8 text-emerald-500" />
               </div>
-              <h3 className="text-2xl font-bold">Instant Branded Pages</h3>
+              <h3 className="text-2xl font-bold">Instant Professionalism</h3>
               <p className="text-muted-foreground leading-relaxed">
-                Simply connect your gateway (Stripe/PayPal) once. Every link you generate thereafter is wrapped in your high-end professional brand identity.
+                Simply connect your gateway (Stripe/PayPal) once. Every link you generate thereafter is wrapped in your high-end professional identity.
               </p>
             </div>
           </div>
@@ -90,11 +91,11 @@ export default function LandingPage() {
           <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center relative z-10">
             <div className="space-y-6">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-white text-xs font-bold uppercase tracking-widest">
-                The "White-Label" Shell
+                The Identity Your Expertise Deserves
               </div>
               <h2 className="text-4xl md:text-5xl font-bold leading-tight">Professionalism is the key to B2B longevity.</h2>
               <p className="text-slate-400 text-lg leading-relaxed">
-                Your payment gateway is just a utility. Your brand is your reputation. InvoiceSync combines them into a seamless "shell" that reflects your commitment to quality at every touchpoint.
+                Your payment gateway is just a utility. Your brand is your reputation. InvoiceSync combines them into a seamless identity that reflects your commitment to quality at every touchpoint.
               </p>
               <div className="grid sm:grid-cols-2 gap-4 pt-4">
                 {[
@@ -181,7 +182,7 @@ export default function LandingPage() {
               <span className="font-headline">InvoiceSync</span>
             </div>
             <p className="text-sm text-muted-foreground max-w-xs">
-              The professional white-label "shell" for modern small business billing.
+              The professional identity ecosystem for modern small business billing.
             </p>
           </div>
           <div className="flex gap-8 text-sm text-muted-foreground font-medium">

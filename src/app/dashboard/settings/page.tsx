@@ -37,7 +37,7 @@ export default function SettingsPage() {
       <div className="flex justify-between items-start">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
-          <p className="text-muted-foreground">Manage your organization profile and payment integrations.</p>
+          <p className="text-muted-foreground">Manage your professional identity and integrations.</p>
         </div>
         <Button asChild variant="outline" className="border-accent text-accent hover:bg-accent/5">
           <Link href="/onboarding">
@@ -53,7 +53,7 @@ export default function SettingsPage() {
               <Sparkles className="size-5 text-accent" />
               <CardTitle>AI Brand Assistant</CardTitle>
             </div>
-            <CardDescription>Need a fresh perspective? Let our AI consultant help you rewrite your mission and refine your branding tone.</CardDescription>
+            <CardDescription>Need a fresh perspective? Let our AI consultant help you refine your mission and professional tone.</CardDescription>
           </CardHeader>
           <CardContent>
             <Button asChild className="bg-accent hover:bg-accent/90">
@@ -67,7 +67,7 @@ export default function SettingsPage() {
         <Card>
           <CardHeader>
             <CardTitle>Public Profile Link</CardTitle>
-            <CardDescription>Clients can visit this link to view their invoices and manage their account.</CardDescription>
+            <CardDescription>Clients can visit this link to view their invoices and manage their account ecosystem.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center gap-4 p-4 border rounded-xl bg-slate-50">
@@ -95,7 +95,7 @@ export default function SettingsPage() {
         <Card>
           <CardHeader>
             <CardTitle>Organization Profile</CardTitle>
-            <CardDescription>This information will appear on your client invoices.</CardDescription>
+            <CardDescription>This information will appear on your professional client portals.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="flex flex-col sm:flex-row items-center gap-6">
