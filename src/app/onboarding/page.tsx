@@ -329,7 +329,7 @@ export default function OnboardingPage() {
                <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-emerald-500/10 text-emerald-600 rounded-full text-xs font-black uppercase tracking-widest">
                  <ShieldCheck className="size-4" /> Identity & Invoice Architected
                </div>
-               <h1 className="text-4xl font-black text-slate-900 tracking-tight">The Visual First-Look</h1>
+               <h1 className="text-4xl font-black text-slate-900 tracking-tight">Sample Invoice</h1>
                <p className="text-slate-500 text-lg max-w-2xl mx-auto">
                  This is how your client sees your worth. Everything you see can be refined later in Settings.
                </p>
@@ -398,7 +398,7 @@ export default function OnboardingPage() {
                      style={{ backgroundColor: `hsl(${proposal.brandColor})` }}
                      onClick={handleFinish}
                    >
-                     Save & Launch Ecosystem <ArrowRight className="ml-2 size-6" />
+                     Confirm & Go to Dashboard <ArrowRight className="ml-2 size-6" />
                    </Button>
                  </CardContent>
                </Card>
