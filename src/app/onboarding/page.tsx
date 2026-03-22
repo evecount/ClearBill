@@ -335,8 +335,8 @@ export default function OnboardingPage() {
                </p>
              </div>
 
-             <div className="grid gap-8 lg:grid-cols-5 items-start">
-               <Card className="lg:col-span-3 border-none shadow-2xl rounded-[3rem] overflow-hidden bg-white">
+             <div className="flex justify-center">
+               <Card className="max-w-2xl w-full border-none shadow-2xl rounded-[3rem] overflow-hidden bg-white">
                  <div className="h-4 w-full" style={{ backgroundColor: `hsl(${proposal.brandColor})` }} />
                  <CardContent className="p-10 md:p-14 space-y-10">
                    <div className="flex justify-between items-start gap-8">
@@ -402,35 +402,6 @@ export default function OnboardingPage() {
                    </Button>
                  </CardContent>
                </Card>
-
-               <div className="lg:col-span-2 space-y-6">
-                  <Card className="bg-slate-900 text-white rounded-3xl border-none p-8 space-y-6 shadow-xl">
-                    <div className="flex items-center gap-3">
-                      <Zap className="size-5 text-accent" />
-                      <h3 className="text-sm font-black uppercase tracking-widest">Growth Engine</h3>
-                    </div>
-                    <div className="space-y-4">
-                      <div className="p-4 bg-white/5 rounded-2xl border border-white/10 space-y-1">
-                        <p className="text-[10px] uppercase font-black tracking-widest text-accent">Strategic Move</p>
-                        <p className="text-xs text-slate-300 leading-relaxed">{proposal.growthStrategy.initialFocus}</p>
-                      </div>
-                      <div className="p-4 bg-white/5 rounded-2xl border border-white/10 space-y-1">
-                        <p className="text-[10px] uppercase font-black tracking-widest text-emerald-400">Yield Opportunity</p>
-                        <p className="text-xs text-slate-300 leading-relaxed">{proposal.growthStrategy.premiumTierSuggestion}</p>
-                      </div>
-                    </div>
-                  </Card>
-
-                  <div className="p-8 bg-white rounded-3xl border border-slate-200 flex flex-col items-center gap-4 text-center shadow-sm">
-                    <div className="size-12 bg-emerald-500/10 rounded-full flex items-center justify-center">
-                      <ShieldCheck className="size-6 text-emerald-500" />
-                    </div>
-                    <h4 className="font-bold text-sm">Persistent Identity Corpus</h4>
-                    <p className="text-xs text-muted-foreground leading-relaxed">
-                      Your identity is now anchored in your private business corpus. You can refine any detail later in Settings.
-                    </p>
-                  </div>
-               </div>
              </div>
           </div>
         )}
