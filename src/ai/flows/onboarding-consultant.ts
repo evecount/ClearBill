@@ -1,3 +1,4 @@
+
 'use server';
 /**
  * @fileOverview This file defines a Genkit flow for an AI Identity Architect & Growth Partner.
@@ -61,7 +62,9 @@ Context: "{{{userDescription}}}"
 
 Your task:
 1. IDENTITY: If the user provided a brief description like "I am an artist", expand this into a full professional mission that highlights "Outcome Certainty".
-2. INVOICING: Generate 3-4 professional, outcome-based invoice line items that an expert in this field would typically bill for. For an artist, include things like "Conceptual Development & Site Research", "Production & Material Procurement", etc. Assign elite, professional prices.
+2. INVOICING: Generate 3-4 professional, outcome-based invoice line items that an expert in this specific field (e.g., an artist in Singapore, a plumber in Berlin) would typically bill for. 
+For an artist, include things like "Conceptual Development & Site Research", "Production & Material Procurement", "Strategic Installation Supervision".
+Assign elite, professional market rate prices.
 3. GROWTH: Provide grounded advice on how to command elite fees by focusing on the "win" they provide for their clients.
 4. OUTPUT: Ensure the suggestedName and suggestedAddress in the output strictly match the provided facts.
 

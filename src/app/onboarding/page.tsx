@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useState } from "react"
@@ -8,7 +9,8 @@ import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
-import { ArrowRight, Loader2, ShieldCheck, Scissors, Music, HeartPulse, Code, Utensils, Hammer, Shield, Sparkles, Zap, Target, Star, Palette, PenTool, Home, TrendingUp, Briefcase, Landmark, CreditCard, Send } from "lucide-react"
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
+import { ArrowRight, Loader2, ShieldCheck, Scissors, Music, HeartPulse, Code, Utensils, Hammer, Shield, Sparkles, Zap, Target, Star, Palette, PenTool, Home, TrendingUp, Briefcase, Landmark, CreditCard, Send, Camera, Upload } from "lucide-react"
 import { consultBusinessOnboarding, type OnboardingConsultantOutput } from "@/ai/flows/onboarding-consultant"
 import { useToast } from "@/hooks/use-toast"
 import { cn } from "@/lib/utils"
@@ -44,7 +46,8 @@ export default function OnboardingPage() {
   const [basicFacts, setBasicFacts] = useState({
     businessName: "",
     location: "",
-    industry: ""
+    industry: "",
+    logoUrl: ""
   })
 
   const [description, setDescription] = useState("")
@@ -96,7 +99,7 @@ export default function OnboardingPage() {
     const orgData = {
       id: orgId,
       name: proposal.suggestedName,
-      logoUrl: `https://picsum.photos/seed/${orgId}/200/200`,
+      logoUrl: basicFacts.logoUrl || `https://picsum.photos/seed/${orgId}/200/200`,
       contactEmail: proposal.suggestedEmail,
       addressLine1: proposal.suggestedAddress,
       city: "",
@@ -165,6 +168,23 @@ export default function OnboardingPage() {
                   <CardDescription className="text-slate-400">Let's start with the non-negotiable facts of your craft.</CardDescription>
                 </CardHeader>
                 <CardContent className="p-10 space-y-8">
+                  <div className="flex flex-col items-center gap-4 mb-4">
+                    <Label className="text-[10px] uppercase font-black tracking-widest text-muted-foreground self-start">Business Identity</Label>
+                    <div className="relative group cursor-pointer" onClick={() => {
+                      const seed = Math.floor(Math.random() * 1000);
+                      setBasicFacts({...basicFacts, logoUrl: `https://picsum.photos/seed/${seed}/200/200`})
+                    }}>
+                      <Avatar className="size-24 border-2 border-slate-200 shadow-sm transition-all group-hover:scale-105">
+                        <AvatarImage src={basicFacts.logoUrl || `https://picsum.photos/seed/default/200/200`} />
+                        <AvatarFallback><Camera className="size-8 text-slate-300" /></AvatarFallback>
+                      </Avatar>
+                      <div className="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                        <Upload className="size-6 text-white" />
+                      </div>
+                    </div>
+                    <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest">Click to Shuffle Logo</p>
+                  </div>
+
                   <div className="space-y-3">
                     <Label htmlFor="biz-name" className="text-xs uppercase font-black tracking-widest text-muted-foreground">Business Name</Label>
                     <Input 
@@ -295,10 +315,16 @@ export default function OnboardingPage() {
                    {/* Invoice Header Preview */}
                    <div className="flex justify-between items-start gap-8">
                       <div className="space-y-4 flex-1">
-                        <div className="space-y-1">
-                           <p className="text-[10px] uppercase font-black tracking-widest text-muted-foreground">From</p>
-                           <h2 className="text-2xl font-black text-slate-900">{proposal.suggestedName}</h2>
-                           <p className="text-sm text-muted-foreground leading-relaxed">{proposal.suggestedAddress}</p>
+                        <div className="space-y-4">
+                           <Avatar className="size-16 border rounded-xl">
+                             <AvatarImage src={basicFacts.logoUrl || `https://picsum.photos/seed/default/200/200`} />
+                             <AvatarFallback>{proposal.suggestedName[0]}</AvatarFallback>
+                           </Avatar>
+                           <div className="space-y-1">
+                             <p className="text-[10px] uppercase font-black tracking-widest text-muted-foreground">From</p>
+                             <h2 className="text-2xl font-black text-slate-900">{proposal.suggestedName}</h2>
+                             <p className="text-sm text-muted-foreground leading-relaxed">{proposal.suggestedAddress}</p>
+                           </div>
                         </div>
                       </div>
                       <div className="text-right space-y-1">
@@ -347,6 +373,9 @@ export default function OnboardingPage() {
                    >
                      Launch Profile & Invoice <ArrowRight className="ml-2 size-6" />
                    </Button>
+                   <p className="text-center text-[10px] text-muted-foreground font-bold uppercase tracking-widest mt-4">
+                     You can refine your identity and logo anytime in Settings.
+                   </p>
                  </CardContent>
                </Card>
 
