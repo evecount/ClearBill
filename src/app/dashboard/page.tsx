@@ -2,21 +2,32 @@
 
 import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { CreditCard, FileText, Users, TrendingUp, ArrowUpRight, Plus, Sparkles, Copy, ExternalLink, Lightbulb, ArrowRight, Zap } from "lucide-react"
+import { CreditCard, FileText, Users, TrendingUp, ArrowUpRight, Plus, Sparkles, Copy, ExternalLink, Lightbulb, ArrowRight, Zap, Target, Star } from "lucide-react"
 import { MOCK_INVOICES, MOCK_CLIENTS, MOCK_ORG } from "@/lib/mock-data"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
 import { useToast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
+import { useDoc, useUser } from "@/firebase"
+import { useMemoFirebase } from "@/firebase/provider"
+import { doc } from "firebase/firestore"
 
 export default function DashboardPage() {
   const { toast } = useToast()
+  const { user } = useUser()
   const [origin, setOrigin] = useState("")
 
   useEffect(() => {
     setOrigin(window.location.origin)
   }, [])
+
+  const orgRef = useMemoFirebase(() => {
+    if (!user) return null
+    return doc(user.auth.firestore, 'organizations', user.uid)
+  }, [user])
+
+  const { data: org, isLoading: isOrgLoading } = useDoc(orgRef)
 
   const pendingAmount = MOCK_INVOICES
     .filter(inv => inv.status === 'Pending')
@@ -27,7 +38,8 @@ export default function DashboardPage() {
     .reduce((sum, inv) => sum + inv.total, 0)
 
   const copyPublicLink = () => {
-    const url = `${origin}/u/${MOCK_ORG.slug || MOCK_ORG.id}`
+    if (!org?.slug) return
+    const url = `${origin}/u/${org.slug}`
     navigator.clipboard.writeText(url)
     toast({ title: "Link Copied", description: "Your public profile link is ready to share." })
   }
@@ -95,7 +107,7 @@ export default function DashboardPage() {
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-7">
         {/* Main Content Area */}
         <div className="col-span-4 space-y-6">
-          {/* Strategic Growth Insights - NEW PARTNER SECTION */}
+          {/* Strategic Growth Insights - TIER-0 AGENT SECTION */}
           <Card className="border-accent/20 bg-accent/5 overflow-hidden border-2">
             <CardHeader className="pb-3">
               <div className="flex items-center gap-2">
@@ -103,42 +115,59 @@ export default function DashboardPage() {
                   <Lightbulb className="size-4" />
                 </div>
                 <div>
-                  <CardTitle className="text-lg">Strategic Growth Insights</CardTitle>
-                  <CardDescription>AI-driven opportunities to scale your expertise.</CardDescription>
+                  <CardTitle className="text-lg">Strategic Growth Engine</CardTitle>
+                  <CardDescription>Tier-0 Agentic Insights to scale your expertise.</CardDescription>
                 </div>
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid gap-3">
-                <div className="flex items-start gap-4 p-4 bg-white rounded-xl border shadow-sm">
-                  <div className="bg-emerald-50 p-2 rounded-full shrink-0">
-                    <TrendingUp className="size-4 text-emerald-600" />
+              {org?.growthStrategy ? (
+                <div className="grid gap-3">
+                  <div className="flex items-start gap-4 p-4 bg-white rounded-xl border shadow-sm">
+                    <div className="bg-emerald-50 p-2 rounded-full shrink-0">
+                      <Target className="size-4 text-emerald-600" />
+                    </div>
+                    <div className="space-y-1">
+                      <p className="text-sm font-bold">Immediate Growth Focus</p>
+                      <p className="text-xs text-muted-foreground leading-relaxed">
+                        {org.growthStrategy.initialFocus}
+                      </p>
+                    </div>
                   </div>
-                  <div className="space-y-1">
-                    <p className="text-sm font-bold">Upsell Opportunity Detected</p>
-                    <p className="text-xs text-muted-foreground leading-relaxed">
-                      Your "Standard Consulting" rate is 15% below the regional average for high-end creators. Consider a "Premium Strategy" tier.
-                    </p>
-                    <Button variant="link" size="sm" className="h-auto p-0 text-accent text-xs font-bold">
-                      View AI Proposal <ArrowRight className="size-3 ml-1" />
-                    </Button>
+                  <div className="flex items-start gap-4 p-4 bg-white rounded-xl border shadow-sm">
+                    <div className="bg-purple-50 p-2 rounded-full shrink-0">
+                      <Star className="size-4 text-purple-600" />
+                    </div>
+                    <div className="space-y-1">
+                      <p className="text-sm font-bold">Premium Tier Opportunity (AMO)</p>
+                      <p className="text-xs text-muted-foreground leading-relaxed">
+                        {org.growthStrategy.premiumTierSuggestion}
+                      </p>
+                      <Button variant="link" size="sm" className="h-auto p-0 text-accent text-[10px] font-bold uppercase tracking-widest">
+                        Architect Proposal <ArrowRight className="size-3 ml-1" />
+                      </Button>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-4 p-4 bg-white rounded-xl border shadow-sm">
+                    <div className="bg-blue-50 p-2 rounded-full shrink-0">
+                      <TrendingUp className="size-4 text-blue-600" />
+                    </div>
+                    <div className="space-y-1">
+                      <p className="text-sm font-bold">Recurring Revenue Model</p>
+                      <p className="text-xs text-muted-foreground leading-relaxed">
+                        {org.growthStrategy.recurringRevenueModel}
+                      </p>
+                    </div>
                   </div>
                 </div>
-                <div className="flex items-start gap-4 p-4 bg-white rounded-xl border shadow-sm">
-                  <div className="bg-blue-50 p-2 rounded-full shrink-0">
-                    <FileText className="size-4 text-blue-600" />
-                  </div>
-                  <div className="space-y-1">
-                    <p className="text-sm font-bold">Recurring Revenue Engine</p>
-                    <p className="text-xs text-muted-foreground leading-relaxed">
-                      3 clients have paid 2+ invoices this month. Converting them to a monthly retainer could stabilize your cash flow by 40%.
-                    </p>
-                    <Button variant="link" size="sm" className="h-auto p-0 text-accent text-xs font-bold">
-                      Generate Retainer Template <ArrowRight className="size-3 ml-1" />
-                    </Button>
-                  </div>
+              ) : (
+                <div className="py-8 text-center bg-white rounded-xl border border-dashed">
+                  <p className="text-sm text-muted-foreground">Run the AI Consultant to architect your growth strategy.</p>
+                  <Button asChild variant="link" className="text-accent mt-2">
+                    <Link href="/onboarding">Activate Agent <ArrowRight className="size-3 ml-1" /></Link>
+                  </Button>
                 </div>
-              </div>
+              )}
             </CardContent>
           </Card>
 
@@ -188,13 +217,13 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="bg-white/10 rounded-lg p-3 flex items-center justify-between">
-                <span className="text-xs truncate font-mono opacity-80">clearbill.com/u/{MOCK_ORG.slug || MOCK_ORG.id}</span>
+                <span className="text-xs truncate font-mono opacity-80">clearbill.com/u/{org?.slug || org?.id || '...'}</span>
                 <div className="flex gap-2">
                   <Button size="icon" variant="ghost" className="size-8 hover:bg-white/20" onClick={copyPublicLink}>
                     <Copy className="size-3" />
                   </Button>
                   <Button size="icon" variant="ghost" className="size-8 hover:bg-white/20" asChild>
-                    <Link href={`/u/${MOCK_ORG.slug || MOCK_ORG.id}`} target="_blank">
+                    <Link href={`/u/${org?.slug || org?.id}`} target="_blank">
                       <ExternalLink className="size-3" />
                     </Link>
                   </Button>
